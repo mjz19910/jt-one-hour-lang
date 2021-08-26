@@ -101,7 +101,7 @@ fn
 fn main() {
 	println!("Hello World");
 }`;
-	console.log(rust_code);
+	//console.log(rust_code);
 	let rust_match_rx = /\/\/.+(?=[\n])|\/\*.+(?=\/\*|\*\/)|_(?=!>[a-zA-Z_])|fn|self|match|yield|macro|impl|\s|[\(\)]|[\[\]]|[{}]|::|->|<-|@|[a-zA-Z_]/;
 	let test = new class {
 		constructor() {
