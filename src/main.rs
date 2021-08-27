@@ -269,8 +269,9 @@ fn eval_pushvar() -> Result<(), EngineError){
 
 fn main() -> Result<(), EngineError> {
 	for arg in std::env::args().skip(1) {
+		let contents = std::fs::read_to_string(arg).unwrap();
 		let mut engine = Evaluator::new();
-		let commands = parse(&arg)?;
+		let commands = parse(&contents)?;
 		let answer = engine.evaluate(&commands)?;
 
 		println!("{:?}", answer);
