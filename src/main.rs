@@ -49,6 +49,7 @@ impl Evaluator {
 	fn add(&self, lhs: Value, rhs: Value) -> Result<Value, EngineError> {
 		match (lhs, rhs) {
 			(Value::Int(i1), Value::Int(i2)) => Ok(Value::Int(i1 + i2)),
+			(Value::String(s1), Value::String(s2)) => Ok(Value::String(s1 + s2)),
 			_ => Err(EngineError::MismatchType),
 		}
 	}
