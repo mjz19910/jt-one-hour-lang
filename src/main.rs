@@ -3,6 +3,7 @@ use std::collections::HashMap;
 enum Command {
 	SetVar(String,Value),
 	GetVar(String),
+	PushVar(String),
 	Push(Value),
 	Pop,
 	Add,
@@ -61,6 +62,10 @@ impl Evaluator {
 				}
 				Command::GetVar(name) => match self.vars.get(name) {
 					Some(value) => output = Ok(value.clone()),
+					None => return Err(EngineError::MissingVariable(name.into())),
+				},
+				Command::PushVar(name) => match self.vars.get(name) {
+					Some(value) => self.stack.push(value.clone()),
 					None => return Err(EngineError::MissingVariable(name.into())),
 				},
 				Command::Push(v) => self.stack.push(v.clone()),
@@ -144,6 +149,16 @@ fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
 	Ok(Command::Push(val))
 }
 
+fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
+	if input.len() != 2 {
+		return Err(EngineError::MismatchNumParams);
+	}
+
+	let var_name = parse_var_name(input[1])?;
+
+	Ok(Command::PushVar(var_name))
+}
+
 fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 	// set a 100
 	// get a
@@ -162,6 +177,9 @@ fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 			}
 			Some(x) if *x == "push" => {
 				output.push(parse_push(&command)?);
+			}
+			Some(x) if *x == "pushvar" => {
+				output.push(parse_pushvar(&command)?);
 			}
 			Some(x) if *x == "pop" => {
 				output.push(Command::Pop);
@@ -230,11 +248,33 @@ fn eval_stack() -> Result<(), EngineError){
 	let mut evaluator = Evaluator::new();
 	let result = evaluator.evaluate(&commands)?;
 
-	assert_eq!(result, Value::String("hello".into()));
+	assert_eq!(result, Value::Int(130));
 
 	Ok(())
 }
 
-fn main() {
-	println!("Hello World");
+#[test]
+fn eval_pushvar() -> Result<(), EngineError){
+	let input = "set x 33\npushvar x\npush 100\nadd\npop";
+
+	let commands = parse(input)?;
+
+	let mut evaluator = Evaluator::new();
+	let result = evaluator.evaluate(&commands)?;
+
+	assert_eq!(result, Value::Int(133));
+
+	Ok(())
+}
+
+fn main() -> Result<(), EngineError> {
+	for arg in std::env::args().skip(1) {
+		let mut engine = Evaluator::new();
+		let commands = parse(&arg)?;
+		let answer = engine.evaluate(&commands)?;
+
+		println!("{:?}", answer);
+	}
+	
+	Ok(())
 }
