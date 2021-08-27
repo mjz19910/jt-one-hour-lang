@@ -16,7 +16,7 @@ enum Value {
 	String(String),
 }
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug)] #[cfg(test)]
 enum Type {
 	Int,
 	String,
@@ -202,11 +202,11 @@ fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 
     Ok(output)
 }
-
+#[cfg(test)]
 struct Typechecker {
 	stack: Vec<Type>,
 }
-
+#[cfg(test)]
 impl Typechecker {
 	fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
 		Ok(Type::Nothing)
@@ -288,6 +288,15 @@ fn eval_pushvar() -> Result<(), EngineError> {
 	let result = evaluator.evaluate(&commands)?;
 
 	assert_eq!(result, Value::Int(133));
+
+	Ok(())
+}
+
+#[test] #[cfg(test)]
+fn do_typecheck_test() -> Result<(), EngineError> {
+	let mut tc = Typechecker {
+		stack: vec![],
+	};
 
 	Ok(())
 }
