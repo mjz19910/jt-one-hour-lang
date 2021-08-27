@@ -266,7 +266,7 @@ fn eval_set_get_string() -> Result<(), EngineError> {
 }
 
 #[test]
-fn eval_stack() -> Result<(), EngineError){
+fn eval_stack() -> Result<(), EngineError> {
 	let input = "push 100\npush 30\nadd\npop";
 
 	let commands = parse(input)?;
@@ -280,7 +280,7 @@ fn eval_stack() -> Result<(), EngineError){
 }
 
 #[test]
-fn eval_pushvar() -> Result<(), EngineError){
+fn eval_pushvar() -> Result<(), EngineError> {
 	let input = "set x 33\npushvar x\npush 100\nadd\npop";
 
 	let commands = parse(input)?;
