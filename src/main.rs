@@ -117,7 +117,7 @@ fn parse_int(val: &str) -> Result<Value, EngineError>{
 }
 
 fn parse_value(val: &str) -> Result<Value, EngineError>{
-	if(val.starts_with('"') && val.ends_with('"') && val.len() > 1) {
+	if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
 		// Parse the string
 		parse_string(val)
 	}else{
