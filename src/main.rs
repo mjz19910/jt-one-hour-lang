@@ -208,13 +208,13 @@ struct Typechecker {
 }
 
 impl Typechecker {
-	fn typecheck_command(&mut self, commands: &[Command]) -> Result<Type, EngineError> {
+	fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
 		Ok(Type::Nothing)
 	}
 	
 	fn typecheck(&mut self, commands: &[Command]) -> Result<Type, EngineError> {
 		for command in commands {
-			self.typecheck_command(command)?;
+			self.typecheck_command(&command)?;
 		}
 		Ok(Type::Nothing)
 	}
