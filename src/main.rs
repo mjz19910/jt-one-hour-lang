@@ -1,13 +1,18 @@
-enum Lang {
+use std::collections::HashMap;
+
+enum Command {
 	SetVar(String,Value),
-	GetVar(String)
+	GetVar(String),
+	Push(Value),
+	Pop,
+	Add,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Debug)]
 enum Value {
+	Nothing,
 	Int(i64),
 	String(String),
-	Nothing,
 }
 
 #[derive(Debug)]
@@ -16,25 +21,58 @@ enum EngineError {
 	MismatchType,
 	UnknownCommand(String),
 	MissingVariable(String),
+	EmptyStack,
 }
 
 struct Evaluator {
 	vars:HashMap<String, Value>,
+	stack:Vec<Value>,
 }
 
 impl Evaluator {
-	fn evaluate(commands: &[Command]) -> Result<Value, EngineError> {
+	fn new() -> Evaluator {
+		Self {
+			vars:HashMap::new(),
+			stack:vec![],
+		}
+	}
+
+	fn pop(&mut self) -> Result<Value, EngineError> {
+		let result = self.stack.pop();
+		match result {
+			Some(v)=> output = Ok(v),
+			None =>	return Err(EngineError::EmptyStack),
+		}
+	}
+
+	fn add(&self, lhs: Value, rhs: Value) -> Result<Value, EngineError> {
+		match (lhs, rhs) {
+			(Value::Int(i1), Value::Int(i2)) => Ok(Value::Int(i1 + i2)),
+			_ => Err(EngineError::MismatchType),
+		}
+	}
+
+	fn evaluate(&mut self, commands: &[Command]) -> Result<Value, EngineError> {
 		let output=Ok(Value::Nothing);
 		for command in commands {
 			match command {
 				Command::SetVar(name, value) => {
 					self.vars.insert(name.into(), value.clone());
 				}
-				Command::GetVar(name) => {
-					match self.vars.get(name) {
-						Some(value) => output = Ok(value.clone()),
-						None => return Err(EngineError::MissingVariable(name.into())),
-					}
+				Command::GetVar(name) => match self.vars.get(name) {
+					Some(value) => output = Ok(value.clone()),
+					None => return Err(EngineError::MissingVariable(name.into())),
+				},
+				Command::Push(v) => self.stack.push(v.clone()),
+				Command::Pop => {
+					output = self.pop();
+				},
+				Command::Add => {
+					let lhs = self.pop()?;
+					let rhs = self.pop()?;
+
+					let result = self.add(lhs, rhs)?;
+					self.stack.push(result)
 				}
 			}
 		}
@@ -42,54 +80,22 @@ impl Evaluator {
 	}
 }
 
-fn parse_var_name(var_name) {
+fn parse_var_name(var_name) -> Result<String, EngineError> {
 	Ok(var_name.into())
 }
 
-fn parse_value(val:&str) -> Result<Value, EngineError>{
-	let result:Result<i64,_>=val.parse::<i64>();
-	match result {
-		Ok(x)=>return Value::Int(x),
-		_ => Err(EngineError::MismatchType),
-	}
-}
-
-fn parse_set(input:&[&str]) -> Result<Command,EngineError> {
-	if input.len() != 3 {
-		return Err(EngineError::MismatchNumParams)
-	}
-
-	let var_name = parse_var_name(input[1])?
-
-	let value = parse_value(input[2])?
-
-	Ok(Command::SetVar(var_name, value))
-}
-
-fn parse_get(input:&[&str]) -> Result<Command,EngineError> {
-	if input.len() != 2 {
-		return Err(EngineError::MismatchNumParams)
-	}
-
-	let var_name = parse_var_name(input[1])?
-
-	Ok(Command::GetVar(var_name))
-}
-
-parse_string(val:&str)=>Result<Value,EngineError>{
+parse_string(val: &str) -> Result<Value, EngineError>{
 	if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
-		let inner = val[1..(val.len()-1)]
+		let inner = val[1..(val.len() - 1)].to_string();
+
+		Ok(Value::String(inner))
 	} else {
 		Err(EngineError::MismatchType)
 	}
 }
 
-parse_int(val:&str)=>Result<Value, EngineError>{
-	parse_i64(val)
-}
-
-parse_i64(val:&str)=>Result<Value, EngineError>{
-	let result = val.parse::<i64>::parse(val);
+parse_int(val: &str) -> Result<Value, EngineError>{
+	let result = val.parse::<i64>(val);
 
 	match result {
 		Ok(x) => Ok(Value::Int(x)),
@@ -97,13 +103,45 @@ parse_i64(val:&str)=>Result<Value, EngineError>{
 	}
 }
 
-parse_value(val:&str) -> Result<Value, EngineError> {
-	if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
+fn parse_value(val:&str) -> Result<Value, EngineError>{
+	if(val.starts_with('"') && val.ends_with('"') && val.len() > 1) {
 		// Parse the string
 		parse_string(val)
-	} else {
+	}else{
+		// Parse the number
 		parse_int(val)
 	}
+}
+
+fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
+	if input.len() != 3 {
+		return Err(EngineError::MismatchNumParams);
+	}
+
+	let var_name = parse_var_name(input[1])?;
+	let value = parse_value(input[2])?;
+
+	Ok(Command::SetVar(var_name, value))
+}
+
+fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
+	if input.len() != 2 {
+		return Err(EngineError::MismatchNumParams);
+	}
+
+	let var_name = parse_var_name(input[1])?;
+
+	Ok(Command::GetVar(var_name))
+}
+
+fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
+	if input.len() != 2 {
+		return Err(EngineError::MismatchNumParams);
+	}
+
+	let val = parse_value(input[1])?;
+
+	Ok(Command::Push(val))
 }
 
 fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
@@ -121,6 +159,15 @@ fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 			}
 			Some(x) if *x == "get" => {
 				output.push(parse_get(&command)?);
+			}
+			Some(x) if *x == "push" => {
+				output.push(parse_push(&command)?);
+			}
+			Some(x) if *x == "pop" => {
+				output.push(Command::Pop);
+			}
+			Some(x) if *x == "add" => {
+				output.push(Command::Add);
 			}
 			Some(name) => return Err(EngineError::UnknownCommand(name.to_string())),
 			None => {}
@@ -147,10 +194,10 @@ fn test1() -> Result<(), EngineError> {
 }
 
 #[test]
-fn parse_test1() -> Result<(), EngineError> {
-	let input = r#"set x "test"\nget x"#;
+fn eval_set_get() -> Result<(), EngineError> {
+	let input = "set x 30\nget x";
 
-	let commands = parse(input);
+	let commands = parse(input)?;
 
 	let mut evaluator=Evaluator::new();
 	let result = evaluator.evaluate(&commands)?;
@@ -160,12 +207,27 @@ fn parse_test1() -> Result<(), EngineError> {
 	Ok(())
 }
 
-fn parse_test2() -> Result<(), EngineError> {
-	let input = r#"set x "hello"\nget x"#;
+#[test]
+fn eval_set_get_string() -> Result<(), EngineError> {
+	let input = "set x \"hello\"\nget x";
 
-	let commands = parse(input);
+	let commands = parse(input)?;
 
-	let mut evaluator=Evaluator::new();
+	let mut evaluator = Evaluator::new();
+	let result = evaluator.evaluate(&commands)?;
+
+	assert_eq!(result, Value::String("hello".into()));
+
+	Ok(())
+}
+
+#[test]
+fn eval_stack() -> Result<(), EngineError){
+	let input = "push 100\npush 30\nadd\npop";
+
+	let commands = parse(input)?;
+
+	let mut evaluator = Evaluator::new();
 	let result = evaluator.evaluate(&commands)?;
 
 	assert_eq!(result, Value::String("hello".into()));
