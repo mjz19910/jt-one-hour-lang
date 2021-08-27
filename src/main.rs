@@ -203,7 +203,6 @@ fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
     Ok(output)
 }
 
-#[derive(Default)]
 struct Typechecker {
 	stack: Vec<Type>,
 }
@@ -298,8 +297,6 @@ fn main() -> Result<(), EngineError> {
 		let contents = std::fs::read_to_string(arg).unwrap();
 		let mut engine = Evaluator::new();
 		let commands = parse(&contents)?;
-		let mut type_checker = Typechecker::default();
-		type_checker.typecheck(&commands)?;
 		let answer = engine.evaluate(&commands)?;
 
 		println!("{:?}", answer);
