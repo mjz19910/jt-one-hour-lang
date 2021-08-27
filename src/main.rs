@@ -48,8 +48,8 @@ impl Evaluator {
 	fn pop(&mut self) -> Result<Value, EngineError> {
 		let result = self.stack.pop();
 		match result {
-			Some(v)=> output = Ok(v),
-			None =>	return Err(EngineError::EmptyStack),
+			Some(v)=> Ok(v),
+			None =>	Err(EngineError::EmptyStack),
 		}
 	}
 
