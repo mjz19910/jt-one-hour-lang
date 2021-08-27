@@ -97,7 +97,7 @@ fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 	Ok(var_name.into())
 }
 
-parse_string(val: &str) -> Result<Value, EngineError>{
+fn parse_string(val: &str) -> Result<Value, EngineError>{
 	if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
 		let inner = val[1..(val.len() - 1)].to_string();
 
@@ -107,7 +107,7 @@ parse_string(val: &str) -> Result<Value, EngineError>{
 	}
 }
 
-parse_int(val: &str) -> Result<Value, EngineError>{
+fn parse_int(val: &str) -> Result<Value, EngineError>{
 	let result = val.parse::<i64>(val);
 
 	match result {
