@@ -16,6 +16,13 @@ enum Value {
 	String(String),
 }
 
+#[derive(Clone, PartialEq, Debug)]
+enum Type {
+	Int,
+	String,
+	Nothing,
+}
+
 #[derive(Debug)]
 enum EngineError {
 	MismatchNumParams,
@@ -196,6 +203,24 @@ fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
     Ok(output)
 }
 
+#[derive(Default)]
+struct Typechecker {
+	stack: Vec<Type>,
+}
+
+impl Typechecker {
+	fn typecheck_command(&mut self, commands: &[Command]) -> Result<Type, EngineError> {
+		Ok(Type::Nothing)
+	}
+	
+	fn typecheck(&mut self, commands: &[Command]) -> Result<Type, EngineError> {
+		for command in commands {
+			self.typecheck_command(command)?;
+		}
+		Ok(Type::Nothing)
+	}
+}
+
 #[test]
 fn test1() -> Result<(), EngineError> {
 	let commands=vec![
@@ -273,6 +298,8 @@ fn main() -> Result<(), EngineError> {
 		let contents = std::fs::read_to_string(arg).unwrap();
 		let mut engine = Evaluator::new();
 		let commands = parse(&contents)?;
+		let mut type_checker = Typechecker::default();
+		type_checker.typecheck(&commands)?;
 		let answer = engine.evaluate(&commands)?;
 
 		println!("{:?}", answer);
