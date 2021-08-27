@@ -108,7 +108,7 @@ fn parse_string(val: &str) -> Result<Value, EngineError>{
 }
 
 fn parse_int(val: &str) -> Result<Value, EngineError>{
-	let result = val.parse::<i64>(val);
+	let result = val.parse::<i64>();
 
 	match result {
 		Ok(x) => Ok(Value::Int(x)),
