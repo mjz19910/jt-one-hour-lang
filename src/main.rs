@@ -58,10 +58,10 @@ impl Evaluator {
         }
     }
 
-    fn pop(&mut self) -> Result<Value, EngineError> {
+    fn pop(&mut self) -> Result<Object, EngineError> {
         let result = self.stack.pop();
         match result {
-            Some(Object::Raw(v)) => Ok(v),
+            Some(v) => Ok(v),
             None => Err(EngineError::EmptyStack),
         }
     }
@@ -78,35 +78,44 @@ impl Evaluator {
         }
     }
 
-    fn evaluate(&mut self, commands: &[Command]) -> Result<Object, EngineError> {
-        let mut output = Ok(Value::Nothing);
-        for command in commands {
+    fn evaluate<'a>(&mut self, commands: &[Command], typechecker: &'a mut Typechecker) -> Result<(Object, &'a mut Typechecker), EngineError> {
+        let mut output = Object::Raw(Value::Nothing);
+        for (_command_id, command) in commands.iter().enumerate() {
+			let type_result = typechecker.typecheck_command(command)?;
             match command {
                 Command::SetVar(name, value) => {
-                    self.vars.insert(name.into(), Object::Raw(value.clone()));
+                    self.vars.insert(name.into(), Object::Value(type_result.clone(), value.clone()));
                 }
                 Command::GetVar(name) => match self.vars.get(name) {
-                    Some(value) => output = Ok(Object::Raw(value.clone())),
+                    Some(Object::Raw(value)) => output = Object::Raw(value.clone()),
+                    Some(Object::Value(v_type, value)) => {
+                        output = Object::Value(v_type.clone(), value.clone())
+                    }
+                    Some(Object::Nothing) => panic!("nothing object"),
                     None => return Err(EngineError::MissingVariable(name.into())),
                 },
                 Command::PushVar(name) => match self.vars.get(name) {
-                    Some(value) => self.stack.push(Object::Raw(value.clone())),
+                    Some(Object::Raw(value)) => self.stack.push(Object::Raw(value.clone())),
+                    Some(Object::Value(v_type, value)) => self
+                        .stack
+                        .push(Object::Value(v_type.clone(), value.clone())),
+                    Some(Object::Nothing) => panic!("nothing object"),
                     None => return Err(EngineError::MissingVariable(name.into())),
                 },
                 Command::Push(v) => self.stack.push(Object::Raw(v.clone())),
                 Command::Pop => {
-                    output = self.pop();
+                    output = self.pop()?;
                 }
                 Command::Add => {
                     let lhs = self.pop()?;
                     let rhs = self.pop()?;
 
                     let result = self.add(lhs, rhs)?;
-                    self.stack.push(Object::Raw(result))
+                    self.stack.push(result)
                 }
             }
         }
-        output
+        Ok((output, typechecker))
     }
 }
 
@@ -233,7 +242,7 @@ impl Typechecker {
     }
 
     fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
-        println!("typecheck command {:?}", command);
+        //println!("typecheck command {:?}", command);
         match command {
             Command::SetVar(_, Value::Int(_)) => Ok(Type::Int),
             Command::SetVar(_, Value::String(_)) => Ok(Type::String),
@@ -323,21 +332,23 @@ fn eval_pushvar() -> Result<(), EngineError> {
 }
 
 fn do_typecheck_test() -> Result<(), EngineError> {
-    let mut tc = Typechecker { stack: vec![] };
+    let mut typechecker = Typechecker { stack: vec![] };
 
     let input = "set x 33\nset x \"qv\"\nget x";
 
     let commands = parse(input)?;
 
-    let type_res = tc.typecheck(&commands)?;
+    let type_res = typechecker.typecheck(&commands)?;
 
-    tc.print_types();
+    typechecker.print_types();
 
     let mut engine = Evaluator::new();
 
-    let out = engine.evaluate(&commands);
+	let (answer, _typechecker) = engine.evaluate(&commands,&mut typechecker)?;
 
-    println!("return {:?}", out);
+    if let Object::Raw(out) = answer {
+        println!("return {:?}", out);
+    }
 
     println!("type {:?}", type_res);
 
@@ -348,13 +359,28 @@ fn main() -> Result<(), EngineError> {
     for arg in std::env::args().skip(1) {
         let contents = std::fs::read_to_string(arg).unwrap();
         let mut engine = Evaluator::new();
+		let mut typechecker = Typechecker { stack: vec![] };
         let commands = parse(&contents)?;
-        let answer = engine.evaluate(&commands)?;
-
-        println!("{:?}", answer);
+		let (answer, _) = engine.evaluate(&commands,&mut typechecker)?;
+		match answer {
+			Object::Raw(Value::Int(answer)) => {
+				println!("{:?}", answer);
+			},
+			Object::Raw(Value::String(answer)) => {
+				println!("{:?}", answer);
+			},
+			Object::Raw(answer) => {
+				println!("{:?}", answer);
+			},
+			Object::Value(answer_type, Value::String(answer)) => {
+				println!("{:?} {:?}",answer_type, answer);
+			},
+			Object::Value(answer_type, answer) => {
+				println!("{:?} {:?}",answer_type, answer);
+			},
+			Object::Nothing=>{}
+		} 
     }
-
-    do_typecheck_test()?;
 
     Ok(())
 }
