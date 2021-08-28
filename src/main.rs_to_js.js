@@ -1168,8 +1168,7 @@ x: {
 	test.addTest(function () {
 		let regex = /(\/\*|\*\/)(?:(?:!\/\*|\*\/).)*/g;
 		let input = '/* /* */ */ /* /* */ */';
-		let tok_arr=[];
-		let blk_comments_tt = [];
+		let rustc_tokens_vec=[];
 		let blk_com_dep = 0;
 		let in_comment=false;
 		let str_loc=0;
@@ -1197,12 +1196,18 @@ x: {
 			let str0=iter.next().value;
 			str_loc=iter.next().value;
 			if(str0!==''){
-				tok_arr.push(str0,cur[0]);
+				rustc_tokens_vec.push({
+					kind:'raw_text',
+					len:str0.length,
+				},{
+					kind:'block_comment_parsed',
+					len:cur[0].length,
+				});
 			}else{
-				tok_arr.push(cur[0]);
+				rustc_tokens_vec.push(cur[0]);
 			}
 		}
-		console.log(tok_arr);
+		console.log(rustc_tokens_vec);
 	})
 	let cidx = 0;
 	let mt = rust_match_rx.exec(rust_code);
