@@ -506,7 +506,6 @@ x: {
 				}
 			}
 			str_arr=s2_arr;
-			console.log(str_arr,val_acc);
 		}
 	})}
 	
