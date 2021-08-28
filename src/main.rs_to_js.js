@@ -1198,7 +1198,7 @@ x: {
 			if (str0 !== '') {
 				if (in_comment) {
 					rustc_tokens_vec.push({
-						kind: 'block_comment_inner',
+						kind: 'block_comment_content',
 						len: str0.length,
 					});
 				} else {
