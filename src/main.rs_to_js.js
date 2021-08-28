@@ -399,8 +399,6 @@ x: {
 			while(true){
 				is_val_char.lastIndex=mat_idx;
 				cc=is_val_char.exec(str);
-				console.log(is_val_char.lastIndex,cc);
-				console.log(str[mat_idx]);
 				if(ci++>8192){
 					break;
 				}
