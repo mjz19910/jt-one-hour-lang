@@ -312,7 +312,6 @@ x: {
 		Ok(())
 	}
 	`;
-	//console.log(rust_code);
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file=rr`
 	//! Low-level Rust lexer.
@@ -1132,6 +1131,7 @@ x: {
 		}
 	}
 	`;
+	//console.log(rust_code);
 	let rust_match_rx = /\/\/.+(?=[\n])|\/\*.+(?=\/\*|\*\/)|_(?=!>[a-zA-Z_])|fn|self|match|yield|macro|impl|\s|[\(\)]|[\[\]]|[{}]|::|->|<-|@|[a-zA-Z_]/;
 	let test = new class {
 		constructor() {
