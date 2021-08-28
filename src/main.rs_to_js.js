@@ -1,7 +1,7 @@
 x: {
-	let rr=function(mm,...rest){
-		if(rest.length>0)
-			console.log('format_inner!!?',rest);
+	let rr = function(mm, ...rest) {
+		if (rest.length > 0)
+			console.log('format_inner!!?', rest);
 		return mm.raw.join('');
 	};
 	let rust_code = rr`
@@ -313,7 +313,7 @@ x: {
 	}
 	`;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
-	let rustc_lexer_lib_file=rr`
+	let rustc_lexer_lib_file = rr`
 	//! Low-level Rust lexer.
 	//!
 	//! The idea with \`rustc_lexer\` is to make a reusable library,
@@ -1165,47 +1165,53 @@ x: {
 			}
 		}
 	};
-	test.addTest(function () {
+	test.addTest(function() {
 		let regex = /(\/\*|\*\/)(?:(?:!\/\*|\*\/).)*/g;
 		let input = '/* /* */ */ /* /* */ */';
-		let rustc_tokens_vec=[];
+		let rustc_tokens_vec = [];
 		let blk_com_dep = 0;
-		let in_comment=false;
-		let str_loc=0;
+		let in_comment = false;
+		let str_loc = 0;
 		function accept_result(mat, acc) {
-			let res=[];
+			let res = [];
 			if (mat[0] === '/*') {
-				if(blk_com_dep===0){
-					in_comment=true;
+				if (blk_com_dep === 0) {
+					in_comment = true;
 				}
 				blk_com_dep++;
 			} else if (mat[0] === '*/') {
 				blk_com_dep--;
-				if(blk_com_dep===0){
-					in_comment=false;
+				if (blk_com_dep === 0) {
+					in_comment = false;
 				}
 			}
 			res.push(input.slice(acc, mat.index));
-			let di=mat.index-acc;
+			let di = mat.index - acc;
 			res.push(acc + mat[0].length + di);
 			return res.values();
 		}
 		let cur;
-		for(;cur=regex.exec(input);){
-			let iter=accept_result(cur, str_loc);
-			let str0=iter.next().value;
-			str_loc=iter.next().value;
-			if(str0!==''){
-				rustc_tokens_vec.push({
-					kind:'raw_text',
-					len:str0.length,
-				},{
-					kind:'block_comment_parsed',
-					len:cur[0].length,
-				});
-			}else{
-				rustc_tokens_vec.push(cur[0]);
+		for (; cur = regex.exec(input);) {
+			let iter = accept_result(cur, str_loc);
+			let str0 = iter.next().value;
+			str_loc = iter.next().value;
+			if (str0 !== '') {
+				if (in_comment) {
+					rustc_tokens_vec.push({
+						kind: 'block_comment_inner',
+						len: str0.length,
+					});
+				} else {
+					rustc_tokens_vec.push({
+						kind: 'raw_text',
+						len: str0.length,
+					});
+				}
 			}
+			rustc_tokens_vec.push({
+				kind: 'block_comment_parsed',
+				len: cur[0].length,
+			});
 		}
 		console.log(rustc_tokens_vec);
 	})
