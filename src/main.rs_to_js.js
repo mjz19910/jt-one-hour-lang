@@ -388,9 +388,15 @@ x: {
 			let sp=/[ ]+/;
 			let tok_arr=[];
 			let cur;
-			while(is_val_char.exec(str)){
+			let ci=0;
+			while(cc=is_val_char.exec(str)){
+				is_val_char.lastIndex=cc.index;
+				if(cc===null||ci++>8){
+					break;
+				}
 				if(cur=rx.exec(str)){
 					tok_arr.push({kind:'Ident',len:cur[0].length});
+					continue;
 				}
 				if(cur=sp.exec(str)){
 					tok_arr.push({kind:'Whitespace',len:sp.exec(str)?.[0]?.length});
