@@ -397,6 +397,10 @@ x: {
 			}
 			let fn_cache=new Map;
 			while(true){
+				if(mat_idx>is_val_char.lastIndex){
+					console.log(is_val_char.lastIndex,mat_idx,cc);
+					debugger;
+				}
 				is_val_char.lastIndex=mat_idx;
 				cc=is_val_char.exec(str);
 				if(ci++>8192){
@@ -465,8 +469,15 @@ x: {
 					break;
 				}
 			}
-			sp.lastIndex=rx.lastIndex;
-			console.log(tok_arr,val_acc);
+			let iter_index=0;
+			let str_iter_index=0;
+			let str_arr=[];
+			for(;iter_index<tok_arr.length;iter_index++){
+				let cur_tok=tok_arr[iter_index];
+				str_arr.push(str.slice(str_iter_index,str_iter_index+cur_tok.len));
+				str_iter_index+=cur_tok.len;
+			}
+			console.log(str_arr,val_acc);
 		}
 	})}
 	
