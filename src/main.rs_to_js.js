@@ -1,7 +1,10 @@
 x: {
 	let rr = function(mm, ...rest) {
-		if (rest.length > 0)
-			console.log('format_inner!!?', rest);
+		for(let x of rest){
+			if(x.name==='STATIC_init'){
+				x();
+			}
+		}
 		return mm.raw.join('');
 	};
 	let rust_code = rr`
@@ -336,6 +339,45 @@ x: {
 	//! [\`rustc_parse::lexer\`]: ../rustc_parse/lexer/index.html
 	// We want to be able to build this crate with a stable compiler, so no
 	// \`#![feature]\` attributes should be added.
+
+	${(function STATIC_init(){
+		__rust={};
+		class RefGenerator{
+			constructor(from){
+				console.log(from);
+				this.rust_type=null;
+				this.host_backing_value=null;
+				if(from) {
+					this.rust_type=from.rust_type;
+				}
+			}
+			clone(){
+				return new RefGenerator(this);
+			}
+			ffi_use_this(type,_this){
+				if(this.is_mut_borrow){
+					throw Error('can\' borrow');
+				}
+				this.rust_type(type);
+				this.ffi_set_backing_value(_this);
+			}
+			ffi_set_backing_value(value){
+				if(this.is_mut_borrow){
+					throw Error('can\' borrow');
+				}
+				this.host_backing_value=value;
+			}
+			no_mut(){
+				this.is_mut_borrow=true;
+			}
+		};
+		__rust.ref_generator=new RefGenerator;
+		__rust_priv={};
+		__rust_priv.ref_generator.no_mut();
+		__rust.get_ref_generator=function(){
+			return __rust_priv.ref_generator;
+		};
+	})}
 	
 	mod cursor;
 	pub mod unescape;
@@ -1107,12 +1149,27 @@ x: {
 			}
 			self.eat_decimal_digits()
 		}
+
+		${(function(){
+
+		})}
 	
 		// Eats the suffix of the literal, e.g. "_u8".
 		fn eat_literal_suffix(&mut self) {
 			self.eat_identifier();
 		}
 	
+		${(function eat_identifier(){
+			let self=__rust.get_ref_generator().clone().ffi_use_this('&mut',this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			/*if !is_id_start(self.first()) {
+				return;
+			}*/
+			self.bump();
+
+			self.eat_while(is_id_continue);
+		})}
 		// Eats the identifier.
 		fn eat_identifier(&mut self) {
 			if !is_id_start(self.first()) {
@@ -1122,6 +1179,21 @@ x: {
 	
 			self.eat_while(is_id_continue);
 		}
+
+		${(function eat_while(predicate_arg){
+			let self=__rust.get_ref_generator().clone();
+			self.ref_type('&mut');
+			self.ref.value_type('Self');
+			self.ref.ffi_set_backing_value(this);
+			let predicate=__rust.get_fn_generator().clone();
+			predicate.value_type('mut');
+			predicate.value.value_type('impl FnMut(char) -> bool');
+			predicate.ffi_set_backing_value(predicate_arg);
+			predicate.value.throw_if_type_error();
+			while (predicate(self.first()) && !self.is_eof()) {
+				self.bump();
+			}
+		})}
 	
 		/// Eats symbols while predicate returns true or until the end of file is reached.
 		fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
@@ -1161,14 +1233,16 @@ x: {
 				this.results.push(res);
 			}
 			if (fail_count > 0) {
-				throw Error('Test failures:' + fail_count);
+				console.log('Test failures:' + fail_count);
+				console.log(...this.results);
 			}
 		}
 	};
 	test.addTest(function() {
 		let regex = /(\/\*|\*\/)(?:(?:!\/\*|\*\/).)*/g;
 		let input = '/* /* */ */ /* /* */ */';
-		let rustc_tokens_vec = [];
+		let rust_rustc_tokens_vec = [];
+		let tok_arr=[];
 		let blk_com_dep = 0;
 		let in_comment = false;
 		let str_loc = 0;
@@ -1179,7 +1253,7 @@ x: {
 					in_comment = true;
 				}
 				blk_com_dep++;
-			} else if (mat[0] === '*/') {
+			}else if (mat[0] === '*/') {
 				blk_com_dep--;
 				if (blk_com_dep === 0) {
 					in_comment = false;
@@ -1188,32 +1262,54 @@ x: {
 			res.push(input.slice(acc, mat.index));
 			let di = mat.index - acc;
 			res.push(acc + mat[0].length + di);
-			return res.values();
+			let iter={
+				cur:0,
+				next(){
+					if(this.cur<res.length){
+						return {
+							value:res[this.cur++],
+							done:false,
+						}
+					}else{
+						return {
+							value:void 0,
+							done:true,
+						}
+					}
+				}
+			}
+			return iter;
 		}
 		let cur;
+		let in_comment_prev=false;
 		for (; cur = regex.exec(input);) {
 			let iter = accept_result(cur, str_loc);
 			let str0 = iter.next().value;
 			str_loc = iter.next().value;
 			if (str0 !== '') {
-				if (in_comment) {
-					rustc_tokens_vec.push({
+				tok_arr.push(str0);
+				if (in_comment_prev) {
+					rust_rustc_tokens_vec.push({
 						kind: 'block_comment_content',
 						len: str0.length,
 					});
 				} else {
-					rustc_tokens_vec.push({
+					rust_rustc_tokens_vec.push({
 						kind: 'raw_text',
 						len: str0.length,
 					});
 				}
 			}
-			rustc_tokens_vec.push({
+			in_comment_prev=in_comment;
+			tok_arr.push(cur[0]);
+			rust_rustc_tokens_vec.push({
 				kind: 'block_comment_parsed',
 				len: cur[0].length,
 			});
+			console.log(blk_com_dep);
 		}
-		console.log(rustc_tokens_vec);
+		console.log(tok_arr);
+		console.log(...rust_rustc_tokens_vec.slice(0,2),rust_rustc_tokens_vec[7]);
 	})
 	let cidx = 0;
 	let mt = rust_match_rx.exec(rust_code);
@@ -1221,4 +1317,5 @@ x: {
 	cidx = mt.index + mt[0].length;
 	test.runAll();
 	test;
+	//# sourceURL=https://github.com/mjz19910/jt-one-hour-lang/blob/master/src/main.rs_to_js.js
 }
