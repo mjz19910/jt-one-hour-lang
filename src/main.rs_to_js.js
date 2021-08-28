@@ -401,9 +401,6 @@ x: {
 				cc=is_val_char.exec(str);
 				console.log(is_val_char.lastIndex,cc);
 				console.log(str[mat_idx]);
-				if(mat_idx===9){
-					debugger;
-				}
 				if(ci++>8192){
 					break;
 				}
