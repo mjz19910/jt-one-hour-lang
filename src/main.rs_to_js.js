@@ -382,11 +382,18 @@ x: {
 		__rust.get_ref_generator=function(){
 			return __rust_priv.ref_generator;
 		};
+		__rust.exec_line=function(str){
+			console.log(str);
+		}
 	})}
 	
 	mod cursor;
 	pub mod unescape;
 	
+	${(function S_Crate_init(){
+		__rust.exec_line('mod cursor;');
+	})}
+
 	#[cfg(test)]
 	mod tests;
 	
@@ -1311,10 +1318,8 @@ x: {
 				kind: 'block_comment_parsed',
 				len: cur[0].length,
 			});
-			console.log(blk_com_dep);
 		}
-		console.log(tok_arr);
-		console.log(...rust_rustc_tokens_vec.slice(0,2),rust_rustc_tokens_vec[7]);
+		console.log(tok_arr,...rust_rustc_tokens_vec.slice(0,2),rust_rustc_tokens_vec[7]);
 	})
 	let cidx = 0;
 	let mt = rust_match_rx.exec(rust_code);
