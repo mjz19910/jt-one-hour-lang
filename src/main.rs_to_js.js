@@ -417,8 +417,8 @@ x: {
 					val_acc.length=0;
 				}
 				function dm(mat, kind){
-					let want_vars=[val_acc,g,bump,tok_arr];
-					let want_vars_str='val_acc,g,bump,tok_arr';
+					let want_vars=[mat,kind,val_acc,g,bump,tok_arr];
+					let want_vars_str='mat,kind,val_acc,g,bump,tok_arr';
 					let fb=`
 					for(let init=true;;){
 						if(!init){
@@ -438,14 +438,14 @@ x: {
 					}
 					return 'break';`;
 					let func;
-					let fn_key='0,function('+'mat,kind'+','+want_vars_str+'){'+fb+'}'+'("'+mat+'","'+kind+'")';
+					let fn_key='function func('+want_vars_str+'){'+fb+'}';
 					if(fn_cache.has(fn_key)){
 						func=fn_cache.get(fn_key);
 					}else{
-						func=new Function('mat,kind'+','+want_vars_str,fb);
-						fn_cache.set('('+'mat,kind'+','+want_vars_str+'){'+fb+'}',func);
+						func=new Function(want_vars_str,fb);
+						fn_cache.set('('+want_vars_str+'){'+fb+'}',func);
 					}
-					return func(mat,kind,...want_vars);
+					return func(...want_vars);
 				}
 				let loop_res
 				loop_res=dm('ws','Whitespace');
@@ -474,9 +474,38 @@ x: {
 			let str_arr=[];
 			for(;iter_index<tok_arr.length;iter_index++){
 				let cur_tok=tok_arr[iter_index];
+				if(cur_tok.kind==='_char'){
+					let ed=str_iter_index+cur_tok.len;
+					while(str_iter_index<ed){
+						str_arr.push(str[str_iter_index]);
+						str_iter_index++;
+					}
+					continue;
+				}
 				str_arr.push(str.slice(str_iter_index,str_iter_index+cur_tok.len));
 				str_iter_index+=cur_tok.len;
 			}
+			let s2_arr=[];
+			for(let i=0;i<str_arr.length;i++){
+				s2_arr.push(str_arr[i]);
+				function pr(){
+					return s2_arr?.[s2_arr.length-2];
+				}
+				function c(){
+					return s2_arr?.[s2_arr.length-1];
+				}
+				if(pr()===':'&&c()===':'){
+					s2_arr.pop();
+					s2_arr.pop();
+					s2_arr.push('::');
+				}
+				if(pr()==='#'&&c()==='[]'[0]){
+					s2_arr.pop();
+					s2_arr.pop();
+					s2_arr.push('#'+'[]'[0]);
+				}
+			}
+			str_arr=s2_arr;
 			console.log(str_arr,val_acc);
 		}
 	})}
@@ -501,6 +530,13 @@ x: {
 	use self::TokenKind::*;
 	use crate::cursor::{Cursor, EOF_CHAR};
 	use std::convert::TryFrom;
+
+	${(function S_Crate_init(){
+		__rust.exec_line('use self::LiteralKind::*;');
+		__rust.exec_line('use self::TokenKind::*;');
+		__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};');
+		__rust.exec_line('use std::convert::TryFrom;');
+	})}
 	
 	/// Parsed token.
 	/// It doesn't contain information about data that has been parsed,
