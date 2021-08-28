@@ -382,28 +382,96 @@ x: {
 		__rust.get_ref_generator=function(){
 			return __rust_priv.ref_generator;
 		};
+		let rust_chars=[";",",",".","(",")","{","}","[","]","@","#","~","?",":","$","=","!","<",">","-","&","|","+","*","/","^","%"]
 		__rust.exec_line=function(str){
-			let is_val_char=/[a-zA-Z_]|[ ]/;
-			let rx=/^[a-zA-Z_]+/;
-			let sp=/[ ]+/;
+			let is_val_char=/(?<i_s>[a-zA-Z_])|(?<ws>[ ])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>-&\|\+\*\/\^%])/g;
+			let rx=/^[a-zA-Z_]/;
+			let sp=/^[ ]/;
+			let val_acc=[];
 			let tok_arr=[];
 			let cur;
 			let ci=0;
-			while(cc=is_val_char.exec(str)){
-				is_val_char.lastIndex=cc.index;
-				if(cc===null||ci++>8){
+			let mat_idx=0;
+			function bump(){
+				mat_idx++;
+			}
+			let fn_cache=new Map;
+			while(true){
+				is_val_char.lastIndex=mat_idx;
+				cc=is_val_char.exec(str);
+				console.log(is_val_char.lastIndex,cc);
+				console.log(str[mat_idx]);
+				if(mat_idx===9){
+					debugger;
+				}
+				if(ci++>8192){
 					break;
 				}
-				if(cur=rx.exec(str)){
-					tok_arr.push({kind:'Ident',len:cur[0].length});
+				let g=cc?.groups;
+				if((val_acc[0]?.[0]==='i_s'||val_acc.length==0)&&cc&&g.i_s){
+					val_acc.push(['i_s',g.i_s]);
+					bump();
 					continue;
 				}
-				if(cur=sp.exec(str)){
-					tok_arr.push({kind:'Whitespace',len:sp.exec(str)?.[0]?.length});
+				if(val_acc[0][0]==='i_s'){
+					tok_arr.push({kind:'Ident',len:val_acc.length});
+					val_acc.length=0;
+				}
+				function dm(mat, kind){
+					let want_vars=[val_acc,g,bump,tok_arr];
+					let want_vars_str='val_acc,g,bump,tok_arr';
+					let fb=`
+					for(let init=true;;){
+						if(!init){
+							return 'continue';
+						}
+						init=false;
+						if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
+							val_acc.push([mat,g[mat]]);
+							bump();
+							continue;
+						}
+						if(val_acc[0]?.[0]===mat){
+							tok_arr.push({kind:kind,len:val_acc.length});
+							val_acc.length=0;
+						}
+						return 'leave_scope';
+					}
+					return 'break';`;
+					let func;
+					let fn_key='0,function('+'mat,kind'+','+want_vars_str+'){'+fb+'}'+'("'+mat+'","'+kind+'")';
+					if(fn_cache.has(fn_key)){
+						func=fn_cache.get(fn_key);
+					}else{
+						func=new Function('mat,kind'+','+want_vars_str,fb);
+						fn_cache.set('('+'mat,kind'+','+want_vars_str+'){'+fb+'}',func);
+					}
+					return func(mat,kind,...want_vars);
+				}
+				let loop_res
+				loop_res=dm('ws','Whitespace');
+				if(loop_res==='break'){
+					break;
+				}
+				if(loop_res==='continue'){
+					continue;
+				}
+				if(loop_res==='leave_scope'){
+					'leave_scope';
+				}
+				loop_res=dm('char','_char');
+				if(loop_res==='break'){
+					break;
+				}
+				if(loop_res==='continue'){
+					continue;
+				}
+				if(cc===null){
+					break;
 				}
 			}
 			sp.lastIndex=rx.lastIndex;
-			console.log(tok_arr);
+			console.log(tok_arr,val_acc);
 		}
 	})}
 	
