@@ -398,7 +398,7 @@ x: {
 			let fn_cache=new Map;
 			while(true){
 				if(mat_idx>is_val_char.lastIndex){
-					console.log(is_val_char.lastIndex,mat_idx,cc);
+					console.log(is_val_char.lastIndex,mat_idx,cc,str.slice(mat_idx,cc.index));
 					debugger;
 				}
 				is_val_char.lastIndex=mat_idx;
@@ -412,7 +412,7 @@ x: {
 					bump();
 					continue;
 				}
-				if(val_acc[0][0]==='i_s'){
+				if(val_acc[0]?.[0]==='i_s'){
 					tok_arr.push({kind:'Ident',len:val_acc.length});
 					val_acc.length=0;
 				}
@@ -486,10 +486,16 @@ x: {
 	
 	${(function S_Crate_init(){
 		__rust.exec_line('mod cursor;');
+		__rust.exec_line('pub mod unescape;');
 	})}
 
 	#[cfg(test)]
 	mod tests;
+
+	${(function S_Crate_init(){
+		__rust.exec_line('#[cfg(test)]');
+		__rust.exec_line('mod tests;');
+	})}
 	
 	use self::LiteralKind::*;
 	use self::TokenKind::*;
