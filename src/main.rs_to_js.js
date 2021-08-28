@@ -1319,8 +1319,8 @@ x: {
 				len: cur[0].length,
 			});
 		}
-		console.log(tok_arr,...rust_rustc_tokens_vec.slice(0,2),rust_rustc_tokens_vec[7]);
-	})
+		console.log(tok_arr.join(),...rust_rustc_tokens_vec.slice(0,2),rust_rustc_tokens_vec[7]);
+	});
 	let cidx = 0;
 	let mt = rust_match_rx.exec(rust_code);
 	rust_code.slice(cidx, mt.index);
