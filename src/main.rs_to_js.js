@@ -349,7 +349,9 @@ x: {
 		__rust={};
 		class RefGenerator{
 			constructor(from){
-				console.log(from);
+				if(from){
+					console.log(from);
+				}
 				this.rust_type=null;
 				this.host_backing_value=null;
 				if(from) {
