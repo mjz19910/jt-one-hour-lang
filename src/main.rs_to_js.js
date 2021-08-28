@@ -383,7 +383,21 @@ x: {
 			return __rust_priv.ref_generator;
 		};
 		__rust.exec_line=function(str){
-			console.log(str);
+			let is_val_char=/[a-zA-Z_]|[ ]/;
+			let rx=/^[a-zA-Z_]+/;
+			let sp=/[ ]+/;
+			let tok_arr=[];
+			let cur;
+			while(is_val_char.exec(str)){
+				if(cur=rx.exec(str)){
+					tok_arr.push({kind:'Ident',len:cur[0].length});
+				}
+				if(cur=sp.exec(str)){
+					tok_arr.push({kind:'Whitespace',len:sp.exec(str)?.[0]?.length});
+				}
+			}
+			sp.lastIndex=rx.lastIndex;
+			console.log(tok_arr);
 		}
 	})}
 	
