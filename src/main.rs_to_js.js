@@ -3,6 +3,11 @@ x: {
 		for(let x of rest){
 			if(x.name==='STATIC_init'){
 				x();
+				continue;
+			}
+			if(x.name==='S_Crate_init'){
+				x();
+				continue;
 			}
 		}
 		return mm.raw.join('');
@@ -371,8 +376,8 @@ x: {
 				this.is_mut_borrow=true;
 			}
 		};
-		__rust.ref_generator=new RefGenerator;
 		__rust_priv={};
+		__rust_priv.ref_generator=new RefGenerator;
 		__rust_priv.ref_generator.no_mut();
 		__rust.get_ref_generator=function(){
 			return __rust_priv.ref_generator;
