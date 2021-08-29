@@ -254,6 +254,7 @@ x: {
 			let ret={};
 			__rust.block_vec_stack.push([block_id,__rust.block_vec]);
 			__rust.block_vec=[];
+			debugger;
 			block_id=0;
 			__rust_priv.stack.push({});
 			return ret;
