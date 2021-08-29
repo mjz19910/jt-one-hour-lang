@@ -1706,6 +1706,37 @@ x: {
 			}
 		}
 	
+		${function eat_hexadecimal_digits() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let has_digits = false;
+			for(;;) {
+				__rust.do_match(
+					self.first(),
+					["'_'","'0'-'9'","_"],
+					[
+						()=>{
+							self.bump();
+						},
+						()=>{
+							has_digits=true;
+							self.bump();
+						},
+						()=>{
+							__rust.set_break_flag(true);
+							//break;
+						}
+					],
+				);
+				if(__rust.break_flag()){
+					break;
+				}
+			}
+			return has_digits;
+		}}
 		fn eat_decimal_digits(&mut self) -> bool {
 			let mut has_digits = false;
 			loop {
