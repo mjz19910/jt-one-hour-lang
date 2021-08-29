@@ -353,7 +353,7 @@ x: {
 			}
 			let __id = rust_exec_enum.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`enum Command {
+			__rust.exec_lines(rr`enum Command {
 				SetVar(String,Value),
 				GetVar(String),
 				PushVar(String),
@@ -370,7 +370,7 @@ x: {
 			}
 			let __id = rust_exec_enum.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
+			__rust.exec_lines(rr`#[derive(Clone, PartialEq, Debug)]
 			enum Value {
 				Nothing,
 				Int(i64),
@@ -385,7 +385,7 @@ x: {
 			}
 			let __id = rust_exec_enum.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
+			__rust.exec_lines(rr`#[derive(Clone, PartialEq, Debug)]
 			enum Value {
 				Nothing,
 				Int(i64),
@@ -400,7 +400,7 @@ x: {
 			}
 			let __id = rust_exec_enum.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[derive(Debug)]
+			__rust.exec_lines(rr`#[derive(Debug)]
 			enum EngineError {
 				MismatchNumParams,
 				MismatchType,
@@ -417,7 +417,7 @@ x: {
 			}
 			let __id = rust_exec_struct.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`struct Evaluator {
+			__rust.exec_lines(rr`struct Evaluator {
 				vars:HashMap<String, Value>,
 				stack:Vec<Value>,
 			}`, __id);
@@ -430,7 +430,7 @@ x: {
 			}
 			let __id = rust_exec_impl.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`impl Evaluator {
+			__rust.exec_lines(rr`impl Evaluator {
 				fn new() -> Evaluator {
 					Self {
 						vars:HashMap::new(),
@@ -494,7 +494,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
+			__rust.exec_lines(rr`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 				Ok(var_name.into())
 			}`, __id);
 		}}
@@ -506,7 +506,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
+			__rust.exec_lines(rr`fn parse_string(val: &str) -> Result<Value, EngineError>{
 				if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
 					let inner = val[1..(val.len() - 1)].to_string();
 			
@@ -524,7 +524,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
+			__rust.exec_lines(rr`fn parse_int(val: &str) -> Result<Value, EngineError>{
 				let result = val.parse::<i64>();
 			
 				match result {
@@ -541,7 +541,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
+			__rust.exec_lines(rr`fn parse_value(val: &str) -> Result<Value, EngineError>{
 				if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
 					// Parse the string
 					parse_string(val)
@@ -559,7 +559,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
+			__rust.exec_lines(rr`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 3 {
 					return Err(EngineError::MismatchNumParams);
 				}
@@ -578,7 +578,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
+			__rust.exec_lines(rr`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 2 {
 					return Err(EngineError::MismatchNumParams);
 				}
@@ -596,7 +596,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
+			__rust.exec_lines(rr`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 2 {
 				return Err(EngineError::MismatchNumParams);
 			}
@@ -614,7 +614,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
+			__rust.exec_lines(rr`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 2 {
 					return Err(EngineError::MismatchNumParams);
 				}
@@ -632,7 +632,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
+			__rust.exec_lines(rr`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 				// set a 100
 				// get a
 			
@@ -676,7 +676,7 @@ x: {
 			}
 			let __id = rust_exec_struct.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`struct Typechecker {
+			__rust.exec_lines(rr`struct Typechecker {
 				stack: Vec<Type>,
 			}`, __id);
 		}}
@@ -688,7 +688,7 @@ x: {
 			}
 			let __id = rust_exec_impl.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`impl Typechecker {
+			__rust.exec_lines(rr`impl Typechecker {
 				fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
 					Ok(Type::Nothing)
 				}
@@ -709,7 +709,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[test]
+			__rust.exec_lines(rr`#[test]
 			fn test1() -> Result<(), EngineError> {
 				let commands=vec![
 					Command::SetVar("a".into(), Value::Int(100)),
@@ -733,7 +733,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[test]
+			__rust.exec_lines(rr`#[test]
 			fn eval_set_get() -> Result<(), EngineError> {
 				let input = "set x 30\nget x";
 			
@@ -755,7 +755,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[test]
+			__rust.exec_lines(rr`#[test]
 			fn eval_set_get_string() -> Result<(), EngineError> {
 				let input = "set x \"hello\"\nget x";
 			
@@ -777,7 +777,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[test]
+			__rust.exec_lines(rr`#[test]
 			fn eval_stack() -> Result<(), EngineError> {
 				let input = "push 100\npush 30\nadd\npop";
 			
@@ -799,7 +799,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`#[test]
+			__rust.exec_lines(rr`#[test]
 		fn eval_pushvar() -> Result<(), EngineError> {
 			let input = "set x 33\npushvar x\npush 100\nadd\npop";
 		
@@ -821,7 +821,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
+			__rust.exec_lines(rr`fn main() -> Result<(), EngineError> {
 				for arg in std::env::args().skip(1) {
 					let contents = std::fs::read_to_string(arg).unwrap();
 					let mut engine = Evaluator::new();
@@ -1307,7 +1307,7 @@ x: {
 			}
 			let __id = rust_exec_fn.block_id;
 			__rust.set_current_block(__id);
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			/// The passed string is lexically an identifier.
 			pub fn is_ident(string: &str) -> bool {
 				let mut chars = string.chars();
