@@ -19,6 +19,7 @@ x: {
 	let __rust;
 	rust_static_init();
 	let rr = function(mm, ...rest) {
+		let res=[];
 		ts += performance.now() - ts;
 		let parse_pass = 0;
 		let scope = null;
@@ -26,10 +27,14 @@ x: {
 		if (!in_parse) {
 			in_parse = true;
 		}
+		let iter_index=0;
+		res.push(mm.raw[iter_index++]);
 		for (let cur of rest) {
 			console.log(cur.name);
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
+				res.push(cur);
 				cur(parse_pass);
+				res.push(mm.raw[iter_index++]);
 			}
 		}
 		console.log('p0 done', performance.now() - ts);
