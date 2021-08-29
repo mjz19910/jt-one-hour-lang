@@ -1413,7 +1413,7 @@ x: {
 			Token::new(token_kind, self.len_consumed())
 		}
 	
-		${function raw_double_quoted_string() {
+		${function line_comment() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1447,7 +1447,7 @@ x: {
 			LineComment { doc_style }
 		}
 	
-		${function raw_double_quoted_string() {
+		${function block_comment() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1502,7 +1502,7 @@ x: {
 			BlockComment { doc_style, terminated: depth == 0 }
 		}
 	
-		${function raw_double_quoted_string() {
+		${function whitespace() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1526,7 +1526,7 @@ x: {
 			Whitespace
 		}
 	
-		${function raw_double_quoted_string() {
+		${function raw_ident() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1553,7 +1553,7 @@ x: {
 			RawIdent
 		}
 	
-		${function raw_double_quoted_string() {
+		${function ident() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1578,7 +1578,7 @@ x: {
 			Ident
 		}
 	
-		${function raw_double_quoted_string() {
+		${function number() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1665,7 +1665,7 @@ x: {
 			}
 		}
 	
-		${function raw_double_quoted_string() {
+		${function lifetime_or_char() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1729,7 +1729,7 @@ x: {
 			}
 		}
 	
-		${function raw_double_quoted_string() {
+		${function single_quoted_string() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1788,7 +1788,7 @@ x: {
 			false
 		}
 	
-		${function raw_double_quoted_string() {
+		${function double_quoted_string() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
@@ -1865,13 +1865,13 @@ x: {
 
 			let code_generator=__rust.get_code_generator().clone();
 
-			let has_digits = false;
 			code_generator.set_scope({
-				get has_digits(){return {type:'value',value:has_digits}},
-				set has_digits(v){has_digits=v.value},
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(`
+			raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>)
+			`);
 			code_generator.set_body(`
 			debug_assert!(self.prev() == 'r');
 			let start_pos = self.len_consumed();
@@ -1935,8 +1935,9 @@ x: {
 					max_hashes = n_end_hashes;
 				}
 			}`);
-			code_generator.build().run();
-			return has_digits;
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
 		}}
 		fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
 			debug_assert!(self.prev() == 'r');
