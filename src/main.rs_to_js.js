@@ -314,7 +314,7 @@ x: {
 						for (let x = 0; x < 2; x++) {
 							ret.pop();
 						}
-						ret.push('#!' + '[]'[0]);
+						ret.push('#!');
 					}
 				}
 				return ret;
