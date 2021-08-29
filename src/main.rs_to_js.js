@@ -1,13 +1,18 @@
 x: {
 	let rust_exec_code_funcs = [
 		'STATIC_init', 'S_Crate_init',
-		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum']
+		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum','rust_eval_fn']
+	];
+	let rust_autoexec_funcs=[
+		'STATIC_init', 'S_Crate_init',
+		'rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum',
+		'rust_eval_fn'
 	];
 	let my_rust_sym = Symbol();
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
 		for (let i = 0, cur; i < rest.length; (cur = rest[i]), i++) {
-			if (typeof cur === 'function') {
+			if (typeof cur === 'function'&&rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
 		}
@@ -242,10 +247,9 @@ x: {
 	}
 	let rust_code = rr`
 
-	${(function STATIC_init() { rust_static_init(); })}
-
-	use std::collections::HashMap;
-	${(function S_Crate_init(parse_pass) {
+		${(function STATIC_init() { rust_static_init(); })}
+		
+		${(function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				S_Crate_init.block_id = block_id;
@@ -254,7 +258,7 @@ x: {
 			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
 		})}
 
-	${function rust_eval_enum(parse_pass) {
+		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_enum.block_id = block_id;
@@ -270,7 +274,7 @@ x: {
 			}`, rust_eval_enum.block_id);
 		}}
 	
-	${function rust_eval_enum(parse_pass) {
+		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_enum.block_id = block_id;
@@ -284,7 +288,7 @@ x: {
 			}`, rust_eval_enum.block_id);
 		}}
 	
-	${function rust_eval_enum(parse_pass) {
+		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_enum.block_id = block_id;
@@ -298,7 +302,7 @@ x: {
 		}`, rust_eval_enum.block_id);
 		}}
 	
-	${function rust_eval_enum(parse_pass) {
+		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_enum.block_id = block_id;
@@ -314,7 +318,7 @@ x: {
 		}`, rust_eval_enum.block_id);
 		}}
 	
-	${function rust_eval_struct(parse_pass) {
+		${function rust_eval_struct(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_struct.block_id = block_id;
@@ -326,7 +330,7 @@ x: {
 		}`, rust_eval_struct.block_id);
 		}}
 
-	${function rust_eval_impl(parse_pass) {
+		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_impl.block_id = block_id;
@@ -389,7 +393,7 @@ x: {
 		}`, rust_eval_impl.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -400,7 +404,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -417,7 +421,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -433,7 +437,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -450,7 +454,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -468,7 +472,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -755,8 +759,8 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line('mod cursor;', S_Crate_init.block_id);
-			__rust.exec_line('pub mod unescape;', S_Crate_init.block_id);
+			__rust.exec_lines('mod cursor;', S_Crate_init.block_id);
+			__rust.exec_lines('pub mod unescape;', S_Crate_init.block_id);
 		}}
 	
 
@@ -766,8 +770,8 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line('#[cfg(test)]', S_Crate_init.block_id);
-			__rust.exec_line('mod tests;', S_Crate_init.block_id);
+			__rust.exec_lines('#[cfg(test)]', S_Crate_init.block_id);
+			__rust.exec_lines('mod tests;', S_Crate_init.block_id);
 		}}
 
 		${function S_Crate_init(parse_pass) {
@@ -776,7 +780,7 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line(`
+			__rust.exec_lines(`
 			use self::LiteralKind::*;
 			use self::TokenKind::*;
 			use crate::cursor::{Cursor, EOF_CHAR};
@@ -790,7 +794,7 @@ x: {
 				rust_eval_struct.block_id = block_id;
 				return;
 			}
-			__rust.exec_line(`/// Parsed token.
+			__rust.exec_lines(`/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
 			/// only the type of the token and its size.
 			#[derive(Debug)]
@@ -810,7 +814,7 @@ x: {
 				rust_eval_impl.block_id = block_id;
 				return;
 			}
-			__rust.exec_line(`
+			__rust.exec_lines(`
 			impl Token {
 				fn new(kind: TokenKind, len: usize) -> Token {
 					Token { kind, len }
@@ -1587,6 +1591,7 @@ x: {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
+			self=self.bake();
 			/*if !is_id_start(self.first()) {
 				return;
 			}*/
