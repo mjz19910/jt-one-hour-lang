@@ -437,6 +437,9 @@ x: {
 						tt_arr.push(tt_tmp);
 						continue;
 					}
+					if(cur.trim().length===0){
+						continue;
+					}
 					tt_arr.push(cur);
 				}
 				return tt_arr;
