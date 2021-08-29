@@ -203,7 +203,7 @@ x: {
 						continue;
 					};
 					let g = cc?.groups;
-					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
+					if (g.i_s) {
 						let vaa=[];
 						vaa.push(cc[0]);
 						bump();
@@ -217,20 +217,12 @@ x: {
 								break;
 							}
 						}
+						console.log(vaa);
 						tok_arr.push({
 							kind: 'Ident',
 							len: vaa.length,
 							parent_index:arr_iter-1,
 						});
-						continue;
-					}
-					if (val_acc[0]?.[0] === 'i_s') {
-						tok_arr.push({
-							kind: 'Ident',
-							len: val_acc.length,
-							parent_index:arr_iter-1,
-						});
-						val_acc.length = 0;
 					}
 					let mat = 'ws';
 					let kind = 'Whitespace';
