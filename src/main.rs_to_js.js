@@ -7,6 +7,9 @@ x: {
 			'rust_exec_any',
 			'rust_doc_comment',
 		],
+		[
+			'create_impl',
+		]
 	];
 	let rust_autoexec_funcs = [
 		...rust_exec_code_funcs.flat(),
@@ -38,6 +41,19 @@ x: {
 				};
 				res.push(block_inner[cur.block_id]);
 				res.push(mm.raw[iter_index++]);
+			}
+		}
+		parse_pass++;
+		for (i of rust_exec_code_funcs) {
+			for (let cur of rest) {
+				if (i instanceof Array && i.includes(cur.name)) {
+					cur(parse_pass, block_inner[cur.block_id]);
+					continue;
+				}
+				if (cur.name === i) {
+					cur(parse_pass, block_inner[cur.block_id]);
+					continue;
+				}
 			}
 		}
 		parse_pass++;
@@ -949,7 +965,9 @@ x: {
 			scope_push.block_id=block_id++;
 		}
 		let __id = scope_push.block_id;
-		__rust.exec_lines(rust_code, __id);
+		if(parse_pass===1){
+			__rust.exec_lines(rust_code, __id);
+		}
 	}}`;
 	// filter out stuff we didn't use exec_lines while executing the template...
 	__rust.scope.block_vec=__rust.scope.block_vec.filter(e=>e.value.length>0);
