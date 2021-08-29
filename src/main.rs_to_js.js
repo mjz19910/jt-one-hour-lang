@@ -739,7 +739,9 @@ x: {
 	// We want to be able to build this crate with a stable compiler, so no
 	// \`#![feature]\` attributes should be added.
 
-		${(function STATIC_init() { rust_static_init(); })}
+		${(function STATIC_init() {
+			rust_static_init();
+		})}
 	
 		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
