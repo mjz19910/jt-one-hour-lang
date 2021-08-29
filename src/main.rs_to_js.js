@@ -369,6 +369,7 @@ x: {
 
 	test_0();
 	function test_0() {
+		let __id=block_id++;
 		__rust.exec_lines(`#[derive(Debug)]
 		enum Command {
 			SetVar(String, Value),
@@ -377,11 +378,15 @@ x: {
 			Push(Value),
 			Pop,
 			Add,
-		}`, 0);
+		}`, __id);
 	}
 	let rust_code = rr`
-	${function parse_exec_init(){
-		__rust.exec_lines(`#![allow(dead_code)]`, 1);
+	${function parse_exec_init(parse_pass){
+		if(parse_pass===0){
+			parse_exec_init.block_id = block_id++;
+		}
+		let __id=parse_exec_init.block_id;
+		__rust.exec_lines(`#![allow(dead_code)]`, __id);
 	}}
 	#![allow(dead_code)]
 
