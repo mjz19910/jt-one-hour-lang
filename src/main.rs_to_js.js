@@ -202,10 +202,12 @@ x: {
 					break;
 				}
 			}
-			console.log('ps2',get_log_time());
+			console.log('parse end 1',get_log_time());
 			let iter_index = 0;
 			let str_iter_index = 0;
 			let str_arr = [];
+			get_log_time();
+			console.log('parse start 2');
 			for (; iter_index < tok_arr.length; iter_index++) {
 				let cur_tok = tok_arr[iter_index];
 				if (cur_tok.kind === '_char') {
@@ -219,7 +221,7 @@ x: {
 				str_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
-			console.log('ps3',get_log_time());
+			console.log('parse end 2',get_log_time());
 			let s2_arr = [];
 			function pr() {
 				return s2_arr?.[s2_arr.length - 2];
@@ -227,6 +229,8 @@ x: {
 			function c() {
 				return s2_arr?.[s2_arr.length - 1];
 			}
+			get_log_time();
+			console.log('parse start 3');
 			for (let i = 0; i < str_arr.length; i++) {
 				s2_arr.push(str_arr[i]);
 				if (pr() === ':' && c() === ':') {
@@ -240,6 +244,7 @@ x: {
 					s2_arr.push('#' + '[]'[0]);
 				}
 			}
+			console.log('parse end 3',get_log_time());
 			str_arr = s2_arr;
 			str_arr.push(Symbol.for('EOF'));
 			__rust.block_vec[block_id_of_str] ??= [];
@@ -247,8 +252,8 @@ x: {
 			for (let x of str_arr) {
 				block.push(x);
 			}
-			console.log('ps done',get_log_time());
 			__rust.last_exec = str_arr;
+			console.log('parse end',get_log_time());
 		}
 		__rust.log_lines = function(callback_function) {
 			let rs_lines = [[]];
