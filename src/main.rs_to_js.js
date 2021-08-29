@@ -169,7 +169,7 @@ x: {
 			function bump() {
 				mat_idx++;
 			}
-			tok_arr=parse_pass_0(str);
+			tok_arr = parse_pass_0(str);
 			function parse_pass_0(str) {
 				let tok_arr = [];
 				while (true) {
@@ -195,53 +195,53 @@ x: {
 					let g;
 					let mat;
 					let kind;
-					if(cc){
-						g=cc.groups;
+					if (cc) {
+						g = cc.groups;
 					}
 					mat = 'i_s';
 					kind = 'Ident';
-					if (g&&g[mat]){
-						do_mat(mat,kind);
+					if (g && g[mat]) {
+						do_mat(mat, kind);
 						continue;
 					}
 					mat = 'ws';
 					kind = 'Whitespace';
-					if (g&&g[mat]){
-						do_mat(mat,kind);
+					if (g && g[mat]) {
+						do_mat(mat, kind);
 						continue;
 					}
 					mat = 'char';
 					kind = '_char';
-					if (g&&g[mat]){
-						do_mat(mat,kind);
+					if (g && g[mat]) {
+						do_mat(mat, kind);
 						continue;
 					}
 					mat = 'line';
 					kind = '_line';
-					if (g&&g[mat]){
-						do_mat(mat,kind);
+					if (g && g[mat]) {
+						do_mat(mat, kind);
 						continue;
 					}
-					function do_mat(mat,kind){
-							let vaa = [];
-							while (true) {
-								is_val_char.lastIndex = mat_idx;
-								cc = is_val_char.exec(str);
-								if (cc === null) {
-									break;
-								}
-								if (cc.groups[mat]) {
-									vaa.push(cc[0]);
-									bump();
-								} else {
-									break;
-								}
-							}
-							tok_arr.push({
-								kind: kind,
-								len: vaa.length,
-							});
+					function do_mat(mat, kind) {
+						let vaa = [];
+						while (true) {
 							is_val_char.lastIndex = mat_idx;
+							cc = is_val_char.exec(str);
+							if (cc === null) {
+								break;
+							}
+							if (cc.groups[mat]) {
+								vaa.push(cc[0]);
+								bump();
+							} else {
+								break;
+							}
+						}
+						tok_arr.push({
+							kind: kind,
+							len: vaa.length,
+						});
+						is_val_char.lastIndex = mat_idx;
 					}
 					if (cc === null) {
 						break;
@@ -249,7 +249,7 @@ x: {
 				}
 				return tok_arr;
 			}
-			tok_arr=parse_pass_1(tok_arr);
+			tok_arr = parse_pass_1(tok_arr);
 			function parse_pass_1(arr) {
 				let iter_index = 0;
 				let str_iter_index = 0;
@@ -362,7 +362,7 @@ x: {
 	}
 
 	test_0();
-	function test_0(){
+	function test_0() {
 		__rust.exec_lines(`#[derive(Debug)]
 		enum Command {
 			SetVar(String, Value),
@@ -371,7 +371,7 @@ x: {
 			Push(Value),
 			Pop,
 			Add,
-		}`,0);
+		}`, 0);
 	}
 	let rust_code = rr`#![allow(dead_code)]
 
