@@ -191,6 +191,7 @@ x: {
 							len: 1,
 							parent_index:arr_iter-1,
 						});
+						debugger;
 						continue;
 					}
 					str=str_arr[arr_iter++];
