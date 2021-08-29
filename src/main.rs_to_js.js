@@ -259,6 +259,7 @@ x: {
 		}
 		__rust.drop=function(vv){
 			let last=__rust_priv.stack[__rust_priv.stack.length-1];
+			debugger;
 			if(last!==vv){
 				throw Error("failed to drop in order");
 			}
