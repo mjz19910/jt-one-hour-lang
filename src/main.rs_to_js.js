@@ -258,7 +258,6 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			console.log(S_Crate_init.block_id);
 			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
 		})}
 
