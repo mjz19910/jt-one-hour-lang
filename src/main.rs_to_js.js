@@ -15,6 +15,7 @@ x: {
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				console.log(performance.now()-ts);
+				console.log([cur]);
 				cur(parse_pass);
 			}
 		}
@@ -24,11 +25,13 @@ x: {
 			for (let cur of rest) {
 				if (i instanceof Array && i.includes(cur.name)) {
 					console.log(performance.now()-ts);
+					console.log([cur]);
 					cur(parse_pass);
 					continue;
 				}
 				if (cur.name === i) {
 					console.log(performance.now()-ts);
+					console.log([cur]);
 					cur(parse_pass);
 					continue;
 				}
