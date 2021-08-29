@@ -269,6 +269,7 @@ x: {
 			let last_vec_info=__rust.block_vec_stack.pop();
 			let last_id=__rust_block_vec_ref.push(__rust.block_vec);
 			__rust.block_vec=last_vec_info[1];
+			block_id=last_vec_info[0];
 			__rust.block_vec.push({ref:'block',ptr:last_id-1});
 			__rust_priv.stack.length--;
 		}
