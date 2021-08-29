@@ -155,6 +155,7 @@ x: {
 			let val_acc = [];
 			let tok_arr = [];
 			let cur;
+			let str;
 			let ci = 0;
 			let mat_idx = 0;
 			function back(n) {
@@ -170,6 +171,7 @@ x: {
 			if(str_arr instanceof Array){
 				str=str_arr[arr_iter++];
 			}
+			console.log(str);
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
 					str=str_arr[arr_iter++];
