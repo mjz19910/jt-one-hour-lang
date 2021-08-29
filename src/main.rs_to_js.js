@@ -1,6 +1,6 @@
 x: {
 	let rust_exec_code_funcs = [
-		'STATIC_init', 'S_Crate_init', 'parse_exec_init',
+		'scope_push','STATIC_init', 'S_Crate_init', 'parse_exec_init',
 		[
 			'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum', 'rust_exec_fn',
 			'rust_exec_any',
@@ -781,8 +781,13 @@ x: {
 		Ok(())
 	}
 	`;
-	let __id = block_id++;
-	__rust.exec_lines(rust_code, __id);
+	rr`${function scope_push(parse_pass){
+		if(parse_pass===0){
+			scope_push.block_id=block_id++;
+		}
+		let __id = scope_push.block_id;
+		__rust.exec_lines(rust_code, __id);
+	}}`
 	__rust.drop(__rust_root_scope);
 	__rust.crates = [];
 	__rust.scope.files = [];
