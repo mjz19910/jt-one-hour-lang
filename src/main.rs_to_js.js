@@ -1254,7 +1254,43 @@ x: {
 		}
 	}
 	
+	${function create_impl_Cursor() {
+		let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+		self.rust_type('&mut');
+		self.ffi_set_backing_value(this);
+		self = self.build();
+
+		let code_generator=__rust.get_code_generator().clone();
+
+		let has_digits = false;
+		code_generator.set_scope({
+			get self(){return {type:'&mut value',value:self}},
+			set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+		});
+		code_generator.set_body(``);
+		let body=code_generator.build();
+		body.run();
+		return body.return_value;
+	}}
 	impl Cursor<'_> {
+		${function advance_token() {
+			let self_builder = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self_builder.rust_type('&mut');
+			self_builder.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:self_builder.get_type(),value:self}},
+				set self(v){self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		/// Parses a token from the input string.
 		fn advance_token(&mut self) -> Token {
 			let first_char = self.bump().unwrap();
@@ -1377,6 +1413,24 @@ x: {
 			Token::new(token_kind, self.len_consumed())
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn line_comment(&mut self) -> TokenKind {
 			debug_assert!(self.prev() == '/' && self.first() == '/');
 			self.bump();
@@ -1393,6 +1447,24 @@ x: {
 			LineComment { doc_style }
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn block_comment(&mut self) -> TokenKind {
 			debug_assert!(self.prev() == '/' && self.first() == '*');
 			self.bump();
@@ -1430,12 +1502,48 @@ x: {
 			BlockComment { doc_style, terminated: depth == 0 }
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn whitespace(&mut self) -> TokenKind {
 			debug_assert!(is_whitespace(self.prev()));
 			self.eat_while(is_whitespace);
 			Whitespace
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn raw_ident(&mut self) -> TokenKind {
 			debug_assert!(self.prev() == 'r' && self.first() == '#' && is_id_start(self.second()));
 			// Eat "#" symbol.
@@ -1445,6 +1553,24 @@ x: {
 			RawIdent
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn ident(&mut self) -> TokenKind {
 			debug_assert!(is_id_start(self.prev()));
 			// Start is already eaten, eat the rest of identifier.
@@ -1452,6 +1578,24 @@ x: {
 			Ident
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn number(&mut self, first_digit: char) -> LiteralKind {
 			debug_assert!('0' <= self.prev() && self.prev() <= '9');
 			let mut base = Base::Decimal;
@@ -1521,6 +1665,24 @@ x: {
 			}
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn lifetime_or_char(&mut self) -> TokenKind {
 			debug_assert!(self.prev() == '\'');
 	
@@ -1567,6 +1729,24 @@ x: {
 			}
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		fn single_quoted_string(&mut self) -> bool {
 			debug_assert!(self.prev() == '\'');
 			// Check if it's a one-symbol literal.
@@ -1608,6 +1788,24 @@ x: {
 			false
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		/// Eats double-quoted string and returns true
 		/// if string is terminated.
 		fn double_quoted_string(&mut self) -> bool {
@@ -1628,6 +1826,24 @@ x: {
 			false
 		}
 	
+		${function raw_double_quoted_string() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(``);
+			let body=code_generator.build();
+			body.run();
+			return body.return_value;
+		}}
 		/// Eats the double-quoted string and returns \`n_hashes\` and an error if encountered.
 		fn raw_double_quoted_string(&mut self, prefix_len: usize) -> (u16, Option<RawStrError>) {
 			// Wrap the actual function to handle the error with too many hashes.
