@@ -412,9 +412,16 @@ x: {
 					if (ci++ > 8192) {
 						break;
 					}
-					if(back(1)==='/'&&back(2)==='/'){
-						console.log(val_acc[val_acc.length-1][1]);
+					if(back(1)==='/'&&cc[0]==='/'){
+						console.log(val_acc);
 						mat_idx=str.indexOf('\n',mat_idx);
+						tok_arr.push({
+							kind:'line_comment',
+							len:mat_idx-is_val_char.lastIndex+2,
+						});
+						is_val_char.lastIndex=mat_idx+1;
+						val_acc=[];
+						continue;
 					};
 					let g = cc?.groups;
 					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
@@ -568,7 +575,8 @@ pub struct Token {
 	pub kind: TokenKind,
 	pub len: usize,
 }
-		`);
+			`);
+			let rs_lines=[];
 			console.log(__rust.last_exec);
 		})}
 	
