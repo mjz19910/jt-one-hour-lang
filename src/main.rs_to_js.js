@@ -244,7 +244,6 @@ x: {
 						tok_arr.push({
 							kind: kind,
 							len: vaa.length,
-							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx;
 						continue;
@@ -295,7 +294,6 @@ x: {
 						tok_arr.push({
 							kind: kind,
 							len: vaa.length,
-							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx;
 						continue;
