@@ -205,7 +205,7 @@ x: {
 					};
 					if(cc&&cc[0]==="'"){
 						//could be lifetime
-						console.log(str[mat_idx]);
+						console.log(str[mat_idx+1]);
 						/** fn lifetime_or_char(&mut self) -> TokenKind {
     					    debug_assert!(self.prev() == '\'');
 
