@@ -1,13 +1,9 @@
 x: {
-	let rust_exec_code_funcs = [];
+	let rust_exec_code_funcs = ['STATIC_init','S_Crate_init','rust_eval_struct'];
 	let rr = function(mm, ...rest) {
 		for (i of rust_exec_code_funcs) {
 			for (let x of rest) {
-				if (x.name === 'STATIC_init') {
-					x();
-					continue;
-				}
-				if (x.name === 'S_Crate_init') {
+				if (x.name === i) {
 					x();
 					continue;
 				}
@@ -408,9 +404,18 @@ x: {
 					}
 					is_val_char.lastIndex = mat_idx;
 					cc = is_val_char.exec(str);
+					function back(n){
+						if(val_acc.length>(n-1)){
+							return val_acc[val_acc.length-n][1];
+						}
+					}
 					if (ci++ > 8192) {
 						break;
 					}
+					if(back(1)==='/'&&back(2)==='/'){
+						console.log(val_acc[val_acc.length-1][1]);
+						mat_idx=str.indexOf('\n',mat_idx);
+					};
 					let g = cc?.groups;
 					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
 						val_acc.push(['i_s', g.i_s]);
