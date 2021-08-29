@@ -252,7 +252,7 @@ x: {
 					}
 					mat = 'char';
 					kind = '_char';
-					if (g?.[mat]) {
+					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
 						while (true) {
@@ -279,7 +279,7 @@ x: {
 					}
 					mat = 'line';
 					kind = '_line';
-					if (g?.[mat]) {
+					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
 						while (true) {
