@@ -302,7 +302,7 @@ x: {
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
 				__rust.scope.block_vec[block_id_of_str] ??= [];
-				let block = __rust.block_vec[block_id_of_str];
+				let block = __rust.scope.block_vec[block_id_of_str];
 				if (!block.push) {
 					debugger;
 				}
