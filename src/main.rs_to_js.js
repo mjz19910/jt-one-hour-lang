@@ -184,6 +184,7 @@ x: {
 				while (true) {
 					if(str_arr instanceof Array){
 						if(arr_iter<str_arr.length&&mat_idx>(str.length-1)){
+							console.log(str.slice(mat_idx));
 							let val=str_arr[arr_iter++];
 							if(val.id){
 								tok_arr.push({
