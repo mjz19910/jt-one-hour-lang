@@ -804,7 +804,8 @@ x: {
 				fn new(kind: TokenKind, len: usize) -> Token {
 					Token { kind, len }
 				}
-			}`, rust_eval_impl.block_id);
+			}
+			`, rust_eval_impl.block_id);
 		}}
 	
 		${function rust_eval_enum(parse_pass) {
