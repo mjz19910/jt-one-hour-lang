@@ -73,14 +73,14 @@ x: {
 		if (scope) {
 			__rust.drop(scope);
 		}
-		let rr_ref=new __rust.RemoteRef(__rust.scope,'match-ref');
+		let rr_ref = new __rust.RemoteRef(__rust.scope, 'match-ref');
 		rr_ref.make_ref(res);
 		return mm.raw.join('');
 	};
 	function rust_static_init() {
 		if (__rust) return;
 		class RemoteRef {
-			constructor(parent,ref_type) {
+			constructor(parent, ref_type) {
 				this.ref_type = ref_type;
 				this.ref = null;
 				this.parent = parent;
@@ -103,25 +103,41 @@ x: {
 				this.block_vec = [];
 				this.block_vec_stack = [];
 				this.block_vec_ref = [];
+				this.impl_definitions = [];
 			}
 		};
+		class RustImpl {
+			constructor(name) {
+				this.name = name;
+				this.lifetimes = [];
+			}
+			set_lifetime_var(lt_var) {
+				this.lifetimes.push(lt_var);
+			}
+			collect_children() {
+				return [];
+			}
+		}
 		class RustRoot {
 			constructor(base) {
 				this.sym = my_rust_sym;
 				this.RustScope = RustScope;
 				this.scope = new RustScope;
-				this.RemoteRef=RemoteRef;
+				this.RemoteRef = RemoteRef;
 			}
 			set_resolved_block(block_id, ...data) {
 				if (data.length === 1) {
 					data = data[0];
 				}
-				let ref = new RemoteRef(this.scope,'block');
+				let ref = new RemoteRef(this.scope, 'block');
 				ref.make_ref(data);
 				this.scope.block_vec[block_id] = ref;
 			}
 			set_current_block(id) {
 				cur_block_id = id;
+			}
+			get_impl_definition(name) {
+				return new RustImpl(name);
 			}
 		}
 		__rust = new RustRoot;
@@ -169,9 +185,9 @@ x: {
 			return __rust_priv.ref_generator;
 		};
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"];
-		let rust_tt_chars=['()','{}','{}','[]'];
-		let rust_tt_start=rust_tt_chars.map(([e])=>e);
-		let rust_tt_end=rust_tt_chars.map(([,e])=>e);
+		let rust_tt_chars = ['()', '{}', '{}', '[]'];
+		let rust_tt_start = rust_tt_chars.map(([e]) => e);
+		let rust_tt_end = rust_tt_chars.map(([, e]) => e);
 		function get_log_time() {
 			let ret = performance.now() - ts;
 			ts = performance.now();
@@ -198,8 +214,8 @@ x: {
 			tok_arr = parse_pass_0(str);
 			function parse_pass_0(str) {
 				let tok_arr = [];
-				let cur_regex=is_val_char;
-				let str_d_mat=/"(?:\\.|(?!").)+"/g;
+				let cur_regex = is_val_char;
+				let str_d_mat = /"(?:\\.|(?!").)+"/g;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -220,82 +236,82 @@ x: {
 						val_acc = [];
 						continue;
 					};
-					x:if(cc&&cc[0]==="'"){
+					x: if (cc && cc[0] === "'") {
 						//could be lifetime
-						let mat_lt=/'[a-zA-Z_0-9]+?(')?/g;
-						mat_lt.lastIndex=mat_idx;
-						cc=mat_lt.exec(str);
-						if(cc===null){
-							let mat_str=/'(\\.|((?!').))+?'/g;
-							mat_str.lastIndex=mat_idx;
-							cc=mat_str.exec(str);
-							mat_idx+=cc[0].length;
+						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
+						mat_lt.lastIndex = mat_idx;
+						cc = mat_lt.exec(str);
+						if (cc === null) {
+							let mat_str = /'(\\.|((?!').))+?'/g;
+							mat_str.lastIndex = mat_idx;
+							cc = mat_str.exec(str);
+							mat_idx += cc[0].length;
 							tok_arr.push({
 								kind: {
-									type:'Char',
-									terminated:true
+									type: 'Char',
+									terminated: true
 								},
 								len: cc[0].length,
 							});
-							cur_regex.lastIndex=mat_idx;
+							cur_regex.lastIndex = mat_idx;
 							continue;
 						}
-						let starts_with_number=cc[0].charCodeAt(0)>=48&&cc[0].charCodeAt(0)<=57;
+						let starts_with_number = cc[0].charCodeAt(0) >= 48 && cc[0].charCodeAt(0) <= 57;
 						tok_arr.push({
 							kind: {
-								type:'Lifetime',
+								type: 'Lifetime',
 								starts_with_number,
 							},
 							len: cc[0].length,
 						});
-						mat_idx+=cc[0].length;
-						cur_regex.lastIndex=mat_idx;
+						mat_idx += cc[0].length;
+						cur_regex.lastIndex = mat_idx;
 						continue;
 						/** fn lifetime_or_char(&mut self) -> TokenKind {
-    					    debug_assert!(self.prev() == '\'');
+							debug_assert!(self.prev() == '\'');
 
-    					    let can_be_a_lifetime = if self.second() == '\'' {
-    					        // It's surely not a lifetime.
-    					        false
-    					    } else {
-    					        // If the first symbol is valid for identifier, it can be a lifetime.
-    					        // Also check if it's a number for a better error reporting (so '0 will
-    					        // be reported as invalid lifetime and not as unterminated char literal).
-    					        is_id_start(self.first()) || self.first().is_digit(10)
-    					    };
+							let can_be_a_lifetime = if self.second() == '\'' {
+								// It's surely not a lifetime.
+								false
+							} else {
+								// If the first symbol is valid for identifier, it can be a lifetime.
+								// Also check if it's a number for a better error reporting (so '0 will
+								// be reported as invalid lifetime and not as unterminated char literal).
+								is_id_start(self.first()) || self.first().is_digit(10)
+							};
 						
-    					    if !can_be_a_lifetime {
-    					        let terminated = self.single_quoted_string();
-    					        let suffix_start = self.len_consumed();
-    					        if terminated {
-    					            self.eat_literal_suffix();
-    					        }
-    					        let kind = Char { terminated };
-    					        return Literal { kind, suffix_start };
-    					    }
+							if !can_be_a_lifetime {
+								let terminated = self.single_quoted_string();
+								let suffix_start = self.len_consumed();
+								if terminated {
+									self.eat_literal_suffix();
+								}
+								let kind = Char { terminated };
+								return Literal { kind, suffix_start };
+							}
 						
-    					    // Either a lifetime or a character literal with
-    					    // length greater than 1.
+							// Either a lifetime or a character literal with
+							// length greater than 1.
 						
-    					    let starts_with_number = self.first().is_digit(10);
+							let starts_with_number = self.first().is_digit(10);
 						
-    					    // Skip the literal contents.
-    					    // First symbol can be a number (which isn't a valid identifier start),
-    					    // so skip it without any checks.
-    					    self.bump();
-    					    self.eat_while(is_id_continue);
+							// Skip the literal contents.
+							// First symbol can be a number (which isn't a valid identifier start),
+							// so skip it without any checks.
+							self.bump();
+							self.eat_while(is_id_continue);
 						
-    					    // Check if after skipping literal contents we've met a closing
-    					    // single quote (which means that user attempted to create a
-    					    // string with single quotes).
-    					    if self.first() == '\'' {
-    					        self.bump();
-    					        let kind = Char { terminated: true };
-    					        Literal { kind, suffix_start: self.len_consumed() }
-    					    } else {
-    					        Lifetime { starts_with_number }
-    					    }
-    					} */
+							// Check if after skipping literal contents we've met a closing
+							// single quote (which means that user attempted to create a
+							// string with single quotes).
+							if self.first() == '\'' {
+								self.bump();
+								let kind = Char { terminated: true };
+								Literal { kind, suffix_start: self.len_consumed() }
+							} else {
+								Lifetime { starts_with_number }
+							}
+						} */
 					}
 					let g;
 					let mat;
@@ -306,7 +322,15 @@ x: {
 					mat = 'i_s';
 					kind = 'Ident';
 					if (g && g[mat]) {
-						do_mat(mat, kind);
+						let mat_ident = /([a-zA-Z_](?:[a-zA-Z_0-9]+?)?)[^a-zA-Z_0-9]/g;
+						mat_ident.lastIndex = mat_idx;
+						cc = mat_ident.exec(str);
+						tok_arr.push({
+							kind: 'Ident',
+							len: cc[1].length,
+						});
+						mat_idx += cc[1].length;
+						cur_regex.lastIndex = mat_idx;
 						continue;
 					}
 					mat = 'ws';
@@ -328,11 +352,11 @@ x: {
 						continue;
 					}
 					mat = 'd_quo';
-					kind = '_'+mat;
+					kind = '_' + mat;
 					if (g && g[mat]) {
-						str_d_mat.lastIndex=mat_idx;
-						cc=str_d_mat.exec(str);
-						mat_idx+=cc[0].length;
+						str_d_mat.lastIndex = mat_idx;
+						cc = str_d_mat.exec(str);
+						mat_idx += cc[0].length;
 						tok_arr.push({
 							kind: kind,
 							len: cc[0].length,
@@ -341,7 +365,7 @@ x: {
 						continue;
 					}
 					mat = 's_quo';
-					kind = '_'+mat;
+					kind = '_' + mat;
 					if (g && g[mat]) {
 						bump();
 						tok_arr.push({
@@ -400,7 +424,7 @@ x: {
 			}
 			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
-				let valid_tt=true;
+				let valid_tt = true;
 				let ret = [];
 				function c(n) {
 					return ret?.[ret.length - n];
@@ -423,18 +447,18 @@ x: {
 						ret.pop();
 						ret.push('->');
 					}
-					if (!valid_tt&&a() === '#' && b() === '[]'[0]) {
+					if (!valid_tt && a() === '#' && b() === '[]'[0]) {
 						ret.pop();
 						ret.pop();
 						ret.push('#' + '[]'[0]);
 					}
-					if (!valid_tt&&c(3) === '#' && c(2) === '!' && c(1) === '[]'[0]) {
+					if (!valid_tt && c(3) === '#' && c(2) === '!' && c(1) === '[]'[0]) {
 						for (let x = 0; x < 3; x++) {
 							ret.pop();
 						}
 						ret.push('#!' + '[]'[0]);
 					}
-					if (valid_tt&&c(2) === '#' && c(1) === '!') {
+					if (valid_tt && c(2) === '#' && c(1) === '!') {
 						for (let x = 0; x < 2; x++) {
 							ret.pop();
 						}
@@ -443,51 +467,185 @@ x: {
 				}
 				return ret;
 			}
-			function tt_parse(arr){
-				let tt_arr=[];
-				let kw=['fn','enum','impl','use','struct','#'];
-				let tt_stack=[tt_arr];
-				for(let cur,i=0;i<arr.length;i++){
-					cur=arr[i];
-					if(rust_tt_start.includes(cur)){
+			function tt_parse(arr) {
+				let tt_arr = [];
+				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
+				let tt_stack = [tt_arr];
+				for (let cur, i = 0; i < arr.length; i++) {
+					cur = arr[i];
+					if (rust_tt_start.includes(cur)) {
 						tt_stack.push(tt_arr);
-						tt_arr=[cur];
+						tt_arr = [cur];
 						continue;
 					};
-					if(rust_tt_end.includes(cur)){
-						let tt_tmp=tt_arr;
+					if (rust_tt_end.includes(cur)) {
+						let tt_tmp = tt_arr;
 						tt_arr.push(cur);
-						tt_arr=tt_stack.pop();
+						tt_arr = tt_stack.pop();
 						tt_arr.push(tt_tmp);
 						continue;
 					}
-					if(kw.includes(arr[i+1])&&cur==='\n'){
+					if (kw.includes(arr[i + 1]) && cur === '\n') {
 						tt_arr.push(cur);
 						continue;
 					}
-					if(cur.match(/[ ]/)){
+					if (cur.match(/[ ]/)) {
 						tt_arr.push(cur);
 						continue;
 					}
-					if(cur.match(/[\t]/)){
+					if (cur.match(/[\t]/)) {
 						continue;
 					}
-					if(cur.match(/[\n][\n]+/)){
-						let ea=cur.split('');
+					if (cur.match(/[\n][\n]+/)) {
+						let ea = cur.split('');
 						tt_arr.push(...ea);
-						cur=tt_arr.pop();
+						cur = tt_arr.pop();
 					}
-					if(cur==='\n'&&tt_arr[tt_arr.lenght-1]===cur){
+					if (cur === '\n' && tt_arr[tt_arr.lenght - 1] === cur) {
 						continue;
 					}
 					tt_arr.push(cur);
-					while(tt_arr.at(-1)==='\n'&&tt_arr.at(-2)==='\n'){
+					while (tt_arr.at(-1) === '\n' && tt_arr.at(-2) === '\n') {
 						tt_arr.pop();
 					}
 				}
 				return tt_arr;
 			}
-			let tt_arr=tt_parse(tok_arr);
+			let tt_arr = tt_parse(tok_arr);
+			export_scope(tt_arr);
+			function export_scope(out_arr) {
+				let in_defn;
+				let tags = [];
+				let arr_item = [];
+				let enditem = [' ', ';'];
+				let items = [];
+				for (let i = 0; i < out_arr.length; i++) {
+					let cur = out_arr[i];
+					switch (cur) {
+						case '\n':
+							arr_item.push(cur);
+							if(in_defn){
+								console.log(tags, arr_item);
+								items.push([tags, arr_item]);
+								arr_item = [];
+								tags = [];
+								in_defn=false;
+							}
+							continue;
+						case '#!':
+							tags.push(out_arr[i++]);
+							tags.push(out_arr[i]);
+							console.log(tags);
+							continue;
+						case '#':
+							tags.push(out_arr[i++]);
+							tags.push(out_arr[i]);
+							continue;
+						case 'use':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							console.log(arr_item);
+							in_defn=true;
+							i--;
+							continue;
+						case 'struct':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							console.log(arr_item);
+							in_defn=true;
+							i--;
+							continue;
+						case 'impl':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							console.log(arr_item);
+							in_defn=true;
+							i--;
+							continue;
+						case 'fn':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							function parse_gt(){
+								arr_item.push(cur);
+								i++;
+								wl:for(;;){
+									cur = out_arr[i];
+									if(cur==='<'){
+										arr_item.push(cur);
+										cur = out_arr[++i];
+										arr_item.push(cur);
+										i++;
+										cur = out_arr[i];
+										parse_gt();
+									}
+									if(cur==='>'){
+										break wl;
+									}
+									arr_item.push(cur);
+									i++;
+								}
+							}
+							while (!enditem.includes(cur = out_arr[i])) {
+								if(cur==='<'){
+									parse_gt();
+								}
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							in_defn=true;
+							i--;
+							continue;
+						case ';':
+							arr_item.push(cur);
+							continue;
+						case 'enum':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							in_defn=true;
+							i--;
+							continue;
+					}
+					console.log(JSON.stringify(cur));
+					break;
+				}
+
+			}
 			finish_parse(tt_arr);
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
@@ -553,14 +711,14 @@ x: {
 			let this_block_vec = __rust.scope.block_vec;
 			let parent_block_id = last_vec_info[0];
 			let parent_block_vec = last_vec_info[1];
-			let alloc_ref_id=last_vec_info[2];
-			if(this_block_vec.length===1){
-				if(this_block_vec[0] instanceof BlockRef){
-					this_block_vec[0]=this_block_vec[0].deref();
+			let alloc_ref_id = last_vec_info[2];
+			if (this_block_vec.length === 1) {
+				if (this_block_vec[0] instanceof BlockRef) {
+					this_block_vec[0] = this_block_vec[0].deref();
 				}
-				__rust.scope.block_vec_ref[alloc_ref_id]=this_block_vec[0];
-			}else{
-				__rust.scope.block_vec_ref[alloc_ref_id]=this_block_vec;
+				__rust.scope.block_vec_ref[alloc_ref_id] = this_block_vec[0];
+			} else {
+				__rust.scope.block_vec_ref[alloc_ref_id] = this_block_vec;
 			}
 			parent_block_vec.push(new BlockRef(__rust.scope, alloc_ref_id, parent_block_id));
 			__rust.scope.block_vec = parent_block_vec;
@@ -960,17 +1118,17 @@ x: {
 		Ok(())
 	}
 	`;
-	rr`${function scope_push(parse_pass){
-		if(parse_pass===0){
-			scope_push.block_id=block_id++;
+	rr`${function scope_push(parse_pass) {
+		if (parse_pass === 0) {
+			scope_push.block_id = block_id++;
 		}
 		let __id = scope_push.block_id;
-		if(parse_pass===1){
+		if (parse_pass === 1) {
 			__rust.exec_lines(rust_code, __id);
 		}
 	}}`;
 	// filter out stuff we didn't use exec_lines while executing the template...
-	__rust.scope.block_vec=__rust.scope.block_vec.filter(e=>e.value.length>0);
+	__rust.scope.block_vec = __rust.scope.block_vec.filter(e => e.value.length > 0);
 	__rust.drop(__rust_root_scope);
 	__rust.crates = [];
 	__rust.scope.files = [];
@@ -1279,33 +1437,34 @@ x: {
 		}
 	}
 	
-	${function create_impl() {
-		let Cursor_impl=__rust.get_impl_definition('Cursor');
-		Cursor_impl.set_lifetime_var("'_");
-		let child_vec=Cursor_impl.collect_children();
-		for(let [i,x] of child_vec.entries()){
-			console.log(i,x.type);
-		}
-	}}
+	${function create_impl(parse_pass) {
+			if (parse_pass !== 2) return;
+			let Cursor_impl = __rust.get_impl_definition('Cursor');
+			Cursor_impl.set_lifetime_var("'_");
+			let child_vec = Cursor_impl.collect_children();
+			for (let [i, x] of child_vec.entries()) {
+				console.log(i, x.type);
+			}
+		}}
 	impl Cursor<'_> {
 		${function advance_token() {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) {
 					/*can this happen in compilable rust code, if not, what is the error*/
-					self=v.value;
+					self = v.value;
 				},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1436,16 +1595,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1470,16 +1629,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1525,16 +1684,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1549,16 +1708,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1576,16 +1735,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1601,16 +1760,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1688,16 +1847,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1752,16 +1911,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1811,16 +1970,16 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1849,18 +2008,18 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-			prefix_len=__rust.get_type_validator().ensure_type(prefix_len,'usize').convert();
-		
-			let code_generator=__rust.get_code_generator().clone();
-		
+			prefix_len = __rust.get_type_validator().ensure_type(prefix_len, 'usize').convert();
+
+			let code_generator = __rust.get_code_generator().clone();
+
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
-			code_generator.add_arguments(['prefix_len',prefix_len]);
+			code_generator.add_arguments(['prefix_len', prefix_len]);
 			code_generator.set_header(``);
 			code_generator.set_body(``);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -1879,19 +2038,19 @@ x: {
 
 		${function raw_string_unvalidated(prefix_len) {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
-			prefix_len=__rust.get_type_validator().ensure_type(prefix_len,'usize');
+			prefix_len = __rust.get_type_validator().ensure_type(prefix_len, 'usize');
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-			prefix_len=prefix_len.convert();
+			prefix_len = prefix_len.convert();
 
-			let code_generator=__rust.get_code_generator().clone();
+			let code_generator = __rust.get_code_generator().clone();
 
 			code_generator.set_scope({
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
-			code_generator.add_arguments(['prefix_len',prefix_len]);
+			code_generator.add_arguments(['prefix_len', prefix_len]);
 			code_generator.set_header(`
 			raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>)
 			`);
@@ -1958,7 +2117,7 @@ x: {
 					max_hashes = n_end_hashes;
 				}
 			}`);
-			let body=code_generator.build();
+			let body = code_generator.build();
 			body.run();
 			return body.return_value;
 		}}
@@ -2033,14 +2192,14 @@ x: {
 			self.ffi_set_backing_value(this);
 			self = self.build();
 
-			let loop_gen=__rust.get_loop_executer().clone();
+			let loop_gen = __rust.get_loop_executer().clone();
 
 			let has_digits = false;
 			loop_gen.set_scope({
-				get has_digits(){return {type:'value',value:has_digits}},
-				set has_digits(v){has_digits=v.value},
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get has_digits() { return { type: 'value', value: has_digits } },
+				set has_digits(v) { has_digits = v.value },
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			loop_gen.set_body(`{
 				match self.first() {
@@ -2082,10 +2241,10 @@ x: {
 
 			let has_digits = false;
 			loop_gen.set_scope({
-				get has_digits(){return {type:'mut value',value:has_digits}},
-				set has_digits(v){has_digits=v.value},
-				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				get has_digits() { return { type: 'mut value', value: has_digits } },
+				set has_digits(v) { has_digits = v.value },
+				get self() { return { type: '&mut value', value: self } },
+				set self(v) { self = v.value },
 			});
 			loop_gen.set_body(`{
 				match self.first() {
@@ -2121,11 +2280,11 @@ x: {
 	
 		${function eat_float_exponent() {
 			let self = __rust.get_ref_generator().clone();
-			let _m_debug_assert=__rust.macro_handler.get_macro_definition('debug_assert!');
+			let _m_debug_assert = __rust.macro_handler.get_macro_definition('debug_assert!');
 			self.make_ref();//&
 			self.ref.as_mut();//&mut
 			self.as_host_value();
-			self.host_value=this;
+			self.host_value = this;
 			self = self.build();
 			_m_debug_assert = _m_debug_assert.generate();
 
@@ -2195,7 +2354,7 @@ x: {
 			predicate.value.throw_if_type_error();
 			self = self.build();
 			predicate = predicate.build();
-			
+
 			while (predicate(self.first()) && !self.is_eof()) {
 				self.bump();
 			}
