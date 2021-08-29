@@ -1,13 +1,16 @@
 x: {
+	let rust_exec_code_funcs = [];
 	let rr = function(mm, ...rest) {
-		for(let x of rest){
-			if(x.name==='STATIC_init'){
-				x();
-				continue;
-			}
-			if(x.name==='S_Crate_init'){
-				x();
-				continue;
+		for (i of rust_exec_code_funcs) {
+			for (let x of rest) {
+				if (x.name === 'STATIC_init') {
+					x();
+					continue;
+				}
+				if (x.name === 'S_Crate_init') {
+					x();
+					continue;
+				}
 			}
 		}
 		return mm.raw.join('');
@@ -345,83 +348,83 @@ x: {
 	// We want to be able to build this crate with a stable compiler, so no
 	// \`#![feature]\` attributes should be added.
 
-	${(function STATIC_init(){
-		__rust={};
-		class RefGenerator{
-			constructor(from){
-				if(from){
-					console.log(from);
+	${(function STATIC_init() {
+			__rust = {};
+			class RefGenerator {
+				constructor(from) {
+					if (from) {
+						console.log(from);
+					}
+					this.rust_type = null;
+					this.host_backing_value = null;
+					if (from) {
+						this.rust_type = from.rust_type;
+					}
 				}
-				this.rust_type=null;
-				this.host_backing_value=null;
-				if(from) {
-					this.rust_type=from.rust_type;
+				clone() {
+					return new RefGenerator(this);
 				}
-			}
-			clone(){
-				return new RefGenerator(this);
-			}
-			ffi_use_this(type,_this){
-				if(this.is_mut_borrow){
-					throw Error('can\' borrow');
+				ffi_use_this(type, _this) {
+					if (this.is_mut_borrow) {
+						throw Error('can\' borrow');
+					}
+					this.rust_type(type);
+					this.ffi_set_backing_value(_this);
 				}
-				this.rust_type(type);
-				this.ffi_set_backing_value(_this);
-			}
-			ffi_set_backing_value(value){
-				if(this.is_mut_borrow){
-					throw Error('can\' borrow');
+				ffi_set_backing_value(value) {
+					if (this.is_mut_borrow) {
+						throw Error('can\' borrow');
+					}
+					this.host_backing_value = value;
 				}
-				this.host_backing_value=value;
-			}
-			no_mut(){
-				this.is_mut_borrow=true;
-			}
-		};
-		__rust_priv={};
-		__rust_priv.ref_generator=new RefGenerator;
-		__rust_priv.ref_generator.no_mut();
-		__rust.get_ref_generator=function(){
-			return __rust_priv.ref_generator;
-		};
-		let rust_chars=[";",",",".","(",")","{","}","[","]","@","#","~","?",":","$","=","!","<",">","-","&","|","+","*","/","^","%"]
-		__rust.exec_line=function(str){
-			let is_val_char=/(?<i_s>[a-zA-Z_])|(?<ws>[ ])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])/g;
-			let rx=/^[a-zA-Z_]/;
-			let sp=/^[ ]/;
-			let val_acc=[];
-			let tok_arr=[];
-			let cur;
-			let ci=0;
-			let mat_idx=0;
-			function bump(){
-				mat_idx++;
-			}
-			let fn_cache=new Map;
-			while(true){
-				if(mat_idx>is_val_char.lastIndex){
-					console.log(is_val_char.lastIndex,mat_idx,cc,str.slice(mat_idx,cc.index));
-					debugger;
+				no_mut() {
+					this.is_mut_borrow = true;
 				}
-				is_val_char.lastIndex=mat_idx;
-				cc=is_val_char.exec(str);
-				if(ci++>8192){
-					break;
+			};
+			__rust_priv = {};
+			__rust_priv.ref_generator = new RefGenerator;
+			__rust_priv.ref_generator.no_mut();
+			__rust.get_ref_generator = function() {
+				return __rust_priv.ref_generator;
+			};
+			let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
+			__rust.exec_line = function(str) {
+				let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ ])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
+				let rx = /^[a-zA-Z_]/;
+				let sp = /^[ ]/;
+				let val_acc = [];
+				let tok_arr = [];
+				let cur;
+				let ci = 0;
+				let mat_idx = 0;
+				function bump() {
+					mat_idx++;
 				}
-				let g=cc?.groups;
-				if((val_acc[0]?.[0]==='i_s'||val_acc.length==0)&&cc&&g.i_s){
-					val_acc.push(['i_s',g.i_s]);
-					bump();
-					continue;
-				}
-				if(val_acc[0]?.[0]==='i_s'){
-					tok_arr.push({kind:'Ident',len:val_acc.length});
-					val_acc.length=0;
-				}
-				function dm(mat, kind){
-					let want_vars=[mat,kind,val_acc,g,bump,tok_arr];
-					let want_vars_str='mat,kind,val_acc,g,bump,tok_arr';
-					let fb=`
+				let fn_cache = new Map;
+				while (true) {
+					if (mat_idx > is_val_char.lastIndex) {
+						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
+						debugger;
+					}
+					is_val_char.lastIndex = mat_idx;
+					cc = is_val_char.exec(str);
+					if (ci++ > 8192) {
+						break;
+					}
+					let g = cc?.groups;
+					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
+						val_acc.push(['i_s', g.i_s]);
+						bump();
+						continue;
+					}
+					if (val_acc[0]?.[0] === 'i_s') {
+						tok_arr.push({ kind: 'Ident', len: val_acc.length });
+						val_acc.length = 0;
+					}
+					function dm(mat, kind) {
+						let want_vars = [mat, kind, val_acc, g, bump, tok_arr];
+						let want_vars_str = 'mat,kind,val_acc,g,bump,tok_arr';
+						let fb = `
 					for(let init=true;;){
 						if(!init){
 							return 'continue';
@@ -439,105 +442,107 @@ x: {
 						return 'leave_scope';
 					}
 					return 'break';`;
-					let func;
-					let fn_key='function func('+want_vars_str+'){'+fb+'}';
-					if(fn_cache.has(fn_key)){
-						func=fn_cache.get(fn_key);
-					}else{
-						func=new Function(want_vars_str,fb);
-						fn_cache.set('('+want_vars_str+'){'+fb+'}',func);
+						let func;
+						let fn_key = 'function func(' + want_vars_str + '){' + fb + '}';
+						if (fn_cache.has(fn_key)) {
+							func = fn_cache.get(fn_key);
+						} else {
+							func = new Function(want_vars_str, fb);
+							fn_cache.set('(' + want_vars_str + '){' + fb + '}', func);
+						}
+						return func(...want_vars);
 					}
-					return func(...want_vars);
-				}
-				let loop_res
-				loop_res=dm('ws','Whitespace');
-				if(loop_res==='break'){
-					break;
-				}
-				if(loop_res==='continue'){
-					continue;
-				}
-				if(loop_res==='leave_scope'){
-					'leave_scope';
-				}
-				loop_res=dm('char','_char');
-				if(loop_res==='break'){
-					break;
-				}
-				if(loop_res==='continue'){
-					continue;
-				}
-				if(cc===null){
-					break;
-				}
-			}
-			let iter_index=0;
-			let str_iter_index=0;
-			let str_arr=[];
-			for(;iter_index<tok_arr.length;iter_index++){
-				let cur_tok=tok_arr[iter_index];
-				if(cur_tok.kind==='_char'){
-					let ed=str_iter_index+cur_tok.len;
-					while(str_iter_index<ed){
-						str_arr.push(str[str_iter_index]);
-						str_iter_index++;
+					let loop_res
+					loop_res = dm('ws', 'Whitespace');
+					if (loop_res === 'break') {
+						break;
 					}
-					continue;
+					if (loop_res === 'continue') {
+						continue;
+					}
+					if (loop_res === 'leave_scope') {
+						'leave_scope';
+					}
+					loop_res = dm('char', '_char');
+					if (loop_res === 'break') {
+						break;
+					}
+					if (loop_res === 'continue') {
+						continue;
+					}
+					loop_res = dm('line', '_line');
+					if (cc === null) {
+						break;
+					}
 				}
-				str_arr.push(str.slice(str_iter_index,str_iter_index+cur_tok.len));
-				str_iter_index+=cur_tok.len;
+				let iter_index = 0;
+				let str_iter_index = 0;
+				let str_arr = [];
+				for (; iter_index < tok_arr.length; iter_index++) {
+					let cur_tok = tok_arr[iter_index];
+					if (cur_tok.kind === '_char') {
+						let ed = str_iter_index + cur_tok.len;
+						while (str_iter_index < ed) {
+							str_arr.push(str[str_iter_index]);
+							str_iter_index++;
+						}
+						continue;
+					}
+					str_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
+					str_iter_index += cur_tok.len;
+				}
+				let s2_arr = [];
+				for (let i = 0; i < str_arr.length; i++) {
+					s2_arr.push(str_arr[i]);
+					function pr() {
+						return s2_arr?.[s2_arr.length - 2];
+					}
+					function c() {
+						return s2_arr?.[s2_arr.length - 1];
+					}
+					if (pr() === ':' && c() === ':') {
+						s2_arr.pop();
+						s2_arr.pop();
+						s2_arr.push('::');
+					}
+					if (pr() === '#' && c() === '[]'[0]) {
+						s2_arr.pop();
+						s2_arr.pop();
+						s2_arr.push('#' + '[]'[0]);
+					}
+				}
+				str_arr = s2_arr;
+				__rust.last_exec = str_arr;
 			}
-			let s2_arr=[];
-			for(let i=0;i<str_arr.length;i++){
-				s2_arr.push(str_arr[i]);
-				function pr(){
-					return s2_arr?.[s2_arr.length-2];
-				}
-				function c(){
-					return s2_arr?.[s2_arr.length-1];
-				}
-				if(pr()===':'&&c()===':'){
-					s2_arr.pop();
-					s2_arr.pop();
-					s2_arr.push('::');
-				}
-				if(pr()==='#'&&c()==='[]'[0]){
-					s2_arr.pop();
-					s2_arr.pop();
-					s2_arr.push('#'+'[]'[0]);
-				}
-			}
-			str_arr=s2_arr;
-		}
-	})}
+		})}
 	
 	mod cursor;
 	pub mod unescape;
 	
-	${(function S_Crate_init(){
-		__rust.exec_line('mod cursor;');
-		__rust.exec_line('pub mod unescape;');
-	})}
+	${(function S_Crate_init() {
+			__rust.exec_line('mod cursor;');
+			__rust.exec_line('pub mod unescape;');
+		})}
 
 	#[cfg(test)]
 	mod tests;
 
-	${(function S_Crate_init(){
-		__rust.exec_line('#[cfg(test)]');
-		__rust.exec_line('mod tests;');
-	})}
+	${(function S_Crate_init() {
+			__rust.exec_line('#[cfg(test)]');
+			__rust.exec_line('mod tests;');
+		})}
 	
 	use self::LiteralKind::*;
 	use self::TokenKind::*;
 	use crate::cursor::{Cursor, EOF_CHAR};
 	use std::convert::TryFrom;
 
-	${(function S_Crate_init(){
-		__rust.exec_line('use self::LiteralKind::*;');
-		__rust.exec_line('use self::TokenKind::*;');
-		__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};');
-		__rust.exec_line('use std::convert::TryFrom;');
-	})}
+	${(function S_Crate_init() {
+			__rust.exec_line('use self::LiteralKind::*;');
+			__rust.exec_line('use self::TokenKind::*;');
+			__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};');
+			__rust.exec_line('use std::convert::TryFrom;');
+		})}
 	
 	/// Parsed token.
 	/// It doesn't contain information about data that has been parsed,
@@ -547,6 +552,20 @@ x: {
 		pub kind: TokenKind,
 		pub len: usize,
 	}
+
+	${(function rust_eval_struct() {
+			__rust.exec_line(`
+/// Parsed token.
+/// It doesn't contain information about data that has been parsed,
+/// only the type of the token and its size.
+#[derive(Debug)]
+pub struct Token {
+	pub kind: TokenKind,
+	pub len: usize,
+}
+		`);
+			console.log(__rust.last_exec);
+		})}
 	
 	impl Token {
 		fn new(kind: TokenKind, len: usize) -> Token {
@@ -1299,7 +1318,7 @@ x: {
 			self.eat_decimal_digits()
 		}
 
-		${(function(){
+		${(function() {
 
 		})}
 	
@@ -1308,8 +1327,8 @@ x: {
 			self.eat_identifier();
 		}
 	
-		${(function eat_identifier(){
-			let self=__rust.get_ref_generator().clone().ffi_use_this('&mut',this);
+		${(function eat_identifier() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			/*if !is_id_start(self.first()) {
@@ -1329,12 +1348,12 @@ x: {
 			self.eat_while(is_id_continue);
 		}
 
-		${(function eat_while(predicate_arg){
-			let self=__rust.get_ref_generator().clone();
+		${(function eat_while(predicate_arg) {
+			let self = __rust.get_ref_generator().clone();
 			self.ref_type('&mut');
 			self.ref.value_type('Self');
 			self.ref.ffi_set_backing_value(this);
-			let predicate=__rust.get_fn_generator().clone();
+			let predicate = __rust.get_fn_generator().clone();
 			predicate.value_type('mut');
 			predicate.value.value_type('impl FnMut(char) -> bool');
 			predicate.ffi_set_backing_value(predicate_arg);
@@ -1391,7 +1410,7 @@ x: {
 		let regex = /(\/\*|\*\/)(?:(?:!\/\*|\*\/).)*/g;
 		let input = '/* /* */ */ /* /* */ */';
 		let rust_rustc_tokens_vec = [];
-		let tok_arr=[];
+		let tok_arr = [];
 		let blk_com_dep = 0;
 		let in_comment = false;
 		let str_loc = 0;
@@ -1402,7 +1421,7 @@ x: {
 					in_comment = true;
 				}
 				blk_com_dep++;
-			}else if (mat[0] === '*/') {
+			} else if (mat[0] === '*/') {
 				blk_com_dep--;
 				if (blk_com_dep === 0) {
 					in_comment = false;
@@ -1411,18 +1430,18 @@ x: {
 			res.push(input.slice(acc, mat.index));
 			let di = mat.index - acc;
 			res.push(acc + mat[0].length + di);
-			let iter={
-				cur:0,
-				next(){
-					if(this.cur<res.length){
+			let iter = {
+				cur: 0,
+				next() {
+					if (this.cur < res.length) {
 						return {
-							value:res[this.cur++],
-							done:false,
+							value: res[this.cur++],
+							done: false,
 						}
-					}else{
+					} else {
 						return {
-							value:void 0,
-							done:true,
+							value: void 0,
+							done: true,
 						}
 					}
 				}
@@ -1430,7 +1449,7 @@ x: {
 			return iter;
 		}
 		let cur;
-		let in_comment_prev=false;
+		let in_comment_prev = false;
 		for (; cur = regex.exec(input);) {
 			let iter = accept_result(cur, str_loc);
 			let str0 = iter.next().value;
@@ -1449,14 +1468,14 @@ x: {
 					});
 				}
 			}
-			in_comment_prev=in_comment;
+			in_comment_prev = in_comment;
 			tok_arr.push(cur[0]);
 			rust_rustc_tokens_vec.push({
 				kind: 'block_comment_parsed',
 				len: cur[0].length,
 			});
 		}
-		console.log(tok_arr.join(),...rust_rustc_tokens_vec.slice(0,2),rust_rustc_tokens_vec[7]);
+		console.log(tok_arr.join(), ...rust_rustc_tokens_vec.slice(0, 2), rust_rustc_tokens_vec[7]);
 	});
 	let cidx = 0;
 	let mt = rust_match_rx.exec(rust_code);
