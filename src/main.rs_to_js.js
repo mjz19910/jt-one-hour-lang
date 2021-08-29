@@ -330,23 +330,24 @@ x: {
 		__rust_priv.stack = [];
 		__rust.push_block_vec = function() {
 			let ret = {};
-			__rust.block_vec_stack.push([block_id, __rust.block_vec]);
-			__rust.block_vec = [];
+			__rust.scope.block_vec_stack.push([block_id, __rust.scope.block_vec]);
+			__rust.scope.block_vec = [];
 			block_id = 0;
 			__rust_priv.stack.push(ret);
 			return ret;
 		}
 		class BlockRef {
-			constructor(ref) {
+			constructor(scope,ref,parent_ref) {
 				this.ref_type = 'block';
 				this.ref = ref;
-				this.parent_ref = ref;
+				this.parent_ref = parent_ref;
+				this.scope=scope;
 			}
 			deref() {
 				return this.value;
 			}
 			get value() {
-				return __rust.block_vec_ref[this.ref];
+				return this.scope.block_vec_ref[this.ref];
 			}
 		}
 		__rust.drop = function(vv) {
@@ -357,11 +358,11 @@ x: {
 			if (last !== vv) {
 				throw Error("failed to drop in order");
 			}
-			let last_vec_info = __rust.block_vec_stack.pop();
-			let block_vec_from_stack_id = __rust.block_vec_ref.push(__rust.block_vec);
-			__rust.block_vec = last_vec_info[1];
+			let last_vec_info = __rust.scope.block_vec_stack.pop();
+			let block_vec_from_stack_id = __rust.scope.block_vec_ref.push(__rust.scope.block_vec);
+			__rust.scope.block_vec = last_vec_info[1];
 			cur_block_id = last_vec_info[0];
-			__rust.block_vec.push([new BlockRef(block_vec_from_stack_id - 1, cur_block_id)]);
+			__rust.scope.block_vec.push([new BlockRef(block_vec_from_stack_id - 1, cur_block_id, __rust.scope)]);
 			__rust_priv.stack.length--;
 		}
 	}
