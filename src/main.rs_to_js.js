@@ -394,6 +394,7 @@ x: {
 	${function parse_exec_init(parse_pass) {
 			if (parse_pass === 0) {
 				parse_exec_init.block_id = block_id++;
+				return;
 			}
 			let __id = parse_exec_init.block_id;
 			__rust.exec_lines(`#![allow(dead_code)]`, __id);
