@@ -246,6 +246,8 @@ impl Typechecker {
         match command {
             Command::SetVar(_, Value::Int(_)) => Ok(Type::Int),
             Command::SetVar(_, Value::String(_)) => Ok(Type::String),
+			Command::Push(Value::Int(_)) => Ok(Type::Int),
+			Command::Push(Value::String(_)) => Ok(Type::String),
             _ => Ok(Type::Nothing),
         }
     }
