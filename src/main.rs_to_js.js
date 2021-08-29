@@ -175,106 +175,112 @@ x: {
 			if(str_arr instanceof Array){
 				str=str_arr[arr_iter++];
 			}
-			let idx = str_arr[0].indexOf("Cursor");
-			while (true) {
-				if(mat_idx>=str.length&&(str_arr instanceof Array)){
-					let val=str_arr[arr_iter++];
-					if(val.id){
+			let idx = str_arr[0].indexOf("Cursor<'_>");
+			if(idx>-1){
+				debugger;
+			}
+			parse_pass_0();
+			function parse_pass_0(){
+				while (true) {
+					if(mat_idx>=str.length&&(str_arr instanceof Array)){
+						let val=str_arr[arr_iter++];
+						if(val.id){
+							tok_arr.push({
+								kind: 'id',
+								len: 1,
+								parent_index:arr_iter-1,
+							});
+							mat_idx=0;
+							continue;
+						}
+						str=str_arr[arr_iter++];
+						mat_idx=0;
+					}
+					if (mat_idx > is_val_char.lastIndex) {
+						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
+						debugger;
+					}
+					is_val_char.lastIndex = mat_idx;
+					cc = is_val_char.exec(str);
+					if (ci++ > 8192) {
+						break;
+					}
+					if (back(1) === '/' && cc[0] === '/') {
+						mat_idx = str.indexOf('\n', mat_idx);
 						tok_arr.push({
-							kind: 'id',
-							len: 1,
+							kind: 'line_comment',
+							len: mat_idx - is_val_char.lastIndex + 2,
 							parent_index:arr_iter-1,
 						});
-						mat_idx=0;
+						is_val_char.lastIndex = mat_idx + 1;
+						val_acc = [];
+						continue;
+					};
+					let g = cc?.groups;
+					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
+						val_acc.push(['i_s', g.i_s]);
+						bump();
 						continue;
 					}
-					str=str_arr[arr_iter++];
-					mat_idx=0;
-				}
-				if (mat_idx > is_val_char.lastIndex) {
-					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
-					debugger;
-				}
-				is_val_char.lastIndex = mat_idx;
-				cc = is_val_char.exec(str);
-				if (ci++ > 8192) {
-					break;
-				}
-				if (back(1) === '/' && cc[0] === '/') {
-					mat_idx = str.indexOf('\n', mat_idx);
-					tok_arr.push({
-						kind: 'line_comment',
-						len: mat_idx - is_val_char.lastIndex + 2,
-						parent_index:arr_iter-1,
-					});
-					is_val_char.lastIndex = mat_idx + 1;
-					val_acc = [];
-					continue;
-				};
-				let g = cc?.groups;
-				if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
-					val_acc.push(['i_s', g.i_s]);
-					bump();
-					continue;
-				}
-				if (val_acc[0]?.[0] === 'i_s') {
-					tok_arr.push({
-						kind: 'Ident',
-						len: val_acc.length,
-						parent_index:arr_iter-1,
-					});
-					val_acc.length = 0;
-				}
-				let mat = 'ws';
-				let kind = 'Whitespace';
-				if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
-					val_acc.push([mat, g[mat]]);
-					bump();
-					continue;
-				}
-				if (val_acc[0]?.[0] === mat) {
-					tok_arr.push({
-						kind: kind,
-						len: val_acc.length,
-						parent_index:arr_iter-1,
-					});
-					val_acc.length = 0;
-				}
-				mat = 'char';
-				kind = '_char';
-				if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
-					val_acc.push([mat, g[mat]]);
-					bump();
-					continue;
-				}
-				if (val_acc[0]?.[0] === mat) {
-					tok_arr.push({
-						kind: kind,
-						len: val_acc.length,
-						parent_index:arr_iter-1,
-					});
-					val_acc.length = 0;
-				}
-				mat = 'line';
-				kind = '_line';
-				if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
-					val_acc.push([mat, g[mat]]);
-					bump();
-					continue;
-				}
-				if (val_acc[0]?.[0] === mat) {
-					tok_arr.push({
-						kind: kind,
-						len: val_acc.length,
-						parent_index:arr_iter-1,
-					});
-					val_acc.length = 0;
-				}
-				if((arr_iter)>=str_arr.length){
-					break;
-				};
-				if (cc === null) {
-					break;
+					if (val_acc[0]?.[0] === 'i_s') {
+						tok_arr.push({
+							kind: 'Ident',
+							len: val_acc.length,
+							parent_index:arr_iter-1,
+						});
+						val_acc.length = 0;
+					}
+					let mat = 'ws';
+					let kind = 'Whitespace';
+					if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
+						val_acc.push([mat, g[mat]]);
+						bump();
+						continue;
+					}
+					if (val_acc[0]?.[0] === mat) {
+						tok_arr.push({
+							kind: kind,
+							len: val_acc.length,
+							parent_index:arr_iter-1,
+						});
+						val_acc.length = 0;
+					}
+					mat = 'char';
+					kind = '_char';
+					if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
+						val_acc.push([mat, g[mat]]);
+						bump();
+						continue;
+					}
+					if (val_acc[0]?.[0] === mat) {
+						tok_arr.push({
+							kind: kind,
+							len: val_acc.length,
+							parent_index:arr_iter-1,
+						});
+						val_acc.length = 0;
+					}
+					mat = 'line';
+					kind = '_line';
+					if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
+						val_acc.push([mat, g[mat]]);
+						bump();
+						continue;
+					}
+					if (val_acc[0]?.[0] === mat) {
+						tok_arr.push({
+							kind: kind,
+							len: val_acc.length,
+							parent_index:arr_iter-1,
+						});
+						val_acc.length = 0;
+					}
+					if((arr_iter)>=str_arr.length){
+						break;
+					};
+					if (cc === null) {
+						break;
+					}
 				}
 			}
 			let iter_index = 0;
