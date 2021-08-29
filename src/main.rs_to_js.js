@@ -11,7 +11,8 @@ x: {
 	let my_rust_sym = Symbol();
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
-		for (let i = 0, cur; i < rest.length; (cur = rest[i]), i++) {
+		for (let x of rest) {
+			if(cur.name)console.log(cur.name);
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
@@ -530,40 +531,40 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
-			// set a 100
-			// get a
-		
-			let mut output = vec![];
-		
-			for line in input.lines() {
-				let command: Vec<_> = line.split_ascii_whitespace().collect();
-				
-				match command.get(0) {
-					Some(x) if *x == "set" => {
-						output.push(parse_set(&command)?);
+				// set a 100
+				// get a
+			
+				let mut output = vec![];
+			
+				for line in input.lines() {
+					let command: Vec<_> = line.split_ascii_whitespace().collect();
+					
+					match command.get(0) {
+						Some(x) if *x == "set" => {
+							output.push(parse_set(&command)?);
+						}
+						Some(x) if *x == "get" => {
+							output.push(parse_get(&command)?);
+						}
+						Some(x) if *x == "push" => {
+							output.push(parse_push(&command)?);
+						}
+						Some(x) if *x == "pushvar" => {
+							output.push(parse_pushvar(&command)?);
+						}
+						Some(x) if *x == "pop" => {
+							output.push(Command::Pop);
+						}
+						Some(x) if *x == "add" => {
+							output.push(Command::Add);
+						}
+						Some(name) => return Err(EngineError::UnknownCommand(name.to_string())),
+						None => {}
 					}
-					Some(x) if *x == "get" => {
-						output.push(parse_get(&command)?);
-					}
-					Some(x) if *x == "push" => {
-						output.push(parse_push(&command)?);
-					}
-					Some(x) if *x == "pushvar" => {
-						output.push(parse_pushvar(&command)?);
-					}
-					Some(x) if *x == "pop" => {
-						output.push(Command::Pop);
-					}
-					Some(x) if *x == "add" => {
-						output.push(Command::Add);
-					}
-					Some(name) => return Err(EngineError::UnknownCommand(name.to_string())),
-					None => {}
 				}
-			}
-		
-			Ok(output)
-		}`);
+			
+				Ok(output)
+			}`,rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_struct(parse_pass) {
