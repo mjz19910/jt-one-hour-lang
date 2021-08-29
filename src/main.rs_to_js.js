@@ -751,7 +751,6 @@ x: {
 			__rust.exec_lines('pub mod unescape;', S_Crate_init.block_id);
 		}}
 	
-
 		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
 				S_Crate_init.block_id = block_id++;
