@@ -265,6 +265,7 @@ x: {
 					break;
 				}
 			}
+			console.log(val_acc,tok_arr);
 			let iter_index = 0;
 			let str_iter_index = 0;
 			let str_arr_in = [];
@@ -293,7 +294,6 @@ x: {
 				str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
-			console.log(str_arr_in);
 			function parse_pass_2(arr){
 				let ret = [];
 				function pr() {
