@@ -9,21 +9,26 @@ x: {
 		'rust_eval_fn'
 	];
 	let my_rust_sym = Symbol();
+	let ts=performance.now();
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
+				console.log(performance.now()-ts);
 				cur(parse_pass);
 			}
 		}
 		parse_pass++;
+		console.log(performance.now()-ts);
 		for (i of rust_exec_code_funcs) {
 			for (let cur of rest) {
 				if (i instanceof Array && i.includes(cur.name)) {
+					console.log(performance.now()-ts);
 					cur(parse_pass);
 					continue;
 				}
 				if (cur.name === i) {
+					console.log(performance.now()-ts);
 					cur(parse_pass);
 					continue;
 				}
@@ -931,7 +936,7 @@ x: {
 			pub enum DocStyle {
 				Outer,
 				Inner,
-			}`);
+			}`,rust_eval_enum.block_id);
 		}}
 	
 		${function rust_eval_all_items(parse_pass) {
