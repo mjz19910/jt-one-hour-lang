@@ -1,6 +1,7 @@
 x: {
 	let rust_exec_code_funcs = [
-		'scope_push','STATIC_init', 'S_Crate_init', 'parse_exec_init',
+		'scope_push',
+		'STATIC_init', 'S_Crate_init', 'parse_exec_init',
 		[
 			'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum', 'rust_exec_fn',
 			'rust_exec_any',
