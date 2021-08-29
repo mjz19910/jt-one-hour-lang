@@ -203,13 +203,16 @@ x: {
 						continue;
 					};
 					let g = cc?.groups;
-					if (g.i_s) {
+					if (g?.i_s) {
 						let vaa=[];
 						vaa.push(cc[0]);
 						bump();
 						while(true){
 							is_val_char.lastIndex = mat_idx;
 							cc=is_val_char.exec(str);
+							if(cc===null){
+								break;
+							}
 							if(cc.groups.i_s){
 								vaa.push(cc[0]);
 								bump();
