@@ -319,6 +319,29 @@ x: {
 				}
 				return ret;
 			}
+			function tt_parse(arr){
+				let tt_arr=[];
+				let tt_stack=[];
+				for(let cur,i=0;i<arr.length;i++){
+					cur=arr[i];
+					if(rust_tt_start.includes(cur)){
+						tt_stack.push(tt_arr);
+						tt_arr=[cur];
+						continue;
+					};
+					if(rust_tt_end.includes(cur)){
+						let tt_tmp=tt_arr;
+						tt_arr.push(cur);
+						tt_arr=tt_stack.pop();
+						tt_arr.push(tt_tmp);
+						continue;
+					}
+					tt_arr.push(cur);
+				}
+				return tt_arr;
+			}
+			let tt_arr=tt_parse(tok_arr);
+			console.log(tt_arr);
 			finish_parse(tok_arr);
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
