@@ -173,16 +173,13 @@ x: {
 			}
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
-					str=str_arr[arr_iter++];
-					if(arr_iter>str_arr.length){
+					if((arr_iter+1)>=str_arr.length){
 						break;
 					};
+					str=str_arr[arr_iter++];
 				}
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
-					debugger;
-				}
-				if(str===void 0){
 					debugger;
 				}
 				is_val_char.lastIndex = mat_idx;
@@ -286,6 +283,7 @@ x: {
 						i++;
 					}
 				}
+				return ret;
 			}
 			str_arr_in = parse_pass_2(str_arr_in);
 			str_arr_in.push(Symbol.for('EOF'));
