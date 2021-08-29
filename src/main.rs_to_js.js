@@ -305,15 +305,15 @@ x: {
 				}
 			}
 			parse_pass_1();
-			function parse_pass_1() {
+			function parse_pass_1(arr) {
 				let iter_index = 0;
 				let str_iter_index = 0;
-				let str_arr_in = [];
+				let tok_arr = [];
 				let last_index = -1;
 				let cur_arr_index = -1;
-				console.log(tok_arr);
-				for (; iter_index < tok_arr.length; iter_index++) {
-					let cur_tok = tok_arr[iter_index];
+				console.log(arr);
+				for (; iter_index < arr.length; iter_index++) {
+					let cur_tok = arr[iter_index];
 					let { parent_index } = cur_tok;
 					last_index = cur_arr_index;
 					cur_arr_index = parent_index;
@@ -323,20 +323,20 @@ x: {
 					if (cur_tok.kind === '_char') {
 						let ed = str_iter_index + cur_tok.len;
 						while (str_iter_index < ed) {
-							str_arr_in.push(str_arr[parent_index][str_iter_index]);
+							tok_arr.push(str_arr[parent_index][str_iter_index]);
 							str_iter_index++;
 						}
 						continue;
 					}
 					if (!str_arr[parent_index].slice) {
-						str_arr_in.push(str_arr[parent_index]);
+						tok_arr.push(str_arr[parent_index]);
 						continue;
 					}
-					str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
+					tok_arr.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
 					str_iter_index += cur_tok.len;
 				}
 			}
-			str_arr_in = parse_pass_2(str_arr_in);
+			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
 				let ret = [];
 				function pr() {
@@ -362,16 +362,16 @@ x: {
 			}
 			finish_parse();
 			function finish_parse() {
-				str_arr_in.push(Symbol.for('EOF'));
+				tok_arr.push(Symbol.for('EOF'));
 				__rust.block_vec[block_id_of_str] ??= [];
 				let block = __rust.block_vec[block_id_of_str];
 				if (!block.push) {
 					debugger;
 				}
-				for (let x of str_arr_in) {
+				for (let x of tok_arr) {
 					block.push(x);
 				}
-				__rust.last_exec = str_arr_in;
+				__rust.last_exec = tok_arr;
 			}
 
 		}
