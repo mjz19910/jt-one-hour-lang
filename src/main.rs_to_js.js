@@ -303,13 +303,11 @@ x: {
 						arr.pop();
 						arr.pop();
 						ret.push('::');
-						i++;
 					}
 					if (pr() === '#' && c() === '[]'[0]) {
 						arr.pop();
 						arr.pop();
 						ret.push('#' + '[]'[0]);
-						i++;
 					}
 				}
 				return ret;
