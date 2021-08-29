@@ -1142,12 +1142,12 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
+			__id = rust_eval_fn.block_id;
 			__rust.exec_lines(`
 			/// True if \`c\` is valid as a first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
@@ -1162,12 +1162,12 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
+			__id = rust_eval_fn.block_id;
 			__rust.exec_lines(`
 			/// True if \`c\` is valid as a non-first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
@@ -1210,7 +1210,14 @@ x: {
 			__rust.exec_lines(rr`
 			impl Cursor<'_> {
 				/// Parses a token from the input string.
-				fn advance_token(&mut self) -> Token {
+				${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
+					fn advance_token(&mut self) -> Token {
 					let first_char = self.bump().unwrap();
 					let token_kind = match first_char {
 						// Slash, comment or block comment.
@@ -1330,7 +1337,15 @@ x: {
 					};
 					Token::new(token_kind, self.len_consumed())
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn line_comment(&mut self) -> TokenKind {
 					debug_assert!(self.prev() == '/' && self.first() == '/');
 					self.bump();
@@ -1346,7 +1361,15 @@ x: {
 					self.eat_while(|c| c != '\n');
 					LineComment { doc_style }
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn block_comment(&mut self) -> TokenKind {
 					debug_assert!(self.prev() == '/' && self.first() == '*');
 					self.bump();
@@ -1383,13 +1406,29 @@ x: {
 			
 					BlockComment { doc_style, terminated: depth == 0 }
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn whitespace(&mut self) -> TokenKind {
 					debug_assert!(is_whitespace(self.prev()));
 					self.eat_while(is_whitespace);
 					Whitespace
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn raw_ident(&mut self) -> TokenKind {
 					debug_assert!(self.prev() == 'r' && self.first() == '#' && is_id_start(self.second()));
 					// Eat "#" symbol.
@@ -1398,14 +1437,30 @@ x: {
 					self.eat_identifier();
 					RawIdent
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn ident(&mut self) -> TokenKind {
 					debug_assert!(is_id_start(self.prev()));
 					// Start is already eaten, eat the rest of identifier.
 					self.eat_while(is_id_continue);
 					Ident
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn number(&mut self, first_digit: char) -> LiteralKind {
 					debug_assert!('0' <= self.prev() && self.prev() <= '9');
 					let mut base = Base::Decimal;
@@ -1474,7 +1529,15 @@ x: {
 						_ => Int { base, empty_int: false },
 					}
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn lifetime_or_char(&mut self) -> TokenKind {
 					debug_assert!(self.prev() == '\'');
 			
@@ -1520,7 +1583,15 @@ x: {
 						Lifetime { starts_with_number }
 					}
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn single_quoted_string(&mut self) -> bool {
 					debug_assert!(self.prev() == '\'');
 					// Check if it's a one-symbol literal.
@@ -1561,7 +1632,15 @@ x: {
 					// String was not terminated.
 					false
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				/// Eats double-quoted string and returns true
 				/// if string is terminated.
 				fn double_quoted_string(&mut self) -> bool {
@@ -1581,7 +1660,15 @@ x: {
 					// End of file reached.
 					false
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				/// Eats the double-quoted string and returns \`n_hashes\` and an error if encountered.
 				fn raw_double_quoted_string(&mut self, prefix_len: usize) -> (u16, Option<RawStrError>) {
 					// Wrap the actual function to handle the error with too many hashes.
@@ -1594,7 +1681,15 @@ x: {
 						Err(_) => (0, Some(RawStrError::TooManyDelimiters { found: n_hashes })),
 					}
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
 					debug_assert!(self.prev() == 'r');
 					let start_pos = self.len_consumed();
@@ -1659,7 +1754,15 @@ x: {
 						}
 					}
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn eat_decimal_digits(&mut self) -> bool {
 					let mut has_digits = false;
 					loop {
@@ -1676,7 +1779,15 @@ x: {
 					}
 					has_digits
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				fn eat_hexadecimal_digits(&mut self) -> bool {
 					let mut has_digits = false;
 					loop {
@@ -1693,7 +1804,15 @@ x: {
 					}
 					has_digits
 				}
-			
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				/// Eats the float exponent. Returns true if at least one digit was met,
 				/// and returns false otherwise.
 				fn eat_float_exponent(&mut self) -> bool {
@@ -1703,40 +1822,73 @@ x: {
 					}
 					self.eat_decimal_digits()
 				}
-		
-				${(function() {
-					let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
-					self = self.build();
-					__rust.get_for_expr('debug_assert!')
-						.inject_tokenstream(`(self.prev() == 'e' || self.prev() == 'E')`)
-						.finish(';').exec();
-					if (self.first() == '-' || self.first() == '+') {
-						self.bump();
+		`, __id)
+				}}
+		${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
 					}
-					self.eat_decimal_digits();
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
+				${(function() {
+							let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+							self = self.build();
+							__rust.get_for_expr('debug_assert!')
+								.inject_tokenstream(`(self.prev() == 'e' || self.prev() == 'E')`)
+								.finish(';').exec();
+							if (self.first() == '-' || self.first() == '+') {
+								self.bump();
+							}
+							self.eat_decimal_digits();
 
-				})}
-			
+						})}
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				// Eats the suffix of the literal, e.g. "_u8".
 				fn eat_literal_suffix(&mut self) {
 					self.eat_identifier();
 				}
-			
-				${function eat_identifier() {
-					let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
-					self.rust_type('&mut');
-					self.ffi_set_backing_value(this);
-					is_id_start = __rust.scope_lookup('is_id_start');
-					is_id_start = __rust.scope_lookup('is_id_continue');
-					self = self.build();
-
-					if (!is_id_start(self.first())) {
+			`, __id)
+				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
 						return;
 					}
-					self.bump();
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
+				${function eat_identifier() {
+							let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+							self.rust_type('&mut');
+							self.ffi_set_backing_value(this);
+							is_id_start = __rust.scope_lookup('is_id_start');
+							is_id_start = __rust.scope_lookup('is_id_continue');
+							self = self.build();
 
-					self.eat_while(is_id_continue);
+							if (!is_id_start(self.first())) {
+								return;
+							}
+							self.bump();
+
+							self.eat_while(is_id_continue);
+						}}
+			`, __id)
 				}}
+			${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				// Eats the identifier.
 				fn eat_identifier(&mut self) {
 					if !is_id_start(self.first()) {
@@ -1746,28 +1898,49 @@ x: {
 			
 					self.eat_while(is_id_continue);
 				}
-		
-				${(function eat_while(predicate_arg) {
-					let self = __rust.get_ref_generator().clone();
-					self.ref_type('&mut');
-					self.ref.value_type('Self');
-					self.ref.ffi_set_backing_value(this);
-					let predicate = __rust.get_fn_generator().clone();
-					predicate.value_type('mut');
-					predicate.value.value_type('impl FnMut(char) -> bool');
-					predicate.ffi_set_backing_value(predicate_arg);
-					predicate.value.throw_if_type_error();
-					while (predicate(self.first()) && !self.is_eof()) {
-						self.bump();
+		`, __id)
+				}}
+		${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
 					}
-				})}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
+				${(function eat_while(predicate_arg) {
+							let self = __rust.get_ref_generator().clone();
+							self.ref_type('&mut');
+							self.ref.value_type('Self');
+							self.ref.ffi_set_backing_value(this);
+							let predicate = __rust.get_fn_generator().clone();
+							predicate.value_type('mut');
+							predicate.value.value_type('impl FnMut(char) -> bool');
+							predicate.ffi_set_backing_value(predicate_arg);
+							predicate.value.throw_if_type_error();
+							while (predicate(self.first()) && !self.is_eof()) {
+								self.bump();
+							}
+						})}
+				`, __id)
+				}}
+				${function rust_eval_any(parse_pass) {
+					if (parse_pass === 0) {
+						rust_eval_any.block_id = block_id++;
+						return;
+					}
+					__id = rust_eval_any.block_id;
+					__rust.exec_lines(rr`
 				/// Eats symbols while predicate returns true or until the end of file is reached.
 				fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
 					while predicate(self.first()) && !self.is_eof() {
 						self.bump();
 					}
 				}
-			}`, rust_eval_impl.block_id);
+				`, __id)
+				}}
+
+			}
+			`, rust_eval_impl.block_id);
 		}}
 	`;
 	__rust.files = [];
