@@ -277,12 +277,12 @@ x: {
 					break;
 				}
 			}
-			console.log(val_acc,tok_arr);
 			let iter_index = 0;
 			let str_iter_index = 0;
 			let str_arr_in = [];
 			let last_index=-1;
 			let cur_arr_index=-1;
+			console.log(str_arr);
 			for (; iter_index < tok_arr.length; iter_index++) {
 				let cur_tok = tok_arr[iter_index];
 				let {parent_index}=cur_tok;
@@ -303,6 +303,7 @@ x: {
 					str_arr_in.push(str_arr[parent_index]);
 					continue;
 				}
+				console.log(str_arr[parent_index]);
 				str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
