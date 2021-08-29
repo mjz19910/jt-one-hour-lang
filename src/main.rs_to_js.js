@@ -3,7 +3,7 @@ x: {
 	let rr = function(mm, ...rest) {
 		for (i of rust_exec_code_funcs) {
 			for (let x of rest) {
-				if(x instanceof Array&&i.includes(x.name)){
+				if(i instanceof Array&&i.includes(x.name)){
 					x();
 					continue;
 				}
