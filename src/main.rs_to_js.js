@@ -192,6 +192,7 @@ x: {
 					tok_arr.push({
 						kind: 'line_comment',
 						len: mat_idx - is_val_char.lastIndex + 2,
+						parent_index:arr_iter-1,
 					});
 					is_val_char.lastIndex = mat_idx + 1;
 					val_acc = [];
@@ -204,7 +205,11 @@ x: {
 					continue;
 				}
 				if (val_acc[0]?.[0] === 'i_s') {
-					tok_arr.push({ kind: 'Ident', len: val_acc.length });
+					tok_arr.push({
+						kind: 'Ident',
+						len: val_acc.length,
+						parent_index:arr_iter-1,
+					});
 					val_acc.length = 0;
 				}
 				let mat = 'ws';
@@ -215,7 +220,11 @@ x: {
 					continue;
 				}
 				if (val_acc[0]?.[0] === mat) {
-					tok_arr.push({ kind: kind, len: val_acc.length });
+					tok_arr.push({
+						kind: kind,
+						len: val_acc.length,
+						parent_index:arr_iter-1,
+					});
 					val_acc.length = 0;
 				}
 				mat = 'char';
@@ -226,7 +235,11 @@ x: {
 					continue;
 				}
 				if (val_acc[0]?.[0] === mat) {
-					tok_arr.push({ kind: kind, len: val_acc.length });
+					tok_arr.push({
+						kind: kind,
+						len: val_acc.length,
+						parent_index:arr_iter-1,
+					});
 					val_acc.length = 0;
 				}
 				mat = 'line';
@@ -237,7 +250,11 @@ x: {
 					continue;
 				}
 				if (val_acc[0]?.[0] === mat) {
-					tok_arr.push({ kind: kind, len: val_acc.length });
+					tok_arr.push({
+						kind: kind,
+						len: val_acc.length,
+						parent_index:arr_iter-1,
+					});
 					val_acc.length = 0;
 				}
 				if (cc === null) {
@@ -252,12 +269,12 @@ x: {
 				if (cur_tok.kind === '_char') {
 					let ed = str_iter_index + cur_tok.len;
 					while (str_iter_index < ed) {
-						str_arr_in.push(str[str_iter_index]);
+						str_arr_in.push(str_arr[parent_index][str_iter_index]);
 						str_iter_index++;
 					}
 					continue;
 				}
-				str_arr_in.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
+				str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
 			function parse_pass_2(arr){
