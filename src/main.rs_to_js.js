@@ -1634,7 +1634,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1662,7 +1662,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1683,7 +1683,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1756,7 +1756,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1781,7 +1781,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1806,7 +1806,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1824,7 +1824,7 @@ x: {
 				}
 		`, __id)
 				}}
-		${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1845,7 +1845,7 @@ x: {
 						})}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1858,7 +1858,7 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1882,32 +1882,32 @@ x: {
 						}}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				// Eats the identifier.
-				fn eat_identifier(&mut self) {
-					if !is_id_start(self.first()) {
-						return;
+					// Eats the identifier.
+					fn eat_identifier(&mut self) {
+						if !is_id_start(self.first()) {
+							return;
+						}
+						self.bump();
+				
+						self.eat_while(is_id_continue);
 					}
-					self.bump();
-			
-					self.eat_while(is_id_continue);
-				}
-		`, __id)
+			`, __id);
 				}}
-		${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				${(function eat_while(predicate_arg) {
+						${function eat_while(predicate_arg) {
 							let self = __rust.get_ref_generator().clone();
 							self.ref_type('&mut');
 							self.ref.value_type('Self');
@@ -1920,8 +1920,8 @@ x: {
 							while (predicate(self.first()) && !self.is_eof()) {
 								self.bump();
 							}
-						})}
-				`, __id)
+						}}
+					`, __id)
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1930,13 +1930,13 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				/// Eats symbols while predicate returns true or until the end of file is reached.
-				fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
-					while predicate(self.first()) && !self.is_eof() {
-						self.bump();
+					/// Eats symbols while predicate returns true or until the end of file is reached.
+					fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
+						while predicate(self.first()) && !self.is_eof() {
+							self.bump();
+						}
 					}
-				}
-				`, __id)
+					`, __id)
 				}}
 
 			}
