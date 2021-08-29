@@ -1191,7 +1191,6 @@ x: {
 				rust_eval_impl.block_id = block_id++;
 				return;
 			}
-			debugger;
 			__rust.exec_lines(rr`
 			impl Cursor<'_> {
 				/// Parses a token from the input string.
