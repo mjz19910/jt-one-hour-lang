@@ -254,8 +254,7 @@ x: {
 		
 		${(function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				S_Crate_init.block_id = block_id;
+				S_Crate_init.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
@@ -263,8 +262,7 @@ x: {
 
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_enum.block_id = block_id;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`enum Command {
@@ -279,8 +277,7 @@ x: {
 	
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_enum.block_id = block_id;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
@@ -293,8 +290,7 @@ x: {
 	
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_enum.block_id = block_id;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
@@ -307,8 +303,7 @@ x: {
 	
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_enum.block_id = block_id;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Debug)]
@@ -323,8 +318,7 @@ x: {
 	
 		${function rust_eval_struct(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_struct.block_id = block_id;
+				rust_eval_struct.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`struct Evaluator {
@@ -335,8 +329,7 @@ x: {
 
 		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_impl.block_id = block_id;
+				rust_eval_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`impl Evaluator {
@@ -398,8 +391,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
@@ -409,8 +401,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
@@ -426,8 +417,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
@@ -442,8 +432,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
@@ -459,8 +448,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
@@ -477,8 +465,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
@@ -494,8 +481,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
@@ -511,8 +497,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
@@ -528,8 +513,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
@@ -571,8 +555,7 @@ x: {
 	
 	${function rust_eval_struct(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_struct.block_id = block_id;
+				rust_eval_struct.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`struct Typechecker {
@@ -582,8 +565,7 @@ x: {
 	
 		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_impl.block_id = block_id;
+				rust_eval_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`impl Typechecker {
@@ -602,8 +584,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -625,8 +606,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -646,8 +626,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -667,8 +646,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -688,8 +666,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -709,8 +686,7 @@ x: {
 	
 		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_fn.block_id = block_id;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
@@ -738,8 +714,7 @@ x: {
 		})}
 		${function S_rust_doc_comment_eval(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				S_rust_doc_comment_eval.block_id = block_id;
+				S_rust_doc_comment_eval.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`//! Low-level Rust lexer.
@@ -768,8 +743,7 @@ x: {
 	
 		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				S_Crate_init.block_id = block_id;
+				S_Crate_init.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines('mod cursor;', S_Crate_init.block_id);
@@ -779,8 +753,7 @@ x: {
 
 		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				S_Crate_init.block_id = block_id;
+				S_Crate_init.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines('#[cfg(test)]', S_Crate_init.block_id);
@@ -789,8 +762,7 @@ x: {
 
 		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				S_Crate_init.block_id = block_id;
+				S_Crate_init.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`
@@ -803,8 +775,7 @@ x: {
 
 		${function rust_eval_struct(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_struct.block_id = block_id;
+				rust_eval_struct.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`/// Parsed token.
@@ -823,8 +794,7 @@ x: {
 	
 		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_impl.block_id = block_id;
+				rust_eval_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`
@@ -837,8 +807,7 @@ x: {
 	
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_enum.block_id = block_id;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`/// Enum representing common lexeme types.
@@ -930,8 +899,7 @@ x: {
 	
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_enum.block_id = block_id;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -943,8 +911,7 @@ x: {
 	
 		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_all_items.block_id = block_id;
+				rust_eval_all_items.block_id = block_id++;
 				return;
 			}
 			__id = rust_eval_all_items.block_id;
@@ -1110,8 +1077,7 @@ x: {
 	
 		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
-				block_id++;
-				rust_eval_impl.block_id = block_id;
+				rust_eval_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`
