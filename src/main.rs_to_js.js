@@ -176,9 +176,6 @@ x: {
 				str=str_arr[arr_iter++];
 			}
 			let idx = str_arr[0].indexOf("Cursor");
-			if(idx>-1){
-				debugger;
-			}
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
 					if((arr_iter+1)>=str_arr.length){
