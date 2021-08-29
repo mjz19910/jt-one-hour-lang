@@ -292,6 +292,7 @@ x: {
 							kind: kind,
 							len: cc[0].length,
 						});
+						is_val_char.lastIndex = mat_idx;
 						continue;
 					}
 					mat = 's_quo';
@@ -302,6 +303,7 @@ x: {
 							kind: kind,
 							len: 1,
 						});
+						is_val_char.lastIndex = mat_idx;
 						continue;
 					}
 					function do_mat(mat, kind) {
