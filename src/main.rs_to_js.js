@@ -787,7 +787,7 @@ x: {
 	}
 	`;
 	__rust.drop(__rust_root_scope);
-	__rust.crates ??= [];
+	__rust.crates = [];
 	__rust.scope.files = [];
 	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec]);
 	__rust.crates.push(['onehour-language', __rust.scope.files]);
