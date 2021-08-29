@@ -205,8 +205,7 @@ x: {
 					let g = cc?.groups;
 					if (g?.i_s) {
 						let vaa=[];
-						vaa.push(cc[0]);
-						bump();
+						mat_idx--;
 						while(true){
 							is_val_char.lastIndex = mat_idx;
 							cc=is_val_char.exec(str);
@@ -226,6 +225,8 @@ x: {
 							len: vaa.length,
 							parent_index:arr_iter-1,
 						});
+						is_val_char.lastIndex = mat_idx;
+						continue;
 					}
 					let mat = 'ws';
 					let kind = 'Whitespace';
