@@ -206,7 +206,7 @@ x: {
 					};
 					x:if(cc&&cc[0]==="'"){
 						//could be lifetime
-						let mat_lt=/'[a-zA-Z_]+?(')?/g;
+						let mat_lt=/'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex=mat_idx;
 						cc=mat_lt.exec(str);
 						if(cc===null){
@@ -215,14 +215,21 @@ x: {
 							cc=mat_str.exec(str);
 							mat_idx+=cc[0].length;
 							tok_arr.push({
-								kind: {type:'Char',terminated:true},
+								kind: {
+									type:'Char',
+									terminated:true
+								},
 								len: cc[0].length,
 							});
 							cur_regex.lastIndex=mat_idx;
 							continue;
 						}
+						let starts_with_number=cc[0].match(/[0-9]/)!==null;
 						tok_arr.push({
-							kind: 'lifetime',
+							kind: {
+								type:'Lifetime',
+								starts_with_number,
+							},
 							len: cc[0].length,
 						});
 						mat_idx+=cc[0].length;
