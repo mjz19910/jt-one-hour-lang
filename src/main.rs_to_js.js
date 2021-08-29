@@ -293,6 +293,7 @@ x: {
 				str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
+			console.log(str_arr_in);
 			function parse_pass_2(arr){
 				let ret = [];
 				function pr() {
@@ -325,9 +326,6 @@ x: {
 			}
 			for (let x of str_arr_in) {
 				block.push(x);
-			}
-			if(str_arr_in.includes('Cursor')){
-				debugger;
 			}
 			__rust.last_exec = str_arr_in;
 		}
