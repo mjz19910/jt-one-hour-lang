@@ -422,6 +422,7 @@ x: {
 			}
 			function tt_parse(arr){
 				let tt_arr=[];
+				let kw=['fn','enum','impl','use','struct','#'];
 				let tt_stack=[tt_arr];
 				for(let cur,i=0;i<arr.length;i++){
 					cur=arr[i];
@@ -437,6 +438,13 @@ x: {
 						tt_arr.push(tt_tmp);
 						continue;
 					}
+					if(kw.includes(arr[i+1])){
+						tt_arr.push(cur);
+						continue;
+					}
+					if(cur.match(/[ ]/)){
+						tt_arr.push(cur);
+					}
 					if(cur.trim().length===0){
 						continue;
 					}
@@ -444,7 +452,8 @@ x: {
 				}
 				return tt_arr;
 			}
-			let tt_arr=tt_parse(tok_arr);
+			let tt_tmp=tok_arr.filter(e=>e!=='\t');
+			let tt_arr=tt_parse(tt_tmp);
 			console.log(tt_arr);
 			finish_parse(tok_arr);
 			function finish_parse(arr) {
