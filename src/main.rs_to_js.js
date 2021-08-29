@@ -266,9 +266,6 @@ x: {
 			let str_arr_in = [];
 			for (; iter_index < tok_arr.length; iter_index++) {
 				let cur_tok = tok_arr[iter_index];
-				if(iter_index<3){
-					debugger;
-				}
 				let {parent_index}=cur_tok;
 				if (cur_tok.kind === '_char') {
 					let ed = str_iter_index + cur_tok.len;
