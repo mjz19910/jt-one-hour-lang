@@ -220,14 +220,14 @@ x: {
 			}
 			console.log('ps3',get_log_time());
 			let s2_arr = [];
+			function pr() {
+				return s2_arr?.[s2_arr.length - 2];
+			}
+			function c() {
+				return s2_arr?.[s2_arr.length - 1];
+			}
 			for (let i = 0; i < str_arr.length; i++) {
 				s2_arr.push(str_arr[i]);
-				function pr() {
-					return s2_arr?.[s2_arr.length - 2];
-				}
-				function c() {
-					return s2_arr?.[s2_arr.length - 1];
-				}
 				if (pr() === ':' && c() === ':') {
 					s2_arr.pop();
 					s2_arr.pop();
