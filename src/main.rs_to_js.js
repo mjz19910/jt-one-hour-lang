@@ -173,16 +173,16 @@ x: {
 			}
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
+					str=str_arr[arr_iter++];
 					if(arr_iter>str_arr.length){
 						break;
 					};
-					str=str_arr[arr_iter++];
-				}
-				if(str===void 0){
-					debugger;
 				}
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
+					debugger;
+				}
+				if(str===void 0){
 					debugger;
 				}
 				is_val_char.lastIndex = mat_idx;
