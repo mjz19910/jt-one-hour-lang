@@ -813,7 +813,8 @@ x: {
 				rust_eval_enum.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`/// Enum representing common lexeme types.
+			__rust.exec_lines(`
+			/// Enum representing common lexeme types.
 			// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum TokenKind {
@@ -895,7 +896,8 @@ x: {
 			
 				/// Unknown token, not expected by the lexer, e.g. "№"
 				Unknown,
-			}`, rust_eval_enum.block_id);
+			}
+			`, rust_eval_enum.block_id);
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
@@ -904,11 +906,13 @@ x: {
 				rust_eval_enum.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+			__rust.exec_lines(`
+			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum DocStyle {
 				Outer,
 				Inner,
-			}`,rust_eval_enum.block_id);
+			}
+			`,rust_eval_enum.block_id);
 		}}
 	
 		${function rust_eval_all_items(parse_pass) {
@@ -917,7 +921,8 @@ x: {
 				return;
 			}
 			__id = rust_eval_all_items.block_id;
-			__rust.exec_lines(`#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+			__rust.exec_lines(`
+			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum LiteralKind {
 				/// "12_u8", "0o100", "0b120i99"
 				Int { base: Base, empty_int: bool },
@@ -935,8 +940,14 @@ x: {
 				RawStr { n_hashes: u16, err: Option<RawStrError> },
 				/// "br"abc"", "br#"abc"#", "br####"ab"###"c"####", "br#"a"
 				RawByteStr { n_hashes: u16, err: Option<RawStrError> },
-			}
-			
+			}`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// Error produced validating a raw string. Represents cases like:
 			/// - \`r##~"abcde"##\`: \`InvalidStarter\`
 			/// - \`r###"abcde"##\`: \`NoTerminator { expected: 3, found: 2, possible_terminator_offset: Some(11)\`
@@ -952,7 +963,14 @@ x: {
 				/// More than 65535 \`#\`s exist.
 				TooManyDelimiters { found: usize },
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// Base of numeric literal encoding according to its prefix.
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum Base {
@@ -965,7 +983,14 @@ x: {
 				/// Literal doesn't contain a prefix.
 				Decimal,
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// \`rustc\` allows files to have a shebang, e.g. "#!/usr/bin/rustrun",
 			/// but shebang isn't a part of rust syntax.
 			pub fn strip_shebang(input: &str) -> Option<usize> {
@@ -990,13 +1015,27 @@ x: {
 				}
 				None
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// Parses the first token from the provided input string.
 			pub fn first_token(input: &str) -> Token {
 				debug_assert!(!input.is_empty());
 				Cursor::new(input).advance_token()
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// Creates an iterator that produces tokens from the input string.
 			pub fn tokenize(mut input: &str) -> impl Iterator<Item = Token> + '_ {
 				std::iter::from_fn(move || {
@@ -1008,7 +1047,14 @@ x: {
 					Some(token)
 				})
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// True if \`c\` is considered a whitespace according to Rust language definition.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/whitespace.html)
 			/// for definitions of these classes.
@@ -1040,7 +1086,14 @@ x: {
 					| '\u{2029}' // PARAGRAPH SEPARATOR
 				)
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// True if \`c\` is valid as a first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
 			/// a formal definition of valid identifier name.
@@ -1052,7 +1105,14 @@ x: {
 					|| c == '_'
 					|| (c > '\x7f' && unicode_xid::UnicodeXID::is_xid_start(c))
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// True if \`c\` is valid as a non-first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
 			/// a formal definition of valid identifier name.
@@ -1065,7 +1125,14 @@ x: {
 					|| c == '_'
 					|| (c > '\x7f' && unicode_xid::UnicodeXID::is_xid_continue(c))
 			}
-			
+			`,__id)}}
+			${function rust_eval_all_items(parse_pass) {
+				if (parse_pass === 0) {
+					rust_eval_all_items.block_id = block_id++;
+					return;
+				}
+				__id = rust_eval_all_items.block_id;
+				__rust.exec_lines(`
 			/// The passed string is lexically an identifier.
 			pub fn is_ident(string: &str) -> bool {
 				let mut chars = string.chars();
@@ -1074,7 +1141,8 @@ x: {
 				} else {
 					false
 				}
-			}`, __id);
+			}
+			`, __id);
 		}}
 	
 		${function rust_eval_impl(parse_pass) {
