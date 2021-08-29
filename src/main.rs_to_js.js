@@ -449,6 +449,11 @@ x: {
 					if(cur.match(/[\t]/)){
 						continue;
 					}
+					if(cur.match(/[\n][\n]+/)){
+						let ea=cur.split('');
+						tt_arr.push(...ea);
+						continue;
+					}
 					if(cur==='\n'&&tt_arr[tt_arr.lenght-1]===cur){
 						continue;
 					}
