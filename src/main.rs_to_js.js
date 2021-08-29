@@ -204,11 +204,20 @@ x: {
 						val_acc = [];
 						continue;
 					};
-					if(cc&&cc[0]==="'"){
+					x:if(cc&&cc[0]==="'"){
 						//could be lifetime
 						let mat_lt=/'[a-zA-Z_]+?(')?/g;
 						mat_lt.lastIndex=mat_idx;
 						cc=mat_lt.exec(str);
+						if(cc===null){
+							let mat_str=/'(\\.|((?!').))+?'/g;
+							mat_str.lastIndex=mat_idx;
+							cc=mat_str.exec(str);
+							console.log(cc[0],str.slice(mat_idx,mat_idx+7));
+							mat_idx+=cc[0].length;
+							cur_regex.lastIndex=mat_idx;
+							continue;
+						}
 						console.log(cc,str.slice(mat_idx,mat_idx+7));
 						mat_idx+=cc[0].length;
 						cur_regex.lastIndex=mat_idx;
