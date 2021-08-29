@@ -182,8 +182,8 @@ x: {
 			tok_arr = parse_pass_0(str);
 			function parse_pass_0(str) {
 				let tok_arr = [];
-				let str_d_mat=/"(\\.|(?!").)+"/g;
-				let str_s_mat=/'(\\.|(?!').)+'/g;
+				let str_d_mat=/"(?:\\.|(?!").)+"/g;
+				let str_s_mat=/'(?:\\.|(?!').)+'/g;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
