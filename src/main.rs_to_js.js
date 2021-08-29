@@ -1,9 +1,9 @@
 x: {
 	let rust_exec_code_funcs = [
 		'STATIC_init', 'S_Crate_init',
-		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum','rust_eval_fn']
+		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum', 'rust_eval_fn']
 	];
-	let rust_autoexec_funcs=[
+	let rust_autoexec_funcs = [
 		'STATIC_init', 'S_Crate_init',
 		'rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum',
 		'rust_eval_fn'
@@ -12,7 +12,7 @@ x: {
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
 		for (let i = 0, cur; i < rest.length; (cur = rest[i]), i++) {
-			if (typeof cur === 'function'&&rust_autoexec_funcs.includes(cur.name)) {
+			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
 		}
@@ -62,11 +62,11 @@ x: {
 				}
 				this.host_backing_value = value;
 			}
-			rust_type(value){
+			rust_type(value) {
 				if (this.is_mut_borrow) {
 					throw Error('can\' borrow');
 				}
-				this._rust_type=value;
+				this._rust_type = value;
 			}
 			no_mut() {
 				this.is_mut_borrow = true;
@@ -489,7 +489,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -506,7 +506,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -520,10 +520,10 @@ x: {
 				let var_name = parse_var_name(input[1])?;
 			
 				Ok(Command::PushVar(var_name))
-			}`,rust_eval_fn.block_id);
+			}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -1591,7 +1591,7 @@ x: {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
-			self=self.bake();
+			self = self.bake();
 			/*if !is_id_start(self.first()) {
 				return;
 			}*/
