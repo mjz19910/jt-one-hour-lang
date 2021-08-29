@@ -413,7 +413,6 @@ x: {
 						break;
 					}
 					if(back(1)==='/'&&cc[0]==='/'){
-						console.log(val_acc);
 						mat_idx=str.indexOf('\n',mat_idx);
 						tok_arr.push({
 							kind:'line_comment',
@@ -585,7 +584,7 @@ pub struct Token {
 					rs_lines[ri]=[];
 				}
 			}
-			console.log(rs_lines);
+			console.log(...rs_lines);
 		})}
 	
 	impl Token {
@@ -1502,7 +1501,6 @@ pub struct Token {
 	let mt = rust_match_rx.exec(rust_code);
 	rust_code.slice(cidx, mt.index);
 	cidx = mt.index + mt[0].length;
-	test.runAll();
-	test;
+	//test.runAll();
 	//# sourceURL=https://github.com/mjz19910/jt-one-hour-lang/blob/master/src/main.rs_to_js.js
 }
