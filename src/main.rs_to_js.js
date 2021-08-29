@@ -159,8 +159,8 @@ x: {
 					tok_arr.push({kind:kind,len:val_acc.length});
 					val_acc.length=0;
 				}
-				let mat='char';
-				let kind='_char';
+				mat='char';
+				kind='_char';
 				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
 					val_acc.push([mat,g[mat]]);
 					bump();
@@ -170,8 +170,8 @@ x: {
 					tok_arr.push({kind:kind,len:val_acc.length});
 					val_acc.length=0;
 				}
-				let mat='line';
-				let kind='_line';
+				mat='line';
+				kind='_line';
 				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
 					val_acc.push([mat,g[mat]]);
 					bump();
