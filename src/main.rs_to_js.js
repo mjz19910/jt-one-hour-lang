@@ -1377,22 +1377,22 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn line_comment(&mut self) -> TokenKind {
-					debug_assert!(self.prev() == '/' && self.first() == '/');
-					self.bump();
-			
-					let doc_style = match self.first() {
-						// \`//!\` is an inner line doc comment.
-						'!' => Some(DocStyle::Inner),
-						// \`////\` (more than 3 slashes) is not considered a doc comment.
-						'/' if self.second() != '/' => Some(DocStyle::Outer),
-						_ => None,
-					};
-			
-					self.eat_while(|c| c != '\n');
-					LineComment { doc_style }
-				}
-			`, __id)
+					fn line_comment(&mut self) -> TokenKind {
+						debug_assert!(self.prev() == '/' && self.first() == '/');
+						self.bump();
+				
+						let doc_style = match self.first() {
+							// \`//!\` is an inner line doc comment.
+							'!' => Some(DocStyle::Inner),
+							// \`////\` (more than 3 slashes) is not considered a doc comment.
+							'/' if self.second() != '/' => Some(DocStyle::Outer),
+							_ => None,
+						};
+				
+						self.eat_while(|c| c != '\n');
+						LineComment { doc_style }
+					}
+				`, __id)
 				}}
 			${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1401,43 +1401,43 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn block_comment(&mut self) -> TokenKind {
-					debug_assert!(self.prev() == '/' && self.first() == '*');
-					self.bump();
-			
-					let doc_style = match self.first() {
-						// \`/*!\` is an inner block doc comment.
-						'!' => Some(DocStyle::Inner),
-						// \`/***\` (more than 2 stars) is not considered a doc comment.
-						// \`/**/\` is not considered a doc comment.
-						'*' if !matches!(self.second(), '*' | '/') => Some(DocStyle::Outer),
-						_ => None,
-					};
-			
-					let mut depth = 1usize;
-					while let Some(c) = self.bump() {
-						match c {
-							'/' if self.first() == '*' => {
-								self.bump();
-								depth += 1;
-							}
-							'*' if self.first() == '/' => {
-								self.bump();
-								depth -= 1;
-								if depth == 0 {
-									// This block comment is closed, so for a construction like "/* */ */"
-									// there will be a successfully parsed block comment "/* */"
-									// and " */" will be processed separately.
-									break;
+					fn block_comment(&mut self) -> TokenKind {
+						debug_assert!(self.prev() == '/' && self.first() == '*');
+						self.bump();
+				
+						let doc_style = match self.first() {
+							// \`/*!\` is an inner block doc comment.
+							'!' => Some(DocStyle::Inner),
+							// \`/***\` (more than 2 stars) is not considered a doc comment.
+							// \`/**/\` is not considered a doc comment.
+							'*' if !matches!(self.second(), '*' | '/') => Some(DocStyle::Outer),
+							_ => None,
+						};
+				
+						let mut depth = 1usize;
+						while let Some(c) = self.bump() {
+							match c {
+								'/' if self.first() == '*' => {
+									self.bump();
+									depth += 1;
 								}
+								'*' if self.first() == '/' => {
+									self.bump();
+									depth -= 1;
+									if depth == 0 {
+										// This block comment is closed, so for a construction like "/* */ */"
+										// there will be a successfully parsed block comment "/* */"
+										// and " */" will be processed separately.
+										break;
+									}
+								}
+								_ => (),
 							}
-							_ => (),
 						}
+				
+						BlockComment { doc_style, terminated: depth == 0 }
 					}
-			
-					BlockComment { doc_style, terminated: depth == 0 }
-				}
-			`, __id)
+				`, __id)
 				}}
 			${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1446,12 +1446,12 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn whitespace(&mut self) -> TokenKind {
-					debug_assert!(is_whitespace(self.prev()));
-					self.eat_while(is_whitespace);
-					Whitespace
-				}
-			`, __id)
+					fn whitespace(&mut self) -> TokenKind {
+						debug_assert!(is_whitespace(self.prev()));
+						self.eat_while(is_whitespace);
+						Whitespace
+					}
+				`, __id)
 				}}
 			${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1460,15 +1460,15 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn raw_ident(&mut self) -> TokenKind {
-					debug_assert!(self.prev() == 'r' && self.first() == '#' && is_id_start(self.second()));
-					// Eat "#" symbol.
-					self.bump();
-					// Eat the identifier part of RawIdent.
-					self.eat_identifier();
-					RawIdent
-				}
-			`, __id)
+					fn raw_ident(&mut self) -> TokenKind {
+						debug_assert!(self.prev() == 'r' && self.first() == '#' && is_id_start(self.second()));
+						// Eat "#" symbol.
+						self.bump();
+						// Eat the identifier part of RawIdent.
+						self.eat_identifier();
+						RawIdent
+					}
+				`, __id)
 				}}
 			${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1477,13 +1477,13 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn ident(&mut self) -> TokenKind {
-					debug_assert!(is_id_start(self.prev()));
-					// Start is already eaten, eat the rest of identifier.
-					self.eat_while(is_id_continue);
-					Ident
-				}
-			`, __id)
+					fn ident(&mut self) -> TokenKind {
+						debug_assert!(is_id_start(self.prev()));
+						// Start is already eaten, eat the rest of identifier.
+						self.eat_while(is_id_continue);
+						Ident
+					}
+				`, __id)
 				}}
 			${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
