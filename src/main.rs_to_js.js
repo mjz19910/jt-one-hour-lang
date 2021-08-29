@@ -280,7 +280,7 @@ x: {
 					}
 				}
 			}
-			str_arr = str_arr_next;
+			str_arr = parse_pass_2(str_arr);
 			str_arr.push(Symbol.for('EOF'));
 			__rust.block_vec[block_id_of_str] ??= [];
 			let block = __rust.block_vec[block_id_of_str];
