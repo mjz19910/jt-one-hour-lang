@@ -377,19 +377,6 @@ x: {
 
 	let __rust_root_scope;
 	__rust_root_scope = __rust.push_block_vec();
-	test_0();
-	function test_0() {
-		let __id = block_id++;
-		__rust.exec_lines(`#[derive(Debug)]
-		enum Command {
-			SetVar(String, Value),
-			GetVar(String),
-			PushVar(String),
-			Push(Value),
-			Pop,
-			Add,
-		}`, __id);
-	}
 	let rust_code = rr`
 	${function parse_exec_init(parse_pass) {
 			if (parse_pass === 0) {
