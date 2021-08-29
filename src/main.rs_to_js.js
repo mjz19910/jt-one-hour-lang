@@ -1755,7 +1755,7 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			is_id_start = __rust.scope_lookup('is_id_start');
-			is_id_start = __rust.scope_lookup('is_id_continue');
+			is_id_continue = __rust.scope_lookup('is_id_continue');
 			self = self.build();
 
 			self.eat_identifier();
