@@ -56,13 +56,15 @@ x: {
 		if (scope) {
 			__rust.drop(scope);
 		}
+		let rr_ref=__rust.RemoteRef(__rust.scope,'match-ref');
+		rr_ref.make_ref(res);
 		return mm.raw.join('');
 	};
 	function rust_static_init() {
 		if (__rust) return;
 		class RemoteRef {
-			constructor(parent) {
-				this.ref_type = 'block';
+			constructor(parent,ref_type) {
+				this.ref_type = ref_type;
 				this.ref = null;
 				this.parent = parent;
 			}
@@ -84,6 +86,7 @@ x: {
 				this.block_vec = [];
 				this.block_vec_stack = [];
 				this.block_vec_ref = [];
+				this.RemoteRef=RemoteRef;
 			}
 		};
 		class RustRoot {
@@ -96,7 +99,7 @@ x: {
 				if (data.length === 1) {
 					data = data[0];
 				}
-				let ref = new RemoteRef(this.scope);
+				let ref = new RemoteRef(this.scope,'block');
 				ref.make_ref(data);
 				this.scope.block_vec[block_id] = ref;
 			}
