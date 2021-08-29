@@ -281,6 +281,7 @@ x: {
 			}
 			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
+				let valid_tt=true;
 				let ret = [];
 				function c(n) {
 					return ret?.[ret.length - n];
@@ -298,17 +299,22 @@ x: {
 						ret.pop();
 						ret.push('::');
 					}
-					if (a() === '#' && b() === '[]'[0]) {
+					if (!valid_tt&&a() === '#' && b() === '[]'[0]) {
 						ret.pop();
 						ret.pop();
 						ret.push('#' + '[]'[0]);
 					}
-					if (c(3) === '#' && c(2) === '!' && c(1) === '[]'[0]) {
+					if (!valid_tt&&c(3) === '#' && c(2) === '!' && c(1) === '[]'[0]) {
 						for (let x = 0; x < 3; x++) {
 							ret.pop();
 						}
 						ret.push('#!' + '[]'[0]);
-
+					}
+					if (valid_tt&&c(2) === '#' && c(1) === '!') {
+						for (let x = 0; x < 2; x++) {
+							ret.pop();
+						}
+						ret.push('#!' + '[]'[0]);
 					}
 				}
 				return ret;
