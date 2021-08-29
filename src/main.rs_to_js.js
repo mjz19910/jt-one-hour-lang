@@ -280,17 +280,17 @@ x: {
 					}
 				}
 			}
-			str_arr = parse_pass_2(str_arr);
-			str_arr.push(Symbol.for('EOF'));
+			str_arr_in = parse_pass_2(str_arr_in);
+			str_arr_in.push(Symbol.for('EOF'));
 			__rust.block_vec[block_id_of_str] ??= [];
 			let block = __rust.block_vec[block_id_of_str];
 			if (!block.push) {
 				debugger;
 			}
-			for (let x of str_arr) {
+			for (let x of str_arr_in) {
 				block.push(x);
 			}
-			__rust.last_exec = str_arr;
+			__rust.last_exec = str_arr_in;
 		}
 		__rust.log_lines = function(callback_function) {
 			let rs_lines = [[]];
