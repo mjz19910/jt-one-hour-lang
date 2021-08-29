@@ -346,10 +346,10 @@ x: {
 			return ret;
 		}
 		class BlockRef {
-			constructor(scope, ref, parent_ref) {
+			constructor(scope, ref, parent_block_id) {
 				this.ref_type = 'block';
 				this.ref = ref;
-				this.parent_ref = parent_ref;
+				this.parent_block_id = parent_block_id;
 				this.scope = scope;
 			}
 			deref() {
