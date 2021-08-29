@@ -34,8 +34,9 @@ x: {
 		return mm.raw.join('');
 	};
 	let block_id = 0;
+	let __rust;
 	function rust_static_init() {
-		if (__rust && (__rust.sym === my_rust_sym)) return;
+		if (__rust) return;
 		__rust = { sym: my_rust_sym };
 		class RefGenerator {
 			constructor(from) {
