@@ -206,8 +206,11 @@ x: {
 					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
 						let vaa=[];
 						vaa.push(cc[0]);
+						bump();
 						while(true){
+							is_val_char.lastIndex = mat_idx;
 							cc=is_val_char.exec(str);
+							bump();
 							if(cc.groups.i_s){
 								vaa.push(cc[0]);
 							}else{
@@ -216,7 +219,7 @@ x: {
 						}
 						tok_arr.push({
 							kind: 'Ident',
-							len: vaa.length,
+							len: vaa.length-1,
 							parent_index:arr_iter-1,
 						});
 						continue;
