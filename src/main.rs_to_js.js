@@ -229,7 +229,7 @@ x: {
 							if (cc === null) {
 								break;
 							}
-							if (cc.groups.i_s) {
+							if (cc.groups[mat]) {
 								vaa.push(cc[0]);
 								bump();
 							} else {
@@ -238,7 +238,7 @@ x: {
 						}
 						console.log(vaa);
 						tok_arr.push({
-							kind: 'Ident',
+							kind: kind,
 							len: vaa.length,
 							parent_index: arr_iter - 1,
 						});
