@@ -200,16 +200,28 @@ x: {
 					}
 					mat = 'i_s';
 					kind = 'Ident';
-					do_mat(mat,kind);
+					if (g&&g[mat]){
+						do_mat(mat,kind);
+						continue;
+					}
 					mat = 'ws';
 					kind = 'Whitespace';
-					do_mat(mat,kind);
+					if (g&&g[mat]){
+						do_mat(mat,kind);
+						continue;
+					}
 					mat = 'char';
 					kind = '_char';
-					do_mat(mat,kind);
+					if (g&&g[mat]){
+						do_mat(mat,kind);
+						continue;
+					}
 					mat = 'line';
 					kind = '_line';
-					do_mat(mat,kind);
+					if (g&&g[mat]){
+						do_mat(mat,kind);
+						continue;
+					}
 					function do_mat(mat,kind){
 						if (g&&g[mat]) {
 							let vaa = [];
@@ -231,7 +243,7 @@ x: {
 								len: vaa.length,
 							});
 							is_val_char.lastIndex = mat_idx;
-							continue;
+							return;
 						}
 					}
 					if (cc === null) {
