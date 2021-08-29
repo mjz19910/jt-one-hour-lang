@@ -97,13 +97,11 @@ x: {
 			ts=performance.now();
 			return ret;
 		}
+		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
 			}
-			let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
-			let rx = /^[a-zA-Z_]/;
-			let sp = /^[ ]/;
 			let val_acc = [];
 			let tok_arr = [];
 			let cur;
