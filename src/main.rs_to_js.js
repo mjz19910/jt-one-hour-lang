@@ -360,18 +360,18 @@ x: {
 				}
 				return ret;
 			}
-			finish_parse();
-			function finish_parse() {
-				tok_arr.push(Symbol.for('EOF'));
+			finish_parse(tok_arr);
+			function finish_parse(arr) {
+				arr.push(Symbol.for('EOF'));
 				__rust.block_vec[block_id_of_str] ??= [];
 				let block = __rust.block_vec[block_id_of_str];
 				if (!block.push) {
 					debugger;
 				}
-				for (let x of tok_arr) {
+				for (let x of arr) {
 					block.push(x);
 				}
-				__rust.last_exec = tok_arr;
+				__rust.last_exec = arr;
 			}
 
 		}
