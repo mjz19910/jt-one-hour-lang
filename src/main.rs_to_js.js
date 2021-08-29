@@ -13,6 +13,7 @@ x: {
 	let block_id = 0;
 	let in_parse=false;
 	let rr = function(mm, ...rest) {
+		console.log('parse start',performance.now()-ts);
 		let parse_pass = 0;
 		if(!in_parse){
 			block_id=0;
