@@ -379,7 +379,8 @@ x: {
 			Add,
 		}`, 0);
 	}
-	let rust_code = rr`#![allow(dead_code)]
+	let rust_code = rr`
+	#![allow(dead_code)]
 
 	use std::collections::HashMap;
 	
