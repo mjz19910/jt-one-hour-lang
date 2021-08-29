@@ -432,6 +432,18 @@ x: {
 			__rust_priv.stack.length--;
 		}
 	}
+
+	function test_0(){
+		__rust.exec_lines(`#[derive(Debug)]
+		enum Command {
+			SetVar(String, Value),
+			GetVar(String),
+			PushVar(String),
+			Push(Value),
+			Pop,
+			Add,
+		}`,0);
+	}
 	let rust_code = rr`#![allow(dead_code)]
 
 	use std::collections::HashMap;
