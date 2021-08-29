@@ -13,6 +13,7 @@ x: {
 	let block_id = 0;
 	let in_parse = false;
 	let block_stack=[];
+	let __rust;
 	let rr = function(mm, ...rest) {
 		ts += performance.now() - ts;
 		let parse_pass = 0;
@@ -21,7 +22,7 @@ x: {
 			block_id = 0;
 			in_parse = true;
 		}else{
-			scope=__rust.push_block_vec();
+			scope = __rust.push_block_vec();
 			block_stack.push(__rust.block_vec);
 		}
 		for (let cur of rest) {
@@ -48,7 +49,6 @@ x: {
 		__rust.drop(scope);
 		return mm.raw.join('');
 	};
-	let __rust;
 	function rust_static_init() {
 		if (__rust) return;
 		__rust = { sym: my_rust_sym };
@@ -246,6 +246,18 @@ x: {
 			}
 			console.log(rs_lines[rs_lines.length - 1]);
 			callback_function();
+		}
+		__rust_priv.stack=[];
+		__rust.push_block_vec=function(){
+			let ret={};
+			__rust_priv.stack.push({});
+		}
+		__rust.drop=function(vv){
+			let last=__rust_priv.stack[__rust_priv.stack.length-1];
+			if(last!==vv){
+				throw Error("failed to drop in order");
+			}
+			__rust_priv.stack.length--;
 		}
 	}
 	let rust_code = rr`
