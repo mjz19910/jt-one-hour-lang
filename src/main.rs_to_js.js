@@ -943,11 +943,13 @@ x: {
 		}
 		let __id = scope_push.block_id;
 		__rust.exec_lines(rust_code, __id);
-	}}`
+	}}`;
+	// filter out stuff we didn't use exec_lines while executing the template...
+	__rust.scope.block_vec=__rust.scope.block_vec.filter(e=>e.value.length>0);
 	__rust.drop(__rust_root_scope);
 	__rust.crates = [];
 	__rust.scope.files = [];
-	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec.filter(e=>e.value.length>0)]);
+	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec]);
 	__rust.crates.push(['onehour-language', __rust.scope.files]);
 	__rust.scope = new __rust.RustScope;
 	__rust_root_scope = __rust.push_block_vec();
