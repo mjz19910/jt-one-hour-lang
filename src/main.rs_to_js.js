@@ -739,12 +739,9 @@ x: {
 	// We want to be able to build this crate with a stable compiler, so no
 	// \`#![feature]\` attributes should be added.
 
-	${(function STATIC_init() { rust_static_init(); })}
+		${(function STATIC_init() { rust_static_init(); })}
 	
-	mod cursor;
-	pub mod unescape;
-	
-	${function S_Crate_init(parse_pass) {
+		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				S_Crate_init.block_id = block_id;
@@ -753,11 +750,9 @@ x: {
 			__rust.exec_line('mod cursor;', S_Crate_init.block_id);
 			__rust.exec_line('pub mod unescape;', S_Crate_init.block_id);
 		}}
+	
 
-	#[cfg(test)]
-	mod tests;
-
-	${function S_Crate_init() {
+		${function S_Crate_init() {
 			if (parse_pass === 0) {
 				block_id++;
 				S_Crate_init.block_id = block_id;
@@ -766,34 +761,22 @@ x: {
 			__rust.exec_line('#[cfg(test)]', S_Crate_init.block_id);
 			__rust.exec_line('mod tests;', S_Crate_init.block_id);
 		}}
-	
-	use self::LiteralKind::*;
-	use self::TokenKind::*;
-	use crate::cursor::{Cursor, EOF_CHAR};
-	use std::convert::TryFrom;
 
-	${function S_Crate_init() {
+		${function S_Crate_init() {
 			if (parse_pass === 0) {
 				block_id++;
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line('use self::LiteralKind::*;', S_Crate_init.block_id);
-			__rust.exec_line('use self::TokenKind::*;', S_Crate_init.block_id);
-			__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};', S_Crate_init.block_id);
-			__rust.exec_line('use std::convert::TryFrom;', S_Crate_init.block_id);
+			__rust.exec_line(`
+			use self::LiteralKind::*;
+			use self::TokenKind::*;
+			use crate::cursor::{Cursor, EOF_CHAR};
+			use std::convert::TryFrom;`, S_Crate_init.block_id);
 		}}
 	
-	/// Parsed token.
-	/// It doesn't contain information about data that has been parsed,
-	/// only the type of the token and its size.
-	#[derive(Debug)]
-	pub struct Token {
-		pub kind: TokenKind,
-		pub len: usize,
-	}
 
-	${function rust_eval_struct(parse_pass) {
+		${function rust_eval_struct(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_struct.block_id = block_id;
@@ -814,6 +797,11 @@ x: {
 		}}
 	
 	${function rust_eval_impl() {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_struct.block_id = block_id;
+				return;
+			}
 			__rust.exec_line(`
 			impl Token {
 				fn new(kind: TokenKind, len: usize) -> Token {
@@ -909,13 +897,13 @@ x: {
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
-	#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-	pub enum DocStyle {
-		Outer,
-		Inner,
-	}
-	${function rust_eval_enum() {
-			'//nop;';
+	
+		${function rust_eval_enum() {
+			`#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+			pub enum DocStyle {
+				Outer,
+				Inner,
+			}`
 		}}
 	
 	#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
