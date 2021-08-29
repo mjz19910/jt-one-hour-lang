@@ -706,6 +706,7 @@ x: {
 	`;
 	console.log(__rust.block_vec);
 	__rust.crates=[];
+	__rust.files.push(['src/main.rs',__rust.block_vec]);
 	__rust.crates.push(['onehour-language',__rust.block_vec]);
 	__rust.block_vec=[];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
@@ -1643,6 +1644,11 @@ x: {
 			}`, rust_eval_impl.block_id);
 		}}
 	`;
+	console.log(__rust.block_vec);
+	__rust.files=[];
+	__rust.files.push(['rustc_lexer/lib.rs',__rust.block_vec]);
+	__rust.crates.push(['nightly-rustc',__rust.files]);
+	__rust.block_vec=[];
 	//console.log(rust_code);
 	let rust_match_rx = /\/\/.+(?=[\n])|\/\*.+(?=\/\*|\*\/)|_(?=!>[a-zA-Z_])|fn|self|match|yield|macro|impl|\s|[\(\)]|[\[\]]|[{}]|::|->|<-|@|[a-zA-Z_]/;
 	let test = new class {
