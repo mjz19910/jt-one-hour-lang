@@ -65,8 +65,9 @@ x: {
 		__rust.get_ref_generator = function() {
 			return __rust_priv.ref_generator;
 		};
+		__rust.block_vec=[];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
-		__rust.exec_lines = function(str) {
+		__rust.exec_lines = function(str, block_id_of_str) {
 			let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 			let rx = /^[a-zA-Z_]/;
 			let sp = /^[ ]/;
@@ -206,6 +207,10 @@ x: {
 			}
 			str_arr = s2_arr;
 			str_arr.push(Symbol.for('EOF'));
+			let block=__rust.block_vec[block_id];
+			for(let x of str_arr){
+				block.push(x);
+			}
 			__rust.last_exec = str_arr;
 		}
 		__rust.log_lines = function(callback_function) {
