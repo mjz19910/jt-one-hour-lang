@@ -191,10 +191,11 @@ x: {
 							len: 1,
 							parent_index:arr_iter-1,
 						});
-						debugger;
+						mat_idx=0;
 						continue;
 					}
 					str=str_arr[arr_iter++];
+					mat_idx=0;
 				}
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
