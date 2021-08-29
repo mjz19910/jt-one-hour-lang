@@ -276,6 +276,7 @@ x: {
 										parent_index:arr_iter-1,
 									});
 									mat_idx=0;
+									str=val;
 									continue;
 								}
 								str=val;
@@ -292,7 +293,7 @@ x: {
 			let str_arr_in = [];
 			let last_index=-1;
 			let cur_arr_index=-1;
-			console.log(str_arr);
+			console.log(tok_arr);
 			for (; iter_index < tok_arr.length; iter_index++) {
 				let cur_tok = tok_arr[iter_index];
 				let {parent_index}=cur_tok;
