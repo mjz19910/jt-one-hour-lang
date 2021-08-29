@@ -206,9 +206,9 @@ x: {
 					};
 					if(cc&&cc[0]==="'"){
 						//could be lifetime
-						let mat_lt=/'[a-zA-Z_]+?(')?/;
+						let mat_lt=/'[a-zA-Z_]+?(')?/g;
 						mat_lt.lastIndex=mat_idx;
-						cc=mat_lt.match(str);
+						cc=mat_lt.exec(str);
 						console.log(cc,str.slice(mat_idx,mat_idx+7));
 						mat_idx+=cc[0].length;
 						cur_regex.lastIndex=mat_idx;
