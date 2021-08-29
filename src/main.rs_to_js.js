@@ -86,7 +86,6 @@ x: {
 				this.block_vec = [];
 				this.block_vec_stack = [];
 				this.block_vec_ref = [];
-				this.RemoteRef=RemoteRef;
 			}
 		};
 		class RustRoot {
@@ -94,6 +93,7 @@ x: {
 				this.sym = my_rust_sym;
 				this.RustScope = RustScope;
 				this.scope = new RustScope;
+				this.RemoteRef=RemoteRef;
 			}
 			set_resolved_block(block_id, ...data) {
 				if (data.length === 1) {
