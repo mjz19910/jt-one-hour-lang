@@ -196,8 +196,8 @@ x: {
 					if(cc){
 						g=cc.groups;
 					}
-					let mat = 'ws';
-					let kind = 'Whitespace';
+					let mat = 'i_s';
+					let kind = 'Ident';
 					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
@@ -207,7 +207,7 @@ x: {
 							if (cc === null) {
 								break;
 							}
-							if (cc.groups.i_s) {
+							if (cc.groups[mat]) {
 								vaa.push(cc[0]);
 								bump();
 							} else {
