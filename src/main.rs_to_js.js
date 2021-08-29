@@ -12,13 +12,13 @@ x: {
 	let ts = performance.now();
 	let block_id = 0;
 	let in_parse = false;
-	let block_stack=[];
+	let block_stack = [];
 	let __rust;
 	rust_static_init();
 	let rr = function(mm, ...rest) {
 		ts += performance.now() - ts;
 		let parse_pass = 0;
-		let scope=null;
+		let scope = null;
 		scope = __rust.push_block_vec();
 		if (!in_parse) {
 			in_parse = true;
@@ -44,7 +44,7 @@ x: {
 		}
 		console.log('p1 done', performance.now() - ts);
 		in_parse = false;
-		if(scope){
+		if (scope) {
 			__rust.drop(scope);
 		}
 		return mm.raw.join('');
@@ -230,7 +230,7 @@ x: {
 			str_arr.push(Symbol.for('EOF'));
 			__rust.block_vec[block_id_of_str] ??= [];
 			let block = __rust.block_vec[block_id_of_str];
-			if(!block.push){
+			if (!block.push) {
 				debugger;
 			}
 			for (let x of str_arr) {
@@ -252,40 +252,40 @@ x: {
 			console.log(rs_lines[rs_lines.length - 1]);
 			callback_function();
 		}
-		__rust_priv.stack=[];
-		__rust.push_block_vec=function(){
-			let ret={};
-			__rust.block_vec_stack.push([block_id,__rust.block_vec]);
-			__rust.block_vec=[];
-			block_id=0;
+		__rust_priv.stack = [];
+		__rust.push_block_vec = function() {
+			let ret = {};
+			__rust.block_vec_stack.push([block_id, __rust.block_vec]);
+			__rust.block_vec = [];
+			block_id = 0;
 			__rust_priv.stack.push(ret);
 			return ret;
 		}
 		class BlockRef {
-			constructor(ref){
-				this.ref_type='block';
-				this.ref=ref;
+			constructor(ref) {
+				this.ref_type = 'block';
+				this.ref = ref;
 			}
-			deref(){
+			deref() {
 				return this.value;
 			}
-			get value(){
+			get value() {
 				return __rust.block_vec_ref[this.ref];
 			}
 		}
-		__rust.drop=function(vv){
-			let last=__rust_priv.stack[__rust_priv.stack.length-1];
-			if(last===void 0){
+		__rust.drop = function(vv) {
+			let last = __rust_priv.stack[__rust_priv.stack.length - 1];
+			if (last === void 0) {
 				throw Error('droping undefined');
 			}
-			if(last!==vv){
+			if (last !== vv) {
 				throw Error("failed to drop in order");
 			}
-			let last_vec_info=__rust.block_vec_stack.pop();
-			let block_vec_from_stack_id=__rust.block_vec_ref.push(__rust.block_vec);
-			__rust.block_vec=last_vec_info[1];
-			block_id=last_vec_info[0];
-			__rust.block_vec.push([new BlockRef(block_vec_from_stack_id-1)]);
+			let last_vec_info = __rust.block_vec_stack.pop();
+			let block_vec_from_stack_id = __rust.block_vec_ref.push(__rust.block_vec);
+			__rust.block_vec = last_vec_info[1];
+			block_id = last_vec_info[0];
+			__rust.block_vec.push([new BlockRef(block_vec_from_stack_id - 1)]);
 			__rust_priv.stack.length--;
 		}
 	}
@@ -962,12 +962,12 @@ x: {
 			`, rust_eval_enum.block_id);
 		}}
 	
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
+			__id = rust_eval_enum.block_id;
 			__rust.exec_lines(`
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum LiteralKind {
@@ -987,14 +987,15 @@ x: {
 				RawStr { n_hashes: u16, err: Option<RawStrError> },
 				/// "br"abc"", "br#"abc"#", "br####"ab"###"c"####", "br#"a"
 				RawByteStr { n_hashes: u16, err: Option<RawStrError> },
-			}`, __id)
+			}
+			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_eval_enum.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
+			__id = rust_eval_enum.block_id;
 			__rust.exec_lines(`
 			/// Error produced validating a raw string. Represents cases like:
 			/// - \`r##~"abcde"##\`: \`InvalidStarter\`
@@ -1013,7 +1014,7 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1034,7 +1035,7 @@ x: {
 				}
 				`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1067,7 +1068,7 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1081,7 +1082,7 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1101,7 +1102,7 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1141,7 +1142,7 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1161,7 +1162,7 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_all_items(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
@@ -1182,12 +1183,12 @@ x: {
 			}
 			`, __id)
 		}}
-			${function rust_eval_all_items(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_eval_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
+			__id = rust_eval_fn.block_id;
 			__rust.exec_lines(`
 			/// The passed string is lexically an identifier.
 			pub fn is_ident(string: &str) -> bool {
