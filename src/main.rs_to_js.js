@@ -346,7 +346,7 @@ x: {
 			}
 			function tt_parse(arr){
 				let tt_arr=[];
-				let tt_stack=[];
+				let tt_stack=[tt_arr];
 				for(let cur,i=0;i<arr.length;i++){
 					cur=arr[i];
 					if(rust_tt_start.includes(cur)){
