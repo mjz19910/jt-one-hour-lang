@@ -12,7 +12,6 @@ x: {
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
 		for (let cur of rest) {
-			if(cur.name)console.log(cur.name);
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
