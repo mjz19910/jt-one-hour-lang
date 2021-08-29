@@ -9,22 +9,22 @@ x: {
 		'rust_eval_fn'
 	];
 	let my_rust_sym = Symbol();
-	let ts=performance.now();
+	let ts = performance.now();
 	let block_id = 0;
-	let in_parse=false;
+	let in_parse = false;
 	let rr = function(mm, ...rest) {
-		ts+=performance.now()-ts;
+		ts += performance.now() - ts;
 		let parse_pass = 0;
-		if(!in_parse){
-			block_id=0;
-			in_parse=true;
+		if (!in_parse) {
+			block_id = 0;
+			in_parse = true;
 		}
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
 		}
-		console.log('p0 done',performance.now()-ts);
+		console.log('p0 done', performance.now() - ts);
 		parse_pass++;
 		for (i of rust_exec_code_funcs) {
 			for (let cur of rest) {
@@ -38,8 +38,8 @@ x: {
 				}
 			}
 		}
-		console.log('p1 done',performance.now()-ts);
-		in_parse=false;
+		console.log('p1 done', performance.now() - ts);
+		in_parse = false;
 		return mm.raw.join('');
 	};
 	let __rust;
@@ -91,9 +91,9 @@ x: {
 		};
 		__rust.block_vec = [];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
-		function get_log_time(){
-			let ret=performance.now()-ts;
-			ts=performance.now();
+		function get_log_time() {
+			let ret = performance.now() - ts;
+			ts = performance.now();
 			return ret;
 		}
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
@@ -145,38 +145,38 @@ x: {
 					tok_arr.push({ kind: 'Ident', len: val_acc.length });
 					val_acc.length = 0;
 				}
-				let mat='ws';
-				let kind='Whitespace';
-				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
-					val_acc.push([mat,g[mat]]);
+				let mat = 'ws';
+				let kind = 'Whitespace';
+				if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
+					val_acc.push([mat, g[mat]]);
 					bump();
 					continue;
 				}
-				if(val_acc[0]?.[0]===mat){
-					tok_arr.push({kind:kind,len:val_acc.length});
-					val_acc.length=0;
+				if (val_acc[0]?.[0] === mat) {
+					tok_arr.push({ kind: kind, len: val_acc.length });
+					val_acc.length = 0;
 				}
-				mat='char';
-				kind='_char';
-				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
-					val_acc.push([mat,g[mat]]);
+				mat = 'char';
+				kind = '_char';
+				if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
+					val_acc.push([mat, g[mat]]);
 					bump();
 					continue;
 				}
-				if(val_acc[0]?.[0]===mat){
-					tok_arr.push({kind:kind,len:val_acc.length});
-					val_acc.length=0;
+				if (val_acc[0]?.[0] === mat) {
+					tok_arr.push({ kind: kind, len: val_acc.length });
+					val_acc.length = 0;
 				}
-				mat='line';
-				kind='_line';
-				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
-					val_acc.push([mat,g[mat]]);
+				mat = 'line';
+				kind = '_line';
+				if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
+					val_acc.push([mat, g[mat]]);
 					bump();
 					continue;
 				}
-				if(val_acc[0]?.[0]===mat){
-					tok_arr.push({kind:kind,len:val_acc.length});
-					val_acc.length=0;
+				if (val_acc[0]?.[0] === mat) {
+					tok_arr.push({ kind: kind, len: val_acc.length });
+					val_acc.length = 0;
 				}
 				if (cc === null) {
 					break;
@@ -544,7 +544,7 @@ x: {
 				}
 			
 				Ok(output)
-			}`,rust_eval_fn.block_id);
+			}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_struct(parse_pass) {
@@ -697,11 +697,11 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	`;
-	__rust.crates=[];
-	__rust.files=[];
-	__rust.files.push(['src/main.rs',__rust.block_vec]);
-	__rust.crates.push(['onehour-language',__rust.files]);
-	__rust.block_vec=[];
+	__rust.crates = [];
+	__rust.files = [];
+	__rust.files.push(['src/main.rs', __rust.block_vec]);
+	__rust.crates.push(['onehour-language', __rust.files]);
+	__rust.block_vec = [];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
 		${(function STATIC_init() {
@@ -912,7 +912,7 @@ x: {
 				Outer,
 				Inner,
 			}
-			`,rust_eval_enum.block_id);
+			`, rust_eval_enum.block_id);
 		}}
 	
 		${function rust_eval_all_items(parse_pass) {
@@ -940,14 +940,15 @@ x: {
 				RawStr { n_hashes: u16, err: Option<RawStrError> },
 				/// "br"abc"", "br#"abc"#", "br####"ab"###"c"####", "br#"a"
 				RawByteStr { n_hashes: u16, err: Option<RawStrError> },
-			}`,__id)}}
+			}`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// Error produced validating a raw string. Represents cases like:
 			/// - \`r##~"abcde"##\`: \`InvalidStarter\`
 			/// - \`r###"abcde"##\`: \`NoTerminator { expected: 3, found: 2, possible_terminator_offset: Some(11)\`
@@ -963,34 +964,36 @@ x: {
 				/// More than 65535 \`#\`s exist.
 				TooManyDelimiters { found: usize },
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
-			/// Base of numeric literal encoding according to its prefix.
-			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-			pub enum Base {
-				/// Literal starts with "0b".
-				Binary,
-				/// Literal starts with "0o".
-				Octal,
-				/// Literal starts with "0x".
-				Hexadecimal,
-				/// Literal doesn't contain a prefix.
-				Decimal,
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
 			}
-			`,__id)}}
-			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
+				/// Base of numeric literal encoding according to its prefix.
+				#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+				pub enum Base {
+					/// Literal starts with "0b".
+					Binary,
+					/// Literal starts with "0o".
+					Octal,
+					/// Literal starts with "0x".
+					Hexadecimal,
+					/// Literal doesn't contain a prefix.
+					Decimal,
 				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+				`, __id)
+		}}
+			${function rust_eval_all_items(parse_pass) {
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// \`rustc\` allows files to have a shebang, e.g. "#!/usr/bin/rustrun",
 			/// but shebang isn't a part of rust syntax.
 			pub fn strip_shebang(input: &str) -> Option<usize> {
@@ -1015,27 +1018,29 @@ x: {
 				}
 				None
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// Parses the first token from the provided input string.
 			pub fn first_token(input: &str) -> Token {
 				debug_assert!(!input.is_empty());
 				Cursor::new(input).advance_token()
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// Creates an iterator that produces tokens from the input string.
 			pub fn tokenize(mut input: &str) -> impl Iterator<Item = Token> + '_ {
 				std::iter::from_fn(move || {
@@ -1047,14 +1052,15 @@ x: {
 					Some(token)
 				})
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// True if \`c\` is considered a whitespace according to Rust language definition.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/whitespace.html)
 			/// for definitions of these classes.
@@ -1086,14 +1092,15 @@ x: {
 					| '\u{2029}' // PARAGRAPH SEPARATOR
 				)
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// True if \`c\` is valid as a first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
 			/// a formal definition of valid identifier name.
@@ -1105,14 +1112,15 @@ x: {
 					|| c == '_'
 					|| (c > '\x7f' && unicode_xid::UnicodeXID::is_xid_start(c))
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// True if \`c\` is valid as a non-first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
 			/// a formal definition of valid identifier name.
@@ -1125,14 +1133,15 @@ x: {
 					|| c == '_'
 					|| (c > '\x7f' && unicode_xid::UnicodeXID::is_xid_continue(c))
 			}
-			`,__id)}}
+			`, __id)
+		}}
 			${function rust_eval_all_items(parse_pass) {
-				if (parse_pass === 0) {
-					rust_eval_all_items.block_id = block_id++;
-					return;
-				}
-				__id = rust_eval_all_items.block_id;
-				__rust.exec_lines(`
+			if (parse_pass === 0) {
+				rust_eval_all_items.block_id = block_id++;
+				return;
+			}
+			__id = rust_eval_all_items.block_id;
+			__rust.exec_lines(`
 			/// The passed string is lexically an identifier.
 			pub fn is_ident(string: &str) -> bool {
 				let mut chars = string.chars();
@@ -1150,7 +1159,7 @@ x: {
 				rust_eval_impl.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			impl Cursor<'_> {
 				/// Parses a token from the input string.
 				fn advance_token(&mut self) -> Token {
@@ -1713,11 +1722,11 @@ x: {
 			}`, rust_eval_impl.block_id);
 		}}
 	`;
-	__rust.files=[];
-	__rust.files.push(['rustc_lexer/lib.rs',__rust.block_vec]);
-	__rust.crates.push(['nightly-rustc',__rust.files]);
-	__rust.block_vec=[];
-	window.__rust.current_scope.scope_stack[0].scope_definition_vec.push(['__rust',__rust]);
+	__rust.files = [];
+	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
+	__rust.crates.push(['nightly-rustc', __rust.files]);
+	__rust.block_vec = [];
+	window.__rust.current_scope.scope_stack[0].scope_definition_vec.push(['__rust', __rust]);
 	console.log(__rust.crates);
 	//console.log(rust_code);
 	let rust_match_rx = /\/\/.+(?=[\n])|\/\*.+(?=\/\*|\*\/)|_(?=!>[a-zA-Z_])|fn|self|match|yield|macro|impl|\s|[\(\)]|[\[\]]|[{}]|::|->|<-|@|[a-zA-Z_]/;
