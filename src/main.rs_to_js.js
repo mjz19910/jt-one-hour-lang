@@ -14,6 +14,7 @@ x: {
 	let in_parse = false;
 	let block_stack=[];
 	let __rust;
+	rust_static_init();
 	let rr = function(mm, ...rest) {
 		ts += performance.now() - ts;
 		let parse_pass = 0;
