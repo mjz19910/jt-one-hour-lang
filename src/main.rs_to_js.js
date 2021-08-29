@@ -1761,7 +1761,7 @@ x: {
 
 			let has_digits = false;
 			loop_gen.set_scope({
-				get has_digits(){return {type:'value',value:has_digits}},
+				get has_digits(){return {type:'mut value',value:has_digits}},
 				set has_digits(v){has_digits=v.value},
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){self=v.value},
