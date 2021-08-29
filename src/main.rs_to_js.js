@@ -182,6 +182,23 @@ x: {
 			parse_pass_0();
 			function parse_pass_0(){
 				while (true) {
+					if(str_arr instanceof Array){
+						if(arr_iter<str_arr.length&&mat_idx>str.length){
+							let val=str_arr[arr_iter++];
+							if(val.id){
+								tok_arr.push({
+									kind: 'id',
+									len: 1,
+									parent_index:arr_iter-1,
+								});
+								mat_idx=0;
+								continue;
+							}
+							str=val;
+							mat_idx=0;
+							continue;
+						}
+					}
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
 						debugger;
@@ -265,23 +282,6 @@ x: {
 						break;
 					};
 					if (cc === null) {
-						if(str_arr instanceof Array){
-							if(arr_iter<str_arr.length){
-								let val=str_arr[arr_iter++];
-								if(val.id){
-									tok_arr.push({
-										kind: 'id',
-										len: 1,
-										parent_index:arr_iter-1,
-									});
-									mat_idx=0;
-									continue;
-								}
-								str=val;
-								mat_idx=0;
-								continue;
-							}
-						}
 						break;
 					}
 				}
