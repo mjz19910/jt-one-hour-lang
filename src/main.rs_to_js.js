@@ -754,8 +754,10 @@ x: {
 				S_Crate_init.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines('#[cfg(test)]', S_Crate_init.block_id);
-			__rust.exec_lines('mod tests;', S_Crate_init.block_id);
+			__rust.exec_lines(`
+			#[cfg(test)]
+			mod tests;
+			`, S_Crate_init.block_id);
 		}}
 
 		${function S_Crate_init(parse_pass) {
