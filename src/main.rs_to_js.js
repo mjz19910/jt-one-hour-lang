@@ -171,7 +171,7 @@ x: {
 			if(str_arr instanceof Array){
 				str=str_arr[arr_iter++];
 			}
-			console.log(str);
+			debugger;
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
 					str=str_arr[arr_iter++];
@@ -242,6 +242,7 @@ x: {
 					break;
 				}
 			}
+			throw 1;
 			let iter_index = 0;
 			let str_iter_index = 0;
 			let str_arr_in = [];
