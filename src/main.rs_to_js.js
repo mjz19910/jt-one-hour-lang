@@ -1623,12 +1623,10 @@ x: {
 		}
 	}
 	`;
-	__rust.files = [];
-	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
-	__rust.crates.push(['nightly-rustc', __rust.files]);
-	__rust.block_vec = [];
-	__rust.block_vec_stack = [];
-	__rust.block_vec_ref = [];
+	__rust.scope.files = [];
+	__rust.scope.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
+	__rust.crates.push(['nightly-rustc', __rust.scope.files]);
+	__rust.scope=new __rust.RustScope;
 	window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
 	console.log(__rust.crates);
 	//console.log(rust_code);
