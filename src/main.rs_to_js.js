@@ -213,12 +213,18 @@ x: {
 							let mat_str=/'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex=mat_idx;
 							cc=mat_str.exec(str);
-							console.log(cc[0],str.slice(mat_idx,mat_idx+7));
 							mat_idx+=cc[0].length;
+							tok_arr.push({
+								kind: {type:'Char',terminated:true},
+								len: cc[0].length,
+							});
 							cur_regex.lastIndex=mat_idx;
 							continue;
 						}
-						console.log(cc,str.slice(mat_idx,mat_idx+7));
+						tok_arr.push({
+							kind: 'lifetime',
+							len: cc[0].length,
+						});
 						mat_idx+=cc[0].length;
 						cur_regex.lastIndex=mat_idx;
 						continue;
