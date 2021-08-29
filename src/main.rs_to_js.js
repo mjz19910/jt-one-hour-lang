@@ -102,6 +102,7 @@ x: {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
 			}
+			get_log_time();
 			let val_acc = [];
 			let tok_arr = [];
 			let cur;
@@ -116,7 +117,7 @@ x: {
 				mat_idx++;
 			}
 			let fn_cache = new Map;
-			console.log('ps1',get_log_time());
+			console.log('ps1');
 			while (true) {
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
