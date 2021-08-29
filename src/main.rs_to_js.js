@@ -23,7 +23,6 @@ x: {
 			in_parse = true;
 		}else{
 			scope = __rust.push_block_vec();
-			block_stack.push(__rust.block_vec);
 		}
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
@@ -46,7 +45,9 @@ x: {
 		}
 		console.log('p1 done', performance.now() - ts);
 		in_parse = false;
-		__rust.drop(scope);
+		if(scope){
+			__rust.drop(scope);
+		}
 		return mm.raw.join('');
 	};
 	function rust_static_init() {
