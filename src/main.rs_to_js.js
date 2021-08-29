@@ -1750,6 +1750,16 @@ x: {
 			self.eat_decimal_digits()
 		}
 	
+		${function eat_literal_suffix() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			is_id_start = __rust.scope_lookup('is_id_start');
+			is_id_start = __rust.scope_lookup('is_id_continue');
+			self = self.build();
+
+			self.eat_identifier();
+		}}
 		// Eats the suffix of the literal, e.g. "_u8".
 		fn eat_literal_suffix(&mut self) {
 			self.eat_identifier();
@@ -1760,7 +1770,7 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			is_id_start = __rust.scope_lookup('is_id_start');
-			is_id_start = __rust.scope_lookup('is_id_continue');
+			is_id_continue = __rust.scope_lookup('is_id_continue');
 			self = self.build();
 
 			if (!is_id_start(self.first())) {
