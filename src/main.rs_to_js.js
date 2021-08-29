@@ -262,10 +262,9 @@ x: {
 			return ret;
 		}
 		class BlockRef {
-			constructor(value){
-				this.ref='block';
-				this.ptr=__rust.block_vec_ref.length;
-				__rust.block_vec_ref.push([this,value]);
+			constructor(ref){
+				this.ref_type='block';
+				this.ref=ref;
 			}
 			deref(){
 				return __rust.block_vec_ref[this.ref];
@@ -280,9 +279,10 @@ x: {
 				throw Error("failed to drop in order");
 			}
 			let last_vec_info=__rust.block_vec_stack.pop();
+			let block_vec_from_stack_id=__rust.block_vec_ref.push(__rust.block_vec);
 			__rust.block_vec=last_vec_info[1];
 			block_id=last_vec_info[0];
-			__rust.block_vec.push([new BlockRef(__rust.block_vec)]);
+			__rust.block_vec.push([new BlockRef(block_vec_from_stack_id-1)]);
 			__rust_priv.stack.length--;
 		}
 	}
@@ -743,7 +743,7 @@ x: {
 	`;
 	__rust.crates = [];
 	__rust.files = [];
-	__rust.files.push(['src/main.rs', __rust.block_vec]);
+	__rust.files.push(['src/main.rs', __rust.block_vec[0].deref()]);
 	__rust.crates.push(['onehour-language', __rust.files]);
 	__rust.block_vec = [];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
