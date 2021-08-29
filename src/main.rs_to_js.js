@@ -84,6 +84,8 @@ x: {
 		class RustScope{
 			constructor(){
 				this.block_vec=[];
+				this.block_vec_stack=[];
+				this.block_vec_ref=[];
 			}
 		};
 		class RustRoot {
@@ -96,9 +98,9 @@ x: {
 				if (data.length === 1) {
 					data = data[0];
 				}
-				let ref = new RemoteRef(this);
+				let ref = new RemoteRef(this.scope);
 				ref.make_ref(data);
-				this.block_vec[block_id] = ref;
+				this.scope.block_vec[block_id] = ref;
 			}
 			set_current_block(id) {
 				cur_block_id = id;
