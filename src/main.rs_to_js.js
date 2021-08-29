@@ -754,7 +754,7 @@ x: {
 		}}
 	
 
-		${function S_Crate_init() {
+		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				S_Crate_init.block_id = block_id;
@@ -764,7 +764,7 @@ x: {
 			__rust.exec_line('mod tests;', S_Crate_init.block_id);
 		}}
 
-		${function S_Crate_init() {
+		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				S_Crate_init.block_id = block_id;
@@ -798,10 +798,10 @@ x: {
 			'//nop;';
 		}}
 	
-	${function rust_eval_impl() {
+		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
-				rust_eval_struct.block_id = block_id;
+				rust_eval_impl.block_id = block_id;
 				return;
 			}
 			__rust.exec_line(`
@@ -812,7 +812,12 @@ x: {
 			}`, rust_eval_impl.block_id);
 		}}
 	
-	${function rust_eval_enum() {
+		${function rust_eval_enum(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_impl.block_id = block_id;
+				return;
+			}
 			__rust.exec_lines(`/// Enum representing common lexeme types.
 			// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -895,12 +900,12 @@ x: {
 			
 				/// Unknown token, not expected by the lexer, e.g. "№"
 				Unknown,
-			}`, rust_eval_struct.block_id);
+			}`, rust_eval_enum.block_id);
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
 	
-		${function rust_eval_enum() {
+		${function rust_eval_enum(parse_pass) {
 			`#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum DocStyle {
 				Outer,
