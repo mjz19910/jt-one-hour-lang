@@ -438,24 +438,25 @@ x: {
 						tt_arr.push(tt_tmp);
 						continue;
 					}
-					if(kw.includes(arr[i+1])){
+					if(kw.includes(arr[i+1])&&cur==='\n'){
 						tt_arr.push(cur);
 						continue;
 					}
 					if(cur.match(/[ ]/)){
 						tt_arr.push(cur);
 					}
-					if(cur.trim().length===0){
+					if(cur.match(/[\t]/)){
+						continue;
+					}
+					if(cur==='\n'&&tt_arr[tt_arr.lenght-1]===cur){
 						continue;
 					}
 					tt_arr.push(cur);
 				}
 				return tt_arr;
 			}
-			let tt_tmp=tok_arr.filter(e=>e!=='\t');
-			let tt_arr=tt_parse(tt_tmp);
-			console.log(tt_arr);
-			finish_parse(tok_arr);
+			let tt_arr=tt_parse(tok_arr);
+			finish_parse(tt_arr);
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
 				__rust.scope.block_vec[block_id_of_str] ??= [];
