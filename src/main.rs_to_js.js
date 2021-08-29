@@ -2088,8 +2088,10 @@ x: {
 	
 		${function eat_float_exponent() {
 			let self = __rust.get_ref_generator().clone();
-			self.rust_type('&mut');
-			self.ffi_set_backing_value(this);
+			self.make_ref();//&
+			self.ref.as_mut();//&mut
+			self.as_host_value();
+			self.host_value=this;
 			self = self.build();
 			let _macro_debug_assert=__rust.get_macro_generator().clone().get_macro_definition('debug_assert!').generate();
 
