@@ -897,7 +897,6 @@ x: {
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
-	
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_enum.block_id = block_id++;
