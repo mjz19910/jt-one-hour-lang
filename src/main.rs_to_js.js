@@ -4,12 +4,13 @@ x: {
 		[
 			'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum', 'rust_exec_fn',
 			'rust_exec_any',
+			'rust_doc_comment',
 		],
 	];
 	let rust_autoexec_funcs = [
 		'STATIC_init', 'S_Crate_init',
 		'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum',
-		'rust_exec_fn', 'rust_exec_any'
+		'rust_exec_fn', 'rust_exec_any','rust_doc_comment',
 	];
 	let my_rust_sym = Symbol();
 	let ts = performance.now();
@@ -907,7 +908,7 @@ x: {
 
 		${function rust_exec_use(parse_pass) {
 			if (parse_pass === 0) {
-				S_Crate_init.block_id = block_id++;
+				rust_exec_use.block_id = block_id++;
 				return;
 			}
 			let __id = rust_exec_use.block_id;
@@ -917,7 +918,7 @@ x: {
 			use self::TokenKind::*;
 			use crate::cursor::{Cursor, EOF_CHAR};
 			use std::convert::TryFrom;
-			`, S_Crate_init.block_id);
+			`, __id);
 		}}
 	
 		${function rust_exec_struct(parse_pass) {
