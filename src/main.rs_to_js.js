@@ -2088,14 +2088,15 @@ x: {
 	
 		${function eat_float_exponent() {
 			let self = __rust.get_ref_generator().clone();
+			let _m_debug_assert=__rust.macro_handler.get_macro_definition('debug_assert!');
 			self.make_ref();//&
 			self.ref.as_mut();//&mut
 			self.as_host_value();
 			self.host_value=this;
 			self = self.build();
-			let _macro_debug_assert=__rust.get_macro_generator().clone().get_macro_definition('debug_assert!').generate();
+			_m_debug_assert = _m_debug_assert.generate();
 
-			_macro_debug_assert(`(self.prev() == 'e' || self.prev() == 'E')`);
+			_m_debug_assert(`(self.prev() == 'e' || self.prev() == 'E')`);
 			if (self.first() == '-' || self.first() == '+') {
 				self.bump();
 			}
