@@ -1740,6 +1740,14 @@ x: {
 			has_digits
 		}
 	
+		${function eat_float_exponent() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			self.eat_identifier();
+		}}
 		/// Eats the float exponent. Returns true if at least one digit was met,
 		/// and returns false otherwise.
 		fn eat_float_exponent(&mut self) -> bool {
@@ -1793,13 +1801,14 @@ x: {
 			self.ref_type('&mut');
 			self.ref.value_type('Self');
 			self.ref.ffi_set_backing_value(this);
-			self = self.build();
 			let predicate = __rust.get_value_generator().clone();
 			predicate.value_type('mut');
 			predicate.value.value_type('impl FnMut(char) -> bool');
 			predicate.ffi_set_backing_value(predicate_arg);
 			predicate.value.throw_if_type_error();
+			self = self.build();
 			predicate = predicate.build();
+			
 			while (predicate(self.first()) && !self.is_eof()) {
 				self.bump();
 			}
