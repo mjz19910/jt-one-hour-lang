@@ -768,9 +768,9 @@ x: {
 	}
 	`;
 	__rust.crates = [];
-	__rust.files = [];
-	__rust.files.push(['src/main.rs', __rust.scope.block_vec, __rust.scope.block_vec_ref]);
-	__rust.crates.push(['onehour-language', __rust.files]);
+	__rust.scope.files = [];
+	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec, __rust.scope.block_vec_ref]);
+	__rust.crates.push(['onehour-language', __rust.scope.files]);
 	__rust.scope=new __rust.RustScope;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
