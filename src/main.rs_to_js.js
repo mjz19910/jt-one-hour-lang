@@ -12,12 +12,17 @@ x: {
 	let ts = performance.now();
 	let block_id = 0;
 	let in_parse = false;
+	let block_stack=[];
 	let rr = function(mm, ...rest) {
 		ts += performance.now() - ts;
 		let parse_pass = 0;
+		let scope=null;
 		if (!in_parse) {
 			block_id = 0;
 			in_parse = true;
+		}else{
+			scope=__rust.push_block_vec();
+			block_stack.push(__rust.block_vec);
 		}
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
@@ -40,6 +45,7 @@ x: {
 		}
 		console.log('p1 done', performance.now() - ts);
 		in_parse = false;
+		__rust.drop(scope);
 		return mm.raw.join('');
 	};
 	let __rust;
