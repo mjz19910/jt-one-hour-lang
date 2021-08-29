@@ -380,6 +380,9 @@ x: {
 		}`, 0);
 	}
 	let rust_code = rr`
+	${function parse_exec_init(){
+		__rust.exec_lines(`#![allow(dead_code)]`, 1);
+	}}
 	#![allow(dead_code)]
 
 	use std::collections::HashMap;
