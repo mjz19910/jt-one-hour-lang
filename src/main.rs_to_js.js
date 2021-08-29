@@ -169,8 +169,8 @@ x: {
 			function bump() {
 				mat_idx++;
 			}
-			parse_pass_0();
-			function parse_pass_0() {
+			tok_arr=parse_pass_0(str);
+			function parse_pass_0(str) {
 				let tok_arr = [];
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
@@ -200,103 +200,39 @@ x: {
 					}
 					mat = 'i_s';
 					kind = 'Ident';
-					if (g&&g[mat]) {
-						let vaa = [];
-						while (true) {
-							is_val_char.lastIndex = mat_idx;
-							cc = is_val_char.exec(str);
-							if (cc === null) {
-								break;
-							}
-							if (cc.groups[mat]) {
-								vaa.push(cc[0]);
-								bump();
-							} else {
-								break;
-							}
-						}
-						console.log(vaa);
-						tok_arr.push({
-							kind: 'Ident',
-							len: vaa.length,
-						});
-						is_val_char.lastIndex = mat_idx;
-						continue;
-					}
+					do_mat(mat,kind);
 					mat = 'ws';
 					kind = 'Whitespace';
-					if (g&&g[mat]) {
-						let vaa = [];
-						while (true) {
-							is_val_char.lastIndex = mat_idx;
-							cc = is_val_char.exec(str);
-							if (cc === null) {
-								break;
-							}
-							if (cc.groups[mat]) {
-								vaa.push(cc[0]);
-								bump();
-							} else {
-								break;
-							}
-						}
-						console.log(vaa);
-						tok_arr.push({
-							kind: kind,
-							len: vaa.length,
-						});
-						is_val_char.lastIndex = mat_idx;
-						continue;
-					}
+					do_mat(mat,kind);
 					mat = 'char';
 					kind = '_char';
-					if (g&&g[mat]) {
-						let vaa = [];
-						while (true) {
-							is_val_char.lastIndex = mat_idx;
-							cc = is_val_char.exec(str);
-							if (cc === null) {
-								break;
-							}
-							if (cc.groups[mat]) {
-								vaa.push(cc[0]);
-								bump();
-							} else {
-								break;
-							}
-						}
-						console.log(vaa);
-						tok_arr.push({
-							kind: kind,
-							len: vaa.length,
-						});
-						is_val_char.lastIndex = mat_idx;
-						continue;
-					}
+					do_mat(mat,kind);
 					mat = 'line';
 					kind = '_line';
-					if (g&&g[mat]) {
-						let vaa = [];
-						while (true) {
+					do_mat(mat,kind);
+					function do_mat(mat,kind){
+						if (g&&g[mat]) {
+							let vaa = [];
+							while (true) {
+								is_val_char.lastIndex = mat_idx;
+								cc = is_val_char.exec(str);
+								if (cc === null) {
+									break;
+								}
+								if (cc.groups[mat]) {
+									vaa.push(cc[0]);
+									bump();
+								} else {
+									break;
+								}
+							}
+							tok_arr.push({
+								kind: kind,
+								len: vaa.length,
+							});
 							is_val_char.lastIndex = mat_idx;
-							cc = is_val_char.exec(str);
-							if (cc === null) {
-								break;
-							}
-							if (cc.groups[mat]) {
-								vaa.push(cc[0]);
-								bump();
-							} else {
-								break;
-							}
+							continue;
 						}
-						console.log(vaa);
-						tok_arr.push({
-							kind: kind,
-							len: vaa.length,
-						});
-						is_val_char.lastIndex = mat_idx;
-						continue;
 					}
 					if (cc === null) {
 						break;
