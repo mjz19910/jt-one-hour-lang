@@ -178,9 +178,6 @@ x: {
 			let idx = str_arr[0].indexOf("Cursor");
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
-					if((arr_iter+1)>=str_arr.length){
-						break;
-					};
 					let val=str_arr[arr_iter++];
 					if(val.id){
 						tok_arr.push({
@@ -273,6 +270,9 @@ x: {
 					});
 					val_acc.length = 0;
 				}
+				if((arr_iter)>=str_arr.length){
+					break;
+				};
 				if (cc === null) {
 					break;
 				}
