@@ -706,6 +706,7 @@ x: {
 	`;
 	console.log(__rust.block_vec);
 	__rust.crates=[];
+	__rust.files=[];
 	__rust.files.push(['src/main.rs',__rust.block_vec]);
 	__rust.crates.push(['onehour-language',__rust.files]);
 	__rust.block_vec=[];
