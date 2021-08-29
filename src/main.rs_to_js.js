@@ -4,14 +4,21 @@ x: {
 		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum']
 	];
 	let rr = function(mm, ...rest) {
+		let parse_pass=0;
+		for(let i=0,cur;i<rest.length;(i++),cur=rest[i]){
+			if(typeof cur==='function'){
+				cur(parse_pass);
+			}
+		}
+		parse_pass++;
 		for (i of rust_exec_code_funcs) {
 			for (let x of rest) {
 				if (i instanceof Array && i.includes(x.name)) {
-					x();
+					x(parse_pass);
 					continue;
 				}
 				if (x.name === i) {
-					x();
+					x(parse_pass);
 					continue;
 				}
 			}
@@ -221,8 +228,12 @@ x: {
 	${(function STATIC_init() { rust_static_init(); })}
 
 	use std::collections::HashMap;
-	${(function S_Crate_init() {
-		__rust.exec_lines('use std::collections::HashMap;');
+	${(function S_Crate_init(parse_pass) {
+		if(parse_pass===0){
+			block_id++;
+			S_Crate_init.block_id=block_id;
+		}
+		__rust.exec_lines('use std::collections::HashMap;',S_Crate_init.block_id);
 	})}
 
 	${function rust_eval_enum(){
