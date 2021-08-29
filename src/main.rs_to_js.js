@@ -246,7 +246,10 @@ x: {
 					mat = 's_quo';
 					kind = '_'+mat;
 					if (g && g[mat]) {
-						do_mat(mat, kind);
+						str_s_mat.lastIndex=mat_idx;
+						cc=str_s_mat.exec(str);
+						console.log(cc);
+						bump();
 						continue;
 					}
 					function do_mat(mat, kind) {
