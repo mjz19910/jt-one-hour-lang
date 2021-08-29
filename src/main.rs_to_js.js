@@ -178,6 +178,9 @@ x: {
 					};
 					str=str_arr[arr_iter++];
 				}
+				if(str===void 0){
+					debugger;
+				}
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
 					debugger;
