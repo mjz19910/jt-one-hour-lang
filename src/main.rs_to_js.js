@@ -240,7 +240,11 @@ x: {
 						str_d_mat.lastIndex=mat_idx;
 						cc=str_d_mat.exec(str);
 						console.log(cc);
-						bump();
+						mat_idx+=cc[0].length;
+						tok_arr.push({
+							kind: kind,
+							len: cc[0].length,
+						});
 						continue;
 					}
 					mat = 's_quo';
@@ -249,7 +253,11 @@ x: {
 						str_s_mat.lastIndex=mat_idx;
 						cc=str_s_mat.exec(str);
 						console.log(cc);
-						bump();
+						mat_idx+=cc[0].length;
+						tok_arr.push({
+							kind: kind,
+							len: cc[0].length,
+						});
 						continue;
 					}
 					function do_mat(mat, kind) {
