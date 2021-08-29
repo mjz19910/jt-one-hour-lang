@@ -1,5 +1,8 @@
 x: {
-	let rust_exec_code_funcs = ['STATIC_init', 'S_Crate_init', ['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum']];
+	let rust_exec_code_funcs = [
+		'STATIC_init', 'S_Crate_init',
+		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum']
+	];
 	let rr = function(mm, ...rest) {
 		for (i of rust_exec_code_funcs) {
 			for (let x of rest) {
@@ -214,7 +217,14 @@ x: {
 		}
 	}
 	let rust_code = rr`
+
+	${(function STATIC_init() { rust_static_init(); })}
+
 	use std::collections::HashMap;
+
+	${(function S_Crate_init() {
+		__rust.exec_line('use std::collections::HashMap;');
+	})}
 
 	enum Command {
 		SetVar(String,Value),
