@@ -81,10 +81,16 @@ x: {
 			}
 		}
 		let cur_block_id = 0;
+		class RustScope{
+			constructor(){
+				this.block_vec=[];
+			}
+		};
 		class RustRoot {
 			constructor(base) {
 				this.sym = my_rust_sym;
-				this.block_vec = [];
+				this.RustScope=RustScope;
+				this.scope=new RustScope;
 			}
 			set_resolved_block(block_id, ...data) {
 				if (data.length === 1) {
