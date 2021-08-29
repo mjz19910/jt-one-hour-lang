@@ -266,6 +266,7 @@ x: {
 					};
 					if (cc === null) {
 						if(str_arr instanceof Array){
+							console.log(val_acc.slice());
 							if(arr_iter<str_arr.length){
 								let val=str_arr[arr_iter++];
 								if(val.id){
