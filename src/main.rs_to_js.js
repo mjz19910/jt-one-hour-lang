@@ -25,6 +25,7 @@ x: {
 		let parse_pass = 0;
 		let scope = null;
 		scope = __rust.push_block_vec();
+		let block_inner=[];
 		if (!in_parse) {
 			in_parse = true;
 		}
@@ -33,7 +34,10 @@ x: {
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
-				res.push(cur.block_id);
+				block_inner[cur.block_id]={
+					id:cur.block_id,
+				};
+				res.push(block_inner[cur.block_id]);
 				res.push(mm.raw[iter_index++]);
 			}
 		}
@@ -41,11 +45,11 @@ x: {
 		for (i of rust_exec_code_funcs) {
 			for (let cur of rest) {
 				if (i instanceof Array && i.includes(cur.name)) {
-					cur(parse_pass);
+					cur(parse_pass, block_inner[cur.block_id]);
 					continue;
 				}
 				if (cur.name === i) {
-					cur(parse_pass);
+					cur(parse_pass, block_inner[cur.block_id]);
 					continue;
 				}
 			}
