@@ -92,6 +92,11 @@ x: {
 		};
 		__rust.block_vec = [];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
+		function get_log_time(){
+			let ret=performance.now()-ts;
+			ts=performance.now();
+			return ret;
+		}
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
@@ -104,10 +109,16 @@ x: {
 			let cur;
 			let ci = 0;
 			let mat_idx = 0;
+			function back(n) {
+				if (val_acc.length > (n - 1)) {
+					return val_acc[val_acc.length - n][1];
+				}
+			}
 			function bump() {
 				mat_idx++;
 			}
 			let fn_cache = new Map;
+			console.log('ps',get_log_time());
 			while (true) {
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -115,11 +126,6 @@ x: {
 				}
 				is_val_char.lastIndex = mat_idx;
 				cc = is_val_char.exec(str);
-				function back(n) {
-					if (val_acc.length > (n - 1)) {
-						return val_acc[val_acc.length - n][1];
-					}
-				}
 				if (ci++ > 8192) {
 					break;
 				}
