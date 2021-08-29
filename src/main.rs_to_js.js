@@ -148,38 +148,6 @@ x: {
 					tok_arr.push({ kind: 'Ident', len: val_acc.length });
 					val_acc.length = 0;
 				}
-				function dm(mat, kind) {
-					let want_vars = [mat, kind, val_acc, g, bump, tok_arr];
-					let want_vars_str = 'mat,kind,val_acc,g,bump,tok_arr';
-					let fb = `
-					for(let init=true;;){
-						if(!init){
-							return 'continue';
-						}
-						init=false;
-						if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
-							val_acc.push([mat,g[mat]]);
-							bump();
-							continue;
-						}
-						if(val_acc[0]?.[0]===mat){
-							tok_arr.push({kind:kind,len:val_acc.length});
-							val_acc.length=0;
-						}
-						return 'leave_scope';
-					}
-					return 'break';`;
-					let func;
-					let fn_key = 'function func(' + want_vars_str + '){' + fb + '}';
-					if (fn_cache.has(fn_key)) {
-						func = fn_cache.get(fn_key);
-					} else {
-						func = new Function(want_vars_str, fb);
-						fn_cache.set('(' + want_vars_str + '){' + fb + '}', func);
-					}
-					return func(...want_vars);
-				}
-				let loop_res
 				let mat='ws';
 				let kind='Whitespace';
 				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
