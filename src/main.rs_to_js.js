@@ -193,11 +193,13 @@ x: {
 						continue;
 					};
 					let g;
+					let mat;
+					let kind;
 					if(cc){
 						g=cc.groups;
 					}
-					let mat = 'i_s';
-					let kind = 'Ident';
+					mat = 'i_s';
+					kind = 'Ident';
 					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
@@ -223,8 +225,8 @@ x: {
 						is_val_char.lastIndex = mat_idx;
 						continue;
 					}
-					let mat = 'ws';
-					let kind = 'Whitespace';
+					mat = 'ws';
+					kind = 'Whitespace';
 					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
