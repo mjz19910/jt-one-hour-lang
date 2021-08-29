@@ -389,14 +389,6 @@ x: {
 	let __rust_root_scope;
 	__rust_root_scope = __rust.push_block_vec();
 	let rust_code = rr`
-	${function parse_exec_init(parse_pass) {
-			if (parse_pass === 0) {
-				parse_exec_init.block_id = block_id++;
-				return;
-			}
-			let __id = parse_exec_init.block_id;
-			__rust.exec_lines(`#![allow(dead_code)]`, __id);
-		}}
 	#![allow(dead_code)]
 
 	use std::collections::HashMap;
@@ -786,6 +778,8 @@ x: {
 		Ok(())
 	}
 	`;
+	let __id = block_id++;
+	__rust.exec_lines(rust_code, __id);
 	__rust.drop(__rust_root_scope);
 	__rust.crates = [];
 	__rust.scope.files = [];
