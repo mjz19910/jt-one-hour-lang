@@ -169,7 +169,6 @@ x: {
 			function bump() {
 				mat_idx++;
 			}
-			let fn_cache = new Map;
 			parse_pass_0();
 			function parse_pass_0() {
 				while (true) {
