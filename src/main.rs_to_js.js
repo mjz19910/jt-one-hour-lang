@@ -298,7 +298,6 @@ x: {
 					mat = 's_quo';
 					kind = '_'+mat;
 					if (g && g[mat]) {
-						str_s_mat.lastIndex=mat_idx;
 						bump();
 						tok_arr.push({
 							kind: kind,
