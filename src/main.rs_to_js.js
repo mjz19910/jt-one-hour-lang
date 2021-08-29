@@ -1,9 +1,9 @@
 x: {
-	let rust_exec_code_funcs = ['STATIC_init','S_Crate_init',['rust_eval_struct','rust_eval_impl','rust_eval_enum']];
+	let rust_exec_code_funcs = ['STATIC_init', 'S_Crate_init', ['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum']];
 	let rr = function(mm, ...rest) {
 		for (i of rust_exec_code_funcs) {
 			for (let x of rest) {
-				if(i instanceof Array&&i.includes(x.name)){
+				if (i instanceof Array && i.includes(x.name)) {
 					x();
 					continue;
 				}
@@ -15,6 +15,204 @@ x: {
 		}
 		return mm.raw.join('');
 	};
+	function rust_static_init() {
+		if (__rust) return;
+		__rust = {};
+		class RefGenerator {
+			constructor(from) {
+				if (from) {
+					console.log(from);
+				}
+				this.rust_type = null;
+				this.host_backing_value = null;
+				if (from) {
+					this.rust_type = from.rust_type;
+				}
+			}
+			clone() {
+				return new RefGenerator(this);
+			}
+			ffi_use_this(type, _this) {
+				if (this.is_mut_borrow) {
+					throw Error('can\' borrow');
+				}
+				this.rust_type(type);
+				this.ffi_set_backing_value(_this);
+			}
+			ffi_set_backing_value(value) {
+				if (this.is_mut_borrow) {
+					throw Error('can\' borrow');
+				}
+				this.host_backing_value = value;
+			}
+			no_mut() {
+				this.is_mut_borrow = true;
+			}
+		};
+		__rust_priv = {};
+		__rust_priv.ref_generator = new RefGenerator;
+		__rust_priv.ref_generator.no_mut();
+		__rust.get_ref_generator = function() {
+			return __rust_priv.ref_generator;
+		};
+		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
+		__rust.exec_line = function(str) {
+			let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
+			let rx = /^[a-zA-Z_]/;
+			let sp = /^[ ]/;
+			let val_acc = [];
+			let tok_arr = [];
+			let cur;
+			let ci = 0;
+			let mat_idx = 0;
+			function bump() {
+				mat_idx++;
+			}
+			let fn_cache = new Map;
+			while (true) {
+				if (mat_idx > is_val_char.lastIndex) {
+					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
+					debugger;
+				}
+				is_val_char.lastIndex = mat_idx;
+				cc = is_val_char.exec(str);
+				function back(n) {
+					if (val_acc.length > (n - 1)) {
+						return val_acc[val_acc.length - n][1];
+					}
+				}
+				if (ci++ > 8192) {
+					break;
+				}
+				if (back(1) === '/' && cc[0] === '/') {
+					mat_idx = str.indexOf('\n', mat_idx);
+					tok_arr.push({
+						kind: 'line_comment',
+						len: mat_idx - is_val_char.lastIndex + 2,
+					});
+					is_val_char.lastIndex = mat_idx + 1;
+					val_acc = [];
+					continue;
+				};
+				let g = cc?.groups;
+				if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
+					val_acc.push(['i_s', g.i_s]);
+					bump();
+					continue;
+				}
+				if (val_acc[0]?.[0] === 'i_s') {
+					tok_arr.push({ kind: 'Ident', len: val_acc.length });
+					val_acc.length = 0;
+				}
+				function dm(mat, kind) {
+					let want_vars = [mat, kind, val_acc, g, bump, tok_arr];
+					let want_vars_str = 'mat,kind,val_acc,g,bump,tok_arr';
+					let fb = `
+					for(let init=true;;){
+						if(!init){
+							return 'continue';
+						}
+						init=false;
+						if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
+							val_acc.push([mat,g[mat]]);
+							bump();
+							continue;
+						}
+						if(val_acc[0]?.[0]===mat){
+							tok_arr.push({kind:kind,len:val_acc.length});
+							val_acc.length=0;
+						}
+						return 'leave_scope';
+					}
+					return 'break';`;
+					let func;
+					let fn_key = 'function func(' + want_vars_str + '){' + fb + '}';
+					if (fn_cache.has(fn_key)) {
+						func = fn_cache.get(fn_key);
+					} else {
+						func = new Function(want_vars_str, fb);
+						fn_cache.set('(' + want_vars_str + '){' + fb + '}', func);
+					}
+					return func(...want_vars);
+				}
+				let loop_res
+				loop_res = dm('ws', 'Whitespace');
+				if (loop_res === 'break') {
+					break;
+				}
+				if (loop_res === 'continue') {
+					continue;
+				}
+				if (loop_res === 'leave_scope') {
+					'leave_scope';
+				}
+				loop_res = dm('char', '_char');
+				if (loop_res === 'break') {
+					break;
+				}
+				if (loop_res === 'continue') {
+					continue;
+				}
+				loop_res = dm('line', '_line');
+				if (cc === null) {
+					break;
+				}
+			}
+			let iter_index = 0;
+			let str_iter_index = 0;
+			let str_arr = [];
+			for (; iter_index < tok_arr.length; iter_index++) {
+				let cur_tok = tok_arr[iter_index];
+				if (cur_tok.kind === '_char') {
+					let ed = str_iter_index + cur_tok.len;
+					while (str_iter_index < ed) {
+						str_arr.push(str[str_iter_index]);
+						str_iter_index++;
+					}
+					continue;
+				}
+				str_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
+				str_iter_index += cur_tok.len;
+			}
+			let s2_arr = [];
+			for (let i = 0; i < str_arr.length; i++) {
+				s2_arr.push(str_arr[i]);
+				function pr() {
+					return s2_arr?.[s2_arr.length - 2];
+				}
+				function c() {
+					return s2_arr?.[s2_arr.length - 1];
+				}
+				if (pr() === ':' && c() === ':') {
+					s2_arr.pop();
+					s2_arr.pop();
+					s2_arr.push('::');
+				}
+				if (pr() === '#' && c() === '[]'[0]) {
+					s2_arr.pop();
+					s2_arr.pop();
+					s2_arr.push('#' + '[]'[0]);
+				}
+			}
+			str_arr = s2_arr;
+			str_arr.push(Symbol.for('EOF'));
+			__rust.last_exec = str_arr;
+		}
+		__rust.log_lines = function(callback_function) {
+			let rs_lines = [[]];
+			let src_arr = this.last_exec;
+			for (let i = 0, ri = 0; i < src_arr.length; i++) {
+				rs_lines[ri].push(src_arr[i]);
+				if (src_arr[i] === '\n') {
+					console.log(rs_lines[ri]);
+					ri++;
+					rs_lines[ri] = [];
+				}
+			}
+			console.log(rs_lines[rs_lines.length - 1]);
+			callback_function();
+		}
+	}
 	let rust_code = rr`
 	use std::collections::HashMap;
 
@@ -348,203 +546,7 @@ x: {
 	// We want to be able to build this crate with a stable compiler, so no
 	// \`#![feature]\` attributes should be added.
 
-	${(function STATIC_init() {
-			__rust = {};
-			class RefGenerator {
-				constructor(from) {
-					if (from) {
-						console.log(from);
-					}
-					this.rust_type = null;
-					this.host_backing_value = null;
-					if (from) {
-						this.rust_type = from.rust_type;
-					}
-				}
-				clone() {
-					return new RefGenerator(this);
-				}
-				ffi_use_this(type, _this) {
-					if (this.is_mut_borrow) {
-						throw Error('can\' borrow');
-					}
-					this.rust_type(type);
-					this.ffi_set_backing_value(_this);
-				}
-				ffi_set_backing_value(value) {
-					if (this.is_mut_borrow) {
-						throw Error('can\' borrow');
-					}
-					this.host_backing_value = value;
-				}
-				no_mut() {
-					this.is_mut_borrow = true;
-				}
-			};
-			__rust_priv = {};
-			__rust_priv.ref_generator = new RefGenerator;
-			__rust_priv.ref_generator.no_mut();
-			__rust.get_ref_generator = function() {
-				return __rust_priv.ref_generator;
-			};
-			let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
-			__rust.exec_line = function(str) {
-				let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
-				let rx = /^[a-zA-Z_]/;
-				let sp = /^[ ]/;
-				let val_acc = [];
-				let tok_arr = [];
-				let cur;
-				let ci = 0;
-				let mat_idx = 0;
-				function bump() {
-					mat_idx++;
-				}
-				let fn_cache = new Map;
-				while (true) {
-					if (mat_idx > is_val_char.lastIndex) {
-						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
-						debugger;
-					}
-					is_val_char.lastIndex = mat_idx;
-					cc = is_val_char.exec(str);
-					function back(n){
-						if(val_acc.length>(n-1)){
-							return val_acc[val_acc.length-n][1];
-						}
-					}
-					if (ci++ > 8192) {
-						break;
-					}
-					if(back(1)==='/'&&cc[0]==='/'){
-						mat_idx=str.indexOf('\n',mat_idx);
-						tok_arr.push({
-							kind:'line_comment',
-							len:mat_idx-is_val_char.lastIndex+2,
-						});
-						is_val_char.lastIndex=mat_idx+1;
-						val_acc=[];
-						continue;
-					};
-					let g = cc?.groups;
-					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
-						val_acc.push(['i_s', g.i_s]);
-						bump();
-						continue;
-					}
-					if (val_acc[0]?.[0] === 'i_s') {
-						tok_arr.push({ kind: 'Ident', len: val_acc.length });
-						val_acc.length = 0;
-					}
-					function dm(mat, kind) {
-						let want_vars = [mat, kind, val_acc, g, bump, tok_arr];
-						let want_vars_str = 'mat,kind,val_acc,g,bump,tok_arr';
-						let fb = `
-					for(let init=true;;){
-						if(!init){
-							return 'continue';
-						}
-						init=false;
-						if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
-							val_acc.push([mat,g[mat]]);
-							bump();
-							continue;
-						}
-						if(val_acc[0]?.[0]===mat){
-							tok_arr.push({kind:kind,len:val_acc.length});
-							val_acc.length=0;
-						}
-						return 'leave_scope';
-					}
-					return 'break';`;
-						let func;
-						let fn_key = 'function func(' + want_vars_str + '){' + fb + '}';
-						if (fn_cache.has(fn_key)) {
-							func = fn_cache.get(fn_key);
-						} else {
-							func = new Function(want_vars_str, fb);
-							fn_cache.set('(' + want_vars_str + '){' + fb + '}', func);
-						}
-						return func(...want_vars);
-					}
-					let loop_res
-					loop_res = dm('ws', 'Whitespace');
-					if (loop_res === 'break') {
-						break;
-					}
-					if (loop_res === 'continue') {
-						continue;
-					}
-					if (loop_res === 'leave_scope') {
-						'leave_scope';
-					}
-					loop_res = dm('char', '_char');
-					if (loop_res === 'break') {
-						break;
-					}
-					if (loop_res === 'continue') {
-						continue;
-					}
-					loop_res = dm('line', '_line');
-					if (cc === null) {
-						break;
-					}
-				}
-				let iter_index = 0;
-				let str_iter_index = 0;
-				let str_arr = [];
-				for (; iter_index < tok_arr.length; iter_index++) {
-					let cur_tok = tok_arr[iter_index];
-					if (cur_tok.kind === '_char') {
-						let ed = str_iter_index + cur_tok.len;
-						while (str_iter_index < ed) {
-							str_arr.push(str[str_iter_index]);
-							str_iter_index++;
-						}
-						continue;
-					}
-					str_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
-					str_iter_index += cur_tok.len;
-				}
-				let s2_arr = [];
-				for (let i = 0; i < str_arr.length; i++) {
-					s2_arr.push(str_arr[i]);
-					function pr() {
-						return s2_arr?.[s2_arr.length - 2];
-					}
-					function c() {
-						return s2_arr?.[s2_arr.length - 1];
-					}
-					if (pr() === ':' && c() === ':') {
-						s2_arr.pop();
-						s2_arr.pop();
-						s2_arr.push('::');
-					}
-					if (pr() === '#' && c() === '[]'[0]) {
-						s2_arr.pop();
-						s2_arr.pop();
-						s2_arr.push('#' + '[]'[0]);
-					}
-				}
-				str_arr = s2_arr;
-				str_arr.push(Symbol.for('EOF'));
-				__rust.last_exec = str_arr;
-			}
-			__rust.log_lines=function(callback_function){
-				let rs_lines=[[]];
-				let src_arr=this.last_exec;
-				for(let i=0,ri=0;i<src_arr.length;i++){
-					rs_lines[ri].push(src_arr[i]);
-					if(src_arr[i]==='\n'){
-						console.log(rs_lines[ri]);
-						ri++;
-						rs_lines[ri]=[];
-					}
-				}
-				console.log(rs_lines[rs_lines.length-1]);
-				callback_function();
-			}
-		})}
+	${(function STATIC_init() { rust_static_init(); })}
 	
 	mod cursor;
 	pub mod unescape;
@@ -601,18 +603,18 @@ x: {
 	}
 
 
-	${(function rust_eval_impl(){
-		'//nop;';
-	})}
+	${(function rust_eval_impl() {
+			'//nop;';
+		})}
 
-	${(function rust_eval_impl(){
-		__rust.exec_line(`
+	${(function rust_eval_impl() {
+			__rust.exec_line(`
 		impl Token {
 			fn new(kind: TokenKind, len: usize) -> Token {
 				Token { kind, len }
 			}
 		}`);
-	})}
+		})}
 	
 	/// Enum representing common lexeme types.
 	// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
@@ -698,8 +700,8 @@ x: {
 		Unknown,
 	}
 
-	${(function rust_eval_enum(){
-		__rust.exec_line(`/// Enum representing common lexeme types.
+	${(function rust_eval_enum() {
+			__rust.exec_line(`/// Enum representing common lexeme types.
 		// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
 		#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 		pub enum TokenKind {
@@ -782,8 +784,8 @@ x: {
 			/// Unknown token, not expected by the lexer, e.g. "№"
 			Unknown,
 		}`);
-		__rust.log_lines(()=>console.log('here'));
-	})}
+			__rust.log_lines(() => console.log('here'));
+		})}
 	
 	#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 	pub enum DocStyle {
@@ -791,9 +793,9 @@ x: {
 		Inner,
 	}
 
-	${(function rust_eval_enum(){
-		'//nop;';
-	})}
+	${(function rust_eval_enum() {
+			'//nop;';
+		})}
 	
 	#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 	pub enum LiteralKind {
