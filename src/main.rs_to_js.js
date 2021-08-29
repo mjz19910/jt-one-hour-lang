@@ -1764,7 +1764,7 @@ x: {
 				get has_digits(){return {type:'value',value:has_digits}},
 				set has_digits(v){has_digits=v.value},
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			loop_gen.set_body(`{
 				match self.first() {
