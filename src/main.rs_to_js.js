@@ -223,7 +223,6 @@ x: {
 						continue;
 					}
 					function do_mat(mat,kind){
-						if (g&&g[mat]) {
 							let vaa = [];
 							while (true) {
 								is_val_char.lastIndex = mat_idx;
@@ -243,8 +242,6 @@ x: {
 								len: vaa.length,
 							});
 							is_val_char.lastIndex = mat_idx;
-							return;
-						}
 					}
 					if (cc === null) {
 						break;
