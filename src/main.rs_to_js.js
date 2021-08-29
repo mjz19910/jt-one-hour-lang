@@ -303,7 +303,6 @@ x: {
 					str_arr_in.push(str_arr[parent_index]);
 					continue;
 				}
-				console.log(str_arr[parent_index]);
 				str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
