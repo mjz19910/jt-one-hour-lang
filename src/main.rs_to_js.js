@@ -96,6 +96,8 @@ x: {
 			return __rust_priv.ref_generator;
 		};
 		__rust.block_vec = [];
+		__rust.block_vec_stack = [];
+		__rust_block_vec_ref = [];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
 		function get_log_time() {
 			let ret = performance.now() - ts;
@@ -250,6 +252,9 @@ x: {
 		__rust_priv.stack=[];
 		__rust.push_block_vec=function(){
 			let ret={};
+			__rust.block_vec_stack.push([block_id,__rust.block_vec]);
+			__rust.block_vec=[];
+			block_id=0;
 			__rust_priv.stack.push({});
 		}
 		__rust.drop=function(vv){
@@ -257,6 +262,10 @@ x: {
 			if(last!==vv){
 				throw Error("failed to drop in order");
 			}
+			block_id=last[0];
+			let last_id=__rust_block_vec_ref.push(__rust.block_vec);
+			__rust.block_vec=last[1];
+			__rust.block_vec.push({ref:'block',ptr:last_id-1});
 			__rust_priv.stack.length--;
 		}
 	}
