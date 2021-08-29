@@ -157,7 +157,7 @@ x: {
 				throw Error('BAD');
 			}
 			let val_acc = [];
-			let tok_arr = [];
+			let tok_arr;
 			let cur;
 			let ci = 0;
 			let mat_idx = 0;
@@ -171,6 +171,7 @@ x: {
 			}
 			parse_pass_0();
 			function parse_pass_0() {
+				let tok_arr = [];
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -201,7 +202,6 @@ x: {
 					kind = 'Ident';
 					if (g&&g[mat]) {
 						let vaa = [];
-						mat_idx--;
 						while (true) {
 							is_val_char.lastIndex = mat_idx;
 							cc = is_val_char.exec(str);
@@ -227,7 +227,6 @@ x: {
 					kind = 'Whitespace';
 					if (g&&g[mat]) {
 						let vaa = [];
-						mat_idx--;
 						while (true) {
 							is_val_char.lastIndex = mat_idx;
 							cc = is_val_char.exec(str);
@@ -254,7 +253,6 @@ x: {
 					kind = '_char';
 					if (g&&g[mat]) {
 						let vaa = [];
-						mat_idx--;
 						while (true) {
 							is_val_char.lastIndex = mat_idx;
 							cc = is_val_char.exec(str);
@@ -280,7 +278,6 @@ x: {
 					kind = '_line';
 					if (g&&g[mat]) {
 						let vaa = [];
-						mat_idx--;
 						while (true) {
 							is_val_char.lastIndex = mat_idx;
 							cc = is_val_char.exec(str);
@@ -307,8 +304,9 @@ x: {
 						break;
 					}
 				}
+				return tok_arr;
 			}
-			parse_pass_1();
+			tok_arr=parse_pass_1(tok_arr);
 			function parse_pass_1(arr) {
 				let iter_index = 0;
 				let str_iter_index = 0;
@@ -326,6 +324,7 @@ x: {
 					tok_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
 					str_iter_index += cur_tok.len;
 				}
+				return tok_arr;
 			}
 			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
