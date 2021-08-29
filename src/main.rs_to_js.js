@@ -161,7 +161,7 @@ x: {
 			ts = performance.now();
 			return ret;
 		}
-		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
+		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
@@ -232,6 +232,18 @@ x: {
 						do_mat(mat, kind);
 						continue;
 					}
+					mat = 'd_quo';
+					kind = '_'+mat;
+					if (g && g[mat]) {
+						do_mat(mat, kind);
+						continue;
+					}
+					mat = 's_quo';
+					kind = '_'+mat;
+					if (g && g[mat]) {
+						do_mat(mat, kind);
+						continue;
+					}
 					function do_mat(mat, kind) {
 						let vaa = [];
 						while (true) {
@@ -298,6 +310,11 @@ x: {
 						ret.pop();
 						ret.pop();
 						ret.push('::');
+					}
+					if (a() === '-' && b() === '>') {
+						ret.pop();
+						ret.pop();
+						ret.push('->');
 					}
 					if (!valid_tt&&a() === '#' && b() === '[]'[0]) {
 						ret.pop();
