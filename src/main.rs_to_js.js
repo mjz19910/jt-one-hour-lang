@@ -780,7 +780,7 @@ x: {
 	__rust.crates = [];
 	__rust.scope.files = [];
 	__rust.drop(__rust_root_scope);
-	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec, __rust.scope.block_vec_ref]);
+	__rust.scope.files.push(['src/main.rs', ...__rust.scope.block_vec[0], __rust.scope.block_vec_ref]);
 	__rust.crates.push(['onehour-language', __rust.scope.files]);
 	__rust.scope = new __rust.RustScope;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
