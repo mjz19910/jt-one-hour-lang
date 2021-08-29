@@ -68,6 +68,9 @@ x: {
 		__rust.block_vec=[];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
 		__rust.exec_lines = function(str, block_id_of_str) {
+			if(block_id_of_str===void 0){
+				throw Error('BAD');
+			}
 			let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 			let rx = /^[a-zA-Z_]/;
 			let sp = /^[ ]/;
