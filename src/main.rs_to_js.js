@@ -324,6 +324,9 @@ x: {
 			for (let x of str_arr_in) {
 				block.push(x);
 			}
+			if(str_arr_in[4]==='Cursor'){
+				debugger;
+			}
 			__rust.last_exec = str_arr_in;
 		}
 		__rust.log_lines = function(callback_function) {
