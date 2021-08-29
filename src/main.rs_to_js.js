@@ -261,9 +261,6 @@ x: {
 						});
 						val_acc.length = 0;
 					}
-					if((arr_iter)>=str_arr.length){
-						break;
-					};
 					if (cc === null) {
 						if(str_arr instanceof Array){
 							console.log(val_acc.slice());
