@@ -266,9 +266,9 @@ x: {
 			if(last!==vv){
 				throw Error("failed to drop in order");
 			}
-			block_id=last[0];
+			let last_vec_info=__rust.block_vec_stack.pop();
 			let last_id=__rust_block_vec_ref.push(__rust.block_vec);
-			__rust.block_vec=last[1];
+			__rust.block_vec=last_vec_info[1];
 			__rust.block_vec.push({ref:'block',ptr:last_id-1});
 			__rust_priv.stack.length--;
 		}
