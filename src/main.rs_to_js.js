@@ -174,7 +174,9 @@ x: {
 			debugger;
 			while (true) {
 				if(mat_idx>=str.length&&(str_arr instanceof Array)){
+					arr_iter>str_arr.length
 					str=str_arr[arr_iter++];
+					break;
 				}
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -242,7 +244,6 @@ x: {
 					break;
 				}
 			}
-			throw 1;
 			let iter_index = 0;
 			let str_iter_index = 0;
 			let str_arr_in = [];
