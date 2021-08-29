@@ -1,12 +1,15 @@
 x: {
 	let rust_exec_code_funcs = [
 		'STATIC_init', 'S_Crate_init',
-		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum', 'rust_eval_fn']
+		[
+			'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum', 'rust_exec_fn',
+			'rust_exec_any',
+		],
 	];
 	let rust_autoexec_funcs = [
 		'STATIC_init', 'S_Crate_init',
-		'rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum',
-		'rust_eval_fn'
+		'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum',
+		'rust_exec_fn','rust_exec_any'
 	];
 	let my_rust_sym = Symbol();
 	let ts = performance.now();
@@ -333,9 +336,9 @@ x: {
 			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
 		})}
 
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`enum Command {
@@ -345,12 +348,12 @@ x: {
 				Push(Value),
 				Pop,
 				Add,
-			}`, rust_eval_enum.block_id);
+			}`, rust_exec_enum.block_id);
 		}}
 	
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
@@ -358,12 +361,12 @@ x: {
 				Nothing,
 				Int(i64),
 				String(String),
-			}`, rust_eval_enum.block_id);
+			}`, rust_exec_enum.block_id);
 		}}
 	
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
@@ -371,12 +374,12 @@ x: {
 				Nothing,
 				Int(i64),
 				String(String),
-			}`, rust_eval_enum.block_id);
+			}`, rust_exec_enum.block_id);
 		}}
 	
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[derive(Debug)]
@@ -386,23 +389,23 @@ x: {
 				UnknownCommand(String),
 				MissingVariable(String),
 				EmptyStack,
-			}`, rust_eval_enum.block_id);
+			}`, rust_exec_enum.block_id);
 		}}
 	
-		${function rust_eval_struct(parse_pass) {
+		${function rust_exec_struct(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_struct.block_id = block_id++;
+				rust_exec_struct.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`struct Evaluator {
 				vars:HashMap<String, Value>,
 				stack:Vec<Value>,
-			}`, rust_eval_struct.block_id);
+			}`, rust_exec_struct.block_id);
 		}}
 
-		${function rust_eval_impl(parse_pass) {
+		${function rust_exec_impl(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_impl.block_id = block_id++;
+				rust_exec_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`impl Evaluator {
@@ -459,22 +462,22 @@ x: {
 					}
 					output
 				}
-			}`, rust_eval_impl.block_id);
+			}`, rust_exec_impl.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 				Ok(var_name.into())
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
@@ -485,12 +488,12 @@ x: {
 				} else {
 					Err(EngineError::MismatchType)
 				}
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
@@ -500,12 +503,12 @@ x: {
 					Ok(x) => Ok(Value::Int(x)),
 					_ => Err(EngineError::MismatchType),
 				}
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
@@ -516,12 +519,12 @@ x: {
 					// Parse the number
 					parse_int(val)
 				}
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
@@ -533,12 +536,12 @@ x: {
 				let value = parse_value(input[2])?;
 			
 				Ok(Command::SetVar(var_name, value))
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
@@ -549,12 +552,12 @@ x: {
 				let var_name = parse_var_name(input[1])?;
 			
 				Ok(Command::GetVar(var_name))
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
@@ -565,12 +568,12 @@ x: {
 			let val = parse_value(input[1])?;
 		
 			Ok(Command::Push(val))
-		}`, rust_eval_fn.block_id);
+		}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
@@ -581,12 +584,12 @@ x: {
 				let var_name = parse_var_name(input[1])?;
 			
 				Ok(Command::PushVar(var_name))
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
@@ -623,22 +626,22 @@ x: {
 				}
 			
 				Ok(output)
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-	${function rust_eval_struct(parse_pass) {
+	${function rust_exec_struct(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_struct.block_id = block_id++;
+				rust_exec_struct.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`struct Typechecker {
 				stack: Vec<Type>,
-			}`, rust_eval_struct.block_id);
+			}`, rust_exec_struct.block_id);
 		}}
 	
-		${function rust_eval_impl(parse_pass) {
+		${function rust_exec_impl(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_impl.block_id = block_id++;
+				rust_exec_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`impl Typechecker {
@@ -652,12 +655,12 @@ x: {
 					}
 					Ok(Type::Nothing)
 				}
-			}`, rust_eval_impl.block_id);
+			}`, rust_exec_impl.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -674,12 +677,12 @@ x: {
 				assert_eq!(result, Value::Int(100));
 			
 				Ok(())
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -694,12 +697,12 @@ x: {
 				assert_eq!(result, Value::Int(30));
 			
 				Ok(())
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -714,12 +717,12 @@ x: {
 				assert_eq!(result, Value::String("hello".into()));
 			
 				Ok(())
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -734,12 +737,12 @@ x: {
 				assert_eq!(result, Value::Int(130));
 			
 				Ok(())
-			}`, rust_eval_fn.block_id);
+			}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`#[test]
@@ -754,12 +757,12 @@ x: {
 			assert_eq!(result, Value::Int(133));
 		
 			Ok(())
-		}`, rust_eval_fn.block_id);
+		}`, rust_exec_fn.block_id);
 		}}
 	
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
@@ -773,7 +776,7 @@ x: {
 			}
 			
 			Ok(())
-		}`, rust_eval_fn.block_id);
+		}`, rust_exec_fn.block_id);
 		}}
 	`;
 	__rust.crates = [];
@@ -786,12 +789,13 @@ x: {
 		${(function STATIC_init() {
 			rust_static_init();
 		})}
-		${function S_rust_doc_comment_eval(parse_pass) {
+		${function rust_doc_comment(parse_pass) {
 			if (parse_pass === 0) {
-				S_rust_doc_comment_eval.block_id = block_id++;
+				rust_eval_struct.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			let __id=rust_eval_struct.block_id;
+			__rust.exec_lines(rr`
 			//! Low-level Rust lexer.
 			//!
 			//! The idea with \`rustc_lexer\` is to make a reusable library,
@@ -817,34 +821,34 @@ x: {
 			`, S_rust_doc_comment_eval.block_id);
 		}}
 	
-		${function S_Crate_init(parse_pass) {
+		${function rust_exec_mod(parse_pass) {
 			if (parse_pass === 0) {
 				S_Crate_init.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			mod cursor;
 			pub mod unescape;
 			`, S_Crate_init.block_id);
 		}}
 	
-		${function S_Crate_init(parse_pass) {
+		${function rust_exec_mod(parse_pass) {
 			if (parse_pass === 0) {
 				S_Crate_init.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			#[cfg(test)]
 			mod tests;
 			`, S_Crate_init.block_id);
 		}}
 
-		${function S_Crate_init(parse_pass) {
+		${function rust_exec_use(parse_pass) {
 			if (parse_pass === 0) {
 				S_Crate_init.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			use self::LiteralKind::*;
 			use self::TokenKind::*;
 			use crate::cursor::{Cursor, EOF_CHAR};
@@ -852,12 +856,12 @@ x: {
 			`, S_Crate_init.block_id);
 		}}
 	
-		${function rust_eval_struct(parse_pass) {
+		${function rust_exec_struct(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_struct.block_id = block_id++;
+				rust_exec_struct.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
 			/// only the type of the token and its size.
@@ -866,33 +870,33 @@ x: {
 				pub kind: TokenKind,
 				pub len: usize,
 			}
-			`, rust_eval_struct.block_id);
+			`, rust_exec_struct.block_id);
 		}}
 	
-		${function rust_eval_impl() {
+		${function rust_exec_impl() {
 			'//nop;';
 		}}
 	
-		${function rust_eval_impl(parse_pass) {
+		${function rust_exec_impl(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_impl.block_id = block_id++;
+				rust_exec_impl.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			impl Token {
 				fn new(kind: TokenKind, len: usize) -> Token {
 					Token { kind, len }
 				}
 			}
-			`, rust_eval_impl.block_id);
+			`, rust_exec_impl.block_id);
 		}}
 	
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			/// Enum representing common lexeme types.
 			// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -976,31 +980,31 @@ x: {
 				/// Unknown token, not expected by the lexer, e.g. "№"
 				Unknown,
 			}
-			`, rust_eval_enum.block_id);
+			`, rust_exec_enum.block_id);
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`
+			__rust.exec_lines(rr`
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum DocStyle {
 				Outer,
 				Inner,
 			}
-			`, rust_eval_enum.block_id);
+			`, rust_exec_enum.block_id);
 		}}
 	
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_enum.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_enum.block_id;
+			__rust.exec_lines(rr`
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum LiteralKind {
 				/// "12_u8", "0o100", "0b120i99"
@@ -1022,13 +1026,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_enum(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_enum.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_enum.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_enum.block_id;
+			__rust.exec_lines(rr`
 			/// Error produced validating a raw string. Represents cases like:
 			/// - \`r##~"abcde"##\`: \`InvalidStarter\`
 			/// - \`r###"abcde"##\`: \`NoTerminator { expected: 3, found: 2, possible_terminator_offset: Some(11)\`
@@ -1046,13 +1050,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_all_items.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
-			__rust.exec_lines(`
+			let __id = rust_eval_all_items.block_id;
+			__rust.exec_lines(rr`
 				/// Base of numeric literal encoding according to its prefix.
 				#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 				pub enum Base {
@@ -1067,13 +1071,13 @@ x: {
 				}
 				`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_fn.block_id;
+			__rust.exec_lines(rr`
 			/// \`rustc\` allows files to have a shebang, e.g. "#!/usr/bin/rustrun",
 			/// but shebang isn't a part of rust syntax.
 			pub fn strip_shebang(input: &str) -> Option<usize> {
@@ -1100,13 +1104,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_fn.block_id;
+			__rust.exec_lines(rr`
 			/// Parses the first token from the provided input string.
 			pub fn first_token(input: &str) -> Token {
 				debug_assert!(!input.is_empty());
@@ -1114,13 +1118,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_fn.block_id;
+			__rust.exec_lines(rr`
 			/// Creates an iterator that produces tokens from the input string.
 			pub fn tokenize(mut input: &str) -> impl Iterator<Item = Token> + '_ {
 				std::iter::from_fn(move || {
@@ -1134,13 +1138,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_all_items(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_all_items.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_fn.block_id;
+			__rust.exec_lines(rr`
 			/// True if \`c\` is considered a whitespace according to Rust language definition.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/whitespace.html)
 			/// for definitions of these classes.
@@ -1174,13 +1178,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_fn.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_fn.block_id;
+			__rust.exec_lines(rr`
 			/// True if \`c\` is valid as a first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
 			/// a formal definition of valid identifier name.
@@ -1194,13 +1198,13 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_fn.block_id;
-			__rust.exec_lines(`
+			let __id = rust_exec_fn.block_id;
+			__rust.exec_lines(rr`
 			/// True if \`c\` is valid as a non-first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
 			/// a formal definition of valid identifier name.
@@ -1215,12 +1219,12 @@ x: {
 			}
 			`, __id)
 		}}
-		${function rust_eval_fn(parse_pass) {
+		${function rust_exec_fn(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_fn.block_id = block_id++;
+				rust_exec_fn.block_id = block_id++;
 				return;
 			}
-			__id = rust_eval_fn.block_id;
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`
 			/// The passed string is lexically an identifier.
 			pub fn is_ident(string: &str) -> bool {
@@ -1234,19 +1238,19 @@ x: {
 			`, __id);
 		}}
 	
-		${function rust_eval_impl(parse_pass) {
+		${function rust_exec_impl(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_impl.block_id = block_id++;
+				rust_exec_impl.block_id = block_id++;
 				return;
 			}
 			__rust.exec_lines(rr`
 			impl Cursor<'_> {
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					/// Parses a token from the input string.
 					fn advance_token(&mut self) -> Token {
@@ -1370,12 +1374,12 @@ x: {
 					Token::new(token_kind, self.len_consumed())
 				}`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn line_comment(&mut self) -> TokenKind {
 						debug_assert!(self.prev() == '/' && self.first() == '/');
@@ -1394,12 +1398,12 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn block_comment(&mut self) -> TokenKind {
 						debug_assert!(self.prev() == '/' && self.first() == '*');
@@ -1439,12 +1443,12 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn whitespace(&mut self) -> TokenKind {
 						debug_assert!(is_whitespace(self.prev()));
@@ -1453,12 +1457,12 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn raw_ident(&mut self) -> TokenKind {
 						debug_assert!(self.prev() == 'r' && self.first() == '#' && is_id_start(self.second()));
@@ -1470,12 +1474,12 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn ident(&mut self) -> TokenKind {
 						debug_assert!(is_id_start(self.prev()));
@@ -1485,12 +1489,12 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 				fn number(&mut self, first_digit: char) -> LiteralKind {
 					debug_assert!('0' <= self.prev() && self.prev() <= '9');
@@ -1562,12 +1566,12 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 				fn lifetime_or_char(&mut self) -> TokenKind {
 					debug_assert!(self.prev() == '\'');
@@ -1616,12 +1620,12 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+			${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 				fn single_quoted_string(&mut self) -> bool {
 					debug_assert!(self.prev() == '\'');
@@ -1665,12 +1669,12 @@ x: {
 				}
 			`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					/// Eats double-quoted string and returns true
 					/// if string is terminated.
@@ -1693,12 +1697,12 @@ x: {
 					}
 				`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					/// Eats the double-quoted string and returns \`n_hashes\` and an error if encountered.
 					fn raw_double_quoted_string(&mut self, prefix_len: usize) -> (u16, Option<RawStrError>) {
@@ -1714,12 +1718,12 @@ x: {
 					}
 				`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
 						debug_assert!(self.prev() == 'r');
@@ -1787,12 +1791,12 @@ x: {
 					}
 					`, __id);
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn eat_decimal_digits(&mut self) -> bool {
 						let mut has_digits = false;
@@ -1812,12 +1816,12 @@ x: {
 					}
 					`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					fn eat_hexadecimal_digits(&mut self) -> bool {
 						let mut has_digits = false;
@@ -1837,12 +1841,12 @@ x: {
 					}
 					`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					/// Eats the float exponent. Returns true if at least one digit was met,
 					/// and returns false otherwise.
@@ -1855,12 +1859,12 @@ x: {
 					}
 					`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.set_resolved_block(__id, function eat_float_exponent() {
 						let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 						self = self.build();
@@ -1873,12 +1877,12 @@ x: {
 						self.eat_decimal_digits();
 					});
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 				// Eats the suffix of the literal, e.g. "_u8".
 				fn eat_literal_suffix(&mut self) {
@@ -1886,12 +1890,12 @@ x: {
 				}
 			`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 				${function eat_identifier() {
 							let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
@@ -1910,12 +1914,12 @@ x: {
 						}}
 			`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					// Eats the identifier.
 					fn eat_identifier(&mut self) {
@@ -1928,12 +1932,12 @@ x: {
 					}
 			`, __id);
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 						${function eat_while(predicate_arg) {
 							let self = __rust.get_ref_generator().clone();
@@ -1951,12 +1955,12 @@ x: {
 						}}
 					`, __id)
 				}}
-				${function rust_eval_any(parse_pass) {
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
-						rust_eval_any.block_id = block_id++;
+						rust_exec_any.block_id = block_id++;
 						return;
 					}
-					__id = rust_eval_any.block_id;
+					let __id = rust_exec_any.block_id;
 					__rust.exec_lines(rr`
 					/// Eats symbols while predicate returns true or until the end of file is reached.
 					fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
@@ -1968,7 +1972,7 @@ x: {
 				}}
 
 			}
-			`, rust_eval_impl.block_id);
+			`, rust_exec_impl.block_id);
 		}}
 	`;
 	__rust.files = [];
