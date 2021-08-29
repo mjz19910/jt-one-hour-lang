@@ -182,7 +182,7 @@ x: {
 			parse_pass_0();
 			function parse_pass_0(){
 				while (true) {
-					if(mat_idx>=str.length&&(str_arr instanceof Array)){
+					if(mat_idx>str.length&&(str_arr instanceof Array)){
 						let val=str_arr[arr_iter++];
 						if(val.id){
 							tok_arr.push({
