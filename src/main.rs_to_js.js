@@ -3,10 +3,11 @@ x: {
 		'STATIC_init', 'S_Crate_init',
 		['rust_eval_struct', 'rust_eval_impl', 'rust_eval_enum']
 	];
+	let my_rust_sym = Symbol();
 	let rr = function(mm, ...rest) {
-		let parse_pass=0;
-		for(let i=0,cur;i<rest.length;(i++),cur=rest[i]){
-			if(typeof cur==='function'){
+		let parse_pass = 0;
+		for (let i = 0, cur; i < rest.length; (cur = rest[i]), i++) {
+			if (typeof cur === 'function') {
 				cur(parse_pass);
 			}
 		}
@@ -25,10 +26,10 @@ x: {
 		}
 		return mm.raw.join('');
 	};
-	let block_id=0;
+	let block_id = 0;
 	function rust_static_init() {
-		if (__rust) return;
-		__rust = {};
+		if (__rust && (__rust.sym === my_rust_sym)) return;
+		__rust = { sym: my_rust_sym };
 		class RefGenerator {
 			constructor(from) {
 				if (from) {
@@ -66,10 +67,10 @@ x: {
 		__rust.get_ref_generator = function() {
 			return __rust_priv.ref_generator;
 		};
-		__rust.block_vec=[];
+		__rust.block_vec = [];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
 		__rust.exec_lines = function(str, block_id_of_str) {
-			if(block_id_of_str===void 0){
+			if (block_id_of_str === void 0) {
 				throw Error('BAD');
 			}
 			let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
@@ -211,8 +212,9 @@ x: {
 			}
 			str_arr = s2_arr;
 			str_arr.push(Symbol.for('EOF'));
-			let block=__rust.block_vec[block_id];
-			for(let x of str_arr){
+			__rust.block_vec[block_id]??=[];
+			let block = __rust.block_vec[block_id];
+			for (let x of str_arr) {
 				block.push(x);
 			}
 			__rust.last_exec = str_arr;
@@ -238,62 +240,93 @@ x: {
 
 	use std::collections::HashMap;
 	${(function S_Crate_init(parse_pass) {
-		if(parse_pass===0){
-			block_id++;
-			S_Crate_init.block_id=block_id;
-		}
-		__rust.exec_lines('use std::collections::HashMap;',S_Crate_init.block_id);
-	})}
+			if (parse_pass === 0) {
+				block_id++;
+				S_Crate_init.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
+		})}
 
-	${function rust_eval_enum(){
-		__rust.exec_lines(`enum Command {
-			SetVar(String,Value),
-			GetVar(String),
-			PushVar(String),
-			Push(Value),
-			Pop,
-			Add,
-		}`);
-	}}
+	${function rust_eval_enum(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_enum.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`enum Command {
+				SetVar(String,Value),
+				GetVar(String),
+				PushVar(String),
+				Push(Value),
+				Pop,
+				Add,
+			}`,rust_eval_enum.block_id);
+		}}
 	
-	${function rust_eval_enum(){
-		__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
+	${function rust_eval_enum(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_enum.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
+			enum Value {
+				Nothing,
+				Int(i64),
+				String(String),
+			}`,rust_eval_enum.block_id);
+		}}
+	
+	${function rust_eval_enum(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_enum.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
 		enum Value {
 			Nothing,
 			Int(i64),
 			String(String),
-		}`);
-	}}
+		}`,rust_eval_enum.block_id);
+		}}
 	
-	${function rust_eval_enum(){
-		__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
-		enum Value {
-			Nothing,
-			Int(i64),
-			String(String),
-		}`);
-	}}
-	
-	${function rust_eval_enum(){
-		__rust.exec_lines(`#[derive(Debug)]
+	${function rust_eval_enum(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_enum.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[derive(Debug)]
 		enum EngineError {
 			MismatchNumParams,
 			MismatchType,
 			UnknownCommand(String),
 			MissingVariable(String),
 			EmptyStack,
-		}`);
-	}}
+		}`,rust_eval_enum.block_id);
+		}}
 	
-	${function rust_eval_struct(){
-		__rust.exec_lines(`struct Evaluator {
+	${function rust_eval_struct(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_struct.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`struct Evaluator {
 			vars:HashMap<String, Value>,
 			stack:Vec<Value>,
-		}`);
-	}}
+		}`,rust_eval_struct.block_id);
+		}}
 
-	${function rust_eval_impl(){
-		__rust.exec_lines(`impl Evaluator {
+	${function rust_eval_impl(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_impl.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`impl Evaluator {
 			fn new() -> Evaluator {
 				Self {
 					vars:HashMap::new(),
@@ -347,17 +380,27 @@ x: {
 				}
 				output
 			}
-		}`);
-	}}
+		}`,rust_eval_impl.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 			Ok(var_name.into())
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
 			if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
 				let inner = val[1..(val.len() - 1)].to_string();
 		
@@ -365,22 +408,32 @@ x: {
 			} else {
 				Err(EngineError::MismatchType)
 			}
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
 			let result = val.parse::<i64>();
 		
 			match result {
 				Ok(x) => Ok(Value::Int(x)),
 				_ => Err(EngineError::MismatchType),
 			}
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
 			if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
 				// Parse the string
 				parse_string(val)
@@ -388,11 +441,16 @@ x: {
 				// Parse the number
 				parse_int(val)
 			}
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 3 {
 				return Err(EngineError::MismatchNumParams);
 			}
@@ -401,11 +459,16 @@ x: {
 			let value = parse_value(input[2])?;
 		
 			Ok(Command::SetVar(var_name, value))
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 2 {
 				return Err(EngineError::MismatchNumParams);
 			}
@@ -413,11 +476,16 @@ x: {
 			let var_name = parse_var_name(input[1])?;
 		
 			Ok(Command::GetVar(var_name))
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 2 {
 				return Err(EngineError::MismatchNumParams);
 			}
@@ -425,11 +493,16 @@ x: {
 			let val = parse_value(input[1])?;
 		
 			Ok(Command::Push(val))
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 2 {
 				return Err(EngineError::MismatchNumParams);
 			}
@@ -438,10 +511,15 @@ x: {
 		
 			Ok(Command::PushVar(var_name))
 		}`);
-	}}
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 			// set a 100
 			// get a
 		
@@ -476,97 +554,132 @@ x: {
 		
 			Ok(output)
 		}`);
-	}}
+		}}
 	
-	${function rust_eval_struct(){
-		__rust.exec_lines(`struct Typechecker {
-			stack: Vec<Type>,
-		}`);
-	}}
-	
-	${function rust_eval_impl(){
-		__rust.exec_lines(`impl Typechecker {
-			fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
-				Ok(Type::Nothing)
+	${function rust_eval_struct(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_struct.block_id = block_id;
+				return;
 			}
-			
-			fn typecheck(&mut self, commands: &[Command]) -> Result<Type, EngineError> {
-				for command in commands {
-					self.typecheck_command(&command)?;
+			__rust.exec_lines(`struct Typechecker {
+				stack: Vec<Type>,
+			}`,rust_eval_struct.block_id);
+		}}
+	
+	${function rust_eval_impl(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_impl.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`impl Typechecker {
+				fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
+					Ok(Type::Nothing)
 				}
-				Ok(Type::Nothing)
+				
+				fn typecheck(&mut self, commands: &[Command]) -> Result<Type, EngineError> {
+					for command in commands {
+						self.typecheck_command(&command)?;
+					}
+					Ok(Type::Nothing)
+				}
+			}`,rust_eval_impl.block_id);
+		}}
+	
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
 			}
-		}`);
-	}}
-	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`#[test]
-		fn test1() -> Result<(), EngineError> {
-			let commands=vec![
-				Command::SetVar("a".into(), Value::Int(100)),
-				Command::GetVar("a".into()),
-			];
+			__rust.exec_lines(`#[test]
+			fn test1() -> Result<(), EngineError> {
+				let commands=vec![
+					Command::SetVar("a".into(), Value::Int(100)),
+					Command::GetVar("a".into()),
+				];
+				
+				let mut evaluator = Evaluator::new();
 			
-			let mut evaluator = Evaluator::new();
-		
-			let result = evaluator.evaluate(&commands)?;
-		
-			assert_eq!(result, Value::Int(100));
-		
-			Ok(())
-		}`);
-	}}
+				let result = evaluator.evaluate(&commands)?;
+			
+				assert_eq!(result, Value::Int(100));
+			
+				Ok(())
+			}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`#[test]
-		fn eval_set_get() -> Result<(), EngineError> {
-			let input = "set x 30\nget x";
-		
-			let commands = parse(input)?;
-		
-			let mut evaluator=Evaluator::new();
-			let result = evaluator.evaluate(&commands)?;
-		
-			assert_eq!(result, Value::Int(30));
-		
-			Ok(())
-		}`);
-	}}
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[test]
+			fn eval_set_get() -> Result<(), EngineError> {
+				let input = "set x 30\nget x";
+			
+				let commands = parse(input)?;
+			
+				let mut evaluator=Evaluator::new();
+				let result = evaluator.evaluate(&commands)?;
+			
+				assert_eq!(result, Value::Int(30));
+			
+				Ok(())
+			}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`#[test]
-		fn eval_set_get_string() -> Result<(), EngineError> {
-			let input = "set x \"hello\"\nget x";
-		
-			let commands = parse(input)?;
-		
-			let mut evaluator = Evaluator::new();
-			let result = evaluator.evaluate(&commands)?;
-		
-			assert_eq!(result, Value::String("hello".into()));
-		
-			Ok(())
-		}`);
-	}}
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[test]
+			fn eval_set_get_string() -> Result<(), EngineError> {
+				let input = "set x \"hello\"\nget x";
+			
+				let commands = parse(input)?;
+			
+				let mut evaluator = Evaluator::new();
+				let result = evaluator.evaluate(&commands)?;
+			
+				assert_eq!(result, Value::String("hello".into()));
+			
+				Ok(())
+			}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`#[test]
-		fn eval_stack() -> Result<(), EngineError> {
-			let input = "push 100\npush 30\nadd\npop";
-		
-			let commands = parse(input)?;
-		
-			let mut evaluator = Evaluator::new();
-			let result = evaluator.evaluate(&commands)?;
-		
-			assert_eq!(result, Value::Int(130));
-		
-			Ok(())
-		}`);
-	}}
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[test]
+			fn eval_stack() -> Result<(), EngineError> {
+				let input = "push 100\npush 30\nadd\npop";
+			
+				let commands = parse(input)?;
+			
+				let mut evaluator = Evaluator::new();
+				let result = evaluator.evaluate(&commands)?;
+			
+				assert_eq!(result, Value::Int(130));
+			
+				Ok(())
+			}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`#[test]
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`#[test]
 		fn eval_pushvar() -> Result<(), EngineError> {
 			let input = "set x 33\npushvar x\npush 100\nadd\npop";
 		
@@ -578,11 +691,16 @@ x: {
 			assert_eq!(result, Value::Int(133));
 		
 			Ok(())
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	
-	${function rust_eval_fn(){
-		__rust.exec_lines(`fn main() -> Result<(), EngineError> {
+	${function rust_eval_fn(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_fn.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
 			for arg in std::env::args().skip(1) {
 				let contents = std::fs::read_to_string(arg).unwrap();
 				let mut engine = Evaluator::new();
@@ -593,8 +711,8 @@ x: {
 			}
 			
 			Ok(())
-		}`);
-	}}
+		}`,rust_eval_fn.block_id);
+		}}
 	`;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
@@ -626,30 +744,45 @@ x: {
 	mod cursor;
 	pub mod unescape;
 	
-	${(function S_Crate_init() {
-			__rust.exec_line('mod cursor;');
-			__rust.exec_line('pub mod unescape;');
-		})}
+	${function S_Crate_init(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				S_Crate_init.block_id = block_id;
+				return;
+			}
+			__rust.exec_line('mod cursor;',S_Crate_init.block_id);
+			__rust.exec_line('pub mod unescape;',S_Crate_init.block_id);
+		}}
 
 	#[cfg(test)]
 	mod tests;
 
-	${(function S_Crate_init() {
-			__rust.exec_line('#[cfg(test)]');
-			__rust.exec_line('mod tests;');
-		})}
+	${function S_Crate_init() {
+			if (parse_pass === 0) {
+				block_id++;
+				S_Crate_init.block_id = block_id;
+				return;
+			}
+			__rust.exec_line('#[cfg(test)]',S_Crate_init.block_id);
+			__rust.exec_line('mod tests;',S_Crate_init.block_id);
+		}}
 	
 	use self::LiteralKind::*;
 	use self::TokenKind::*;
 	use crate::cursor::{Cursor, EOF_CHAR};
 	use std::convert::TryFrom;
 
-	${(function S_Crate_init() {
-			__rust.exec_line('use self::LiteralKind::*;');
-			__rust.exec_line('use self::TokenKind::*;');
-			__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};');
-			__rust.exec_line('use std::convert::TryFrom;');
-		})}
+	${function S_Crate_init() {
+			if (parse_pass === 0) {
+				block_id++;
+				S_Crate_init.block_id = block_id;
+				return;
+			}
+			__rust.exec_line('use self::LiteralKind::*;',S_Crate_init.block_id);
+			__rust.exec_line('use self::TokenKind::*;',S_Crate_init.block_id);
+			__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};',S_Crate_init.block_id);
+			__rust.exec_line('use std::convert::TryFrom;',S_Crate_init.block_id);
+		}}
 	
 	/// Parsed token.
 	/// It doesn't contain information about data that has been parsed,
@@ -660,7 +793,12 @@ x: {
 		pub len: usize,
 	}
 
-	${(function rust_eval_struct() {
+	${function rust_eval_struct(parse_pass) {
+		if (parse_pass === 0) {
+			block_id++;
+			rust_eval_struct.block_id = block_id;
+			return;
+		}
 			__rust.exec_line(`/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
 			/// only the type of the token and its size.
@@ -668,8 +806,8 @@ x: {
 			pub struct Token {
 				pub kind: TokenKind,
 				pub len: usize,
-			}`);
-		})}
+			}`,rust_eval_struct.block_id);
+		}}
 	
 	impl Token {
 		fn new(kind: TokenKind, len: usize) -> Token {
@@ -678,18 +816,18 @@ x: {
 	}
 
 
-	${(function rust_eval_impl() {
+	${function rust_eval_impl() {
 			'//nop;';
-		})}
+		}}
 
-	${(function rust_eval_impl() {
+	${function rust_eval_impl() {
 			__rust.exec_line(`
 		impl Token {
 			fn new(kind: TokenKind, len: usize) -> Token {
 				Token { kind, len }
 			}
-		}`);
-		})}
+		}`,rust_eval_struct.block_id);
+		}}
 	
 	/// Enum representing common lexeme types.
 	// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
@@ -774,103 +912,101 @@ x: {
 		/// Unknown token, not expected by the lexer, e.g. "№"
 		Unknown,
 	}
-
-	${(function rust_eval_enum() {
-			__rust.exec_line(`/// Enum representing common lexeme types.
-		// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
-		#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-		pub enum TokenKind {
-			// Multi-char tokens:
-			/// "// comment"
-			LineComment { doc_style: Option<DocStyle> },
-			/// \`/* block comment */\`
-			///
-			/// Block comments can be recursive, so the sequence like \`/* /* */\`
-			/// will not be considered terminated and will result in a parsing error.
-			BlockComment { doc_style: Option<DocStyle>, terminated: bool },
-			/// Any whitespace characters sequence.
-			Whitespace,
-			/// "ident" or "continue"
-			/// At this step keywords are also considered identifiers.
-			Ident,
-			/// "r#ident"
-			RawIdent,
-			/// "12_u8", "1.0e-40", "b"123"". See \`LiteralKind\` for more details.
-			Literal { kind: LiteralKind, suffix_start: usize },
-			/// "'a"
-			Lifetime { starts_with_number: bool },
-		
-			// One-char tokens:
-			/// ";"
-			Semi,
-			/// ","
-			Comma,
-			/// "."
-			Dot,
-			/// "("
-			OpenParen,
-			/// ")"
-			CloseParen,
-			/// "{"
-			OpenBrace,
-			/// "}"
-			CloseBrace,
-			/// "["
-			OpenBracket,
-			/// "]"
-			CloseBracket,
-			/// "@"
-			At,
-			/// "#"
-			Pound,
-			/// "~"
-			Tilde,
-			/// "?"
-			Question,
-			/// ":"
-			Colon,
-			/// "$"
-			Dollar,
-			/// "="
-			Eq,
-			/// "!"
-			Bang,
-			/// "<"
-			Lt,
-			/// ">"
-			Gt,
-			/// "-"
-			Minus,
-			/// "&"
-			And,
-			/// "|"
-			Or,
-			/// "+"
-			Plus,
-			/// "*"
-			Star,
-			/// "/"
-			Slash,
-			/// "^"
-			Caret,
-			/// "%"
-			Percent,
-		
-			/// Unknown token, not expected by the lexer, e.g. "№"
-			Unknown,
-		}`);
-			__rust.log_lines(() => console.log('here'));
-		})}
+	${function rust_eval_enum() {
+			__rust.exec_lines(`/// Enum representing common lexeme types.
+			// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
+			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+			pub enum TokenKind {
+				// Multi-char tokens:
+				/// "// comment"
+				LineComment { doc_style: Option<DocStyle> },
+				/// \`/* block comment */\`
+				///
+				/// Block comments can be recursive, so the sequence like \`/* /* */\`
+				/// will not be considered terminated and will result in a parsing error.
+				BlockComment { doc_style: Option<DocStyle>, terminated: bool },
+				/// Any whitespace characters sequence.
+				Whitespace,
+				/// "ident" or "continue"
+				/// At this step keywords are also considered identifiers.
+				Ident,
+				/// "r#ident"
+				RawIdent,
+				/// "12_u8", "1.0e-40", "b"123"". See \`LiteralKind\` for more details.
+				Literal { kind: LiteralKind, suffix_start: usize },
+				/// "'a"
+				Lifetime { starts_with_number: bool },
+			
+				// One-char tokens:
+				/// ";"
+				Semi,
+				/// ","
+				Comma,
+				/// "."
+				Dot,
+				/// "("
+				OpenParen,
+				/// ")"
+				CloseParen,
+				/// "{"
+				OpenBrace,
+				/// "}"
+				CloseBrace,
+				/// "["
+				OpenBracket,
+				/// "]"
+				CloseBracket,
+				/// "@"
+				At,
+				/// "#"
+				Pound,
+				/// "~"
+				Tilde,
+				/// "?"
+				Question,
+				/// ":"
+				Colon,
+				/// "$"
+				Dollar,
+				/// "="
+				Eq,
+				/// "!"
+				Bang,
+				/// "<"
+				Lt,
+				/// ">"
+				Gt,
+				/// "-"
+				Minus,
+				/// "&"
+				And,
+				/// "|"
+				Or,
+				/// "+"
+				Plus,
+				/// "*"
+				Star,
+				/// "/"
+				Slash,
+				/// "^"
+				Caret,
+				/// "%"
+				Percent,
+			
+				/// Unknown token, not expected by the lexer, e.g. "№"
+				Unknown,
+			}`,rust_eval_struct.block_id);
+			//__rust.log_lines(() => console.log('here'));
+		}}
 	
 	#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 	pub enum DocStyle {
 		Outer,
 		Inner,
 	}
-
-	${(function rust_eval_enum() {
+	${function rust_eval_enum() {
 			'//nop;';
-		})}
+		}}
 	
 	#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 	pub enum LiteralKind {
