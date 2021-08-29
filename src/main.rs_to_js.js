@@ -769,7 +769,8 @@ x: {
 			use self::LiteralKind::*;
 			use self::TokenKind::*;
 			use crate::cursor::{Cursor, EOF_CHAR};
-			use std::convert::TryFrom;`, S_Crate_init.block_id);
+			use std::convert::TryFrom;
+			`, S_Crate_init.block_id);
 		}}
 	
 		${function rust_eval_struct(parse_pass) {
