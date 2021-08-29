@@ -1640,7 +1640,88 @@ x: {
 				Err(_) => (0, Some(RawStrError::TooManyDelimiters { found: n_hashes })),
 			}
 		}
+
+		${function raw_string_unvalidated() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let code_generator=__rust.get_code_generator().clone();
+
+			let has_digits = false;
+			code_generator.set_scope({
+				get has_digits(){return {type:'value',value:has_digits}},
+				set has_digits(v){has_digits=v.value},
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			code_generator.set_body(`
+			debug_assert!(self.prev() == 'r');
+			let start_pos = self.len_consumed();
+			let mut possible_terminator_offset = None;
+			let mut max_hashes = 0;
 	
+			// Count opening '#' symbols.
+			let mut eaten = 0;
+			while self.first() == '#' {
+				eaten += 1;
+				self.bump();
+			}
+			let n_start_hashes = eaten;
+	
+			// Check that string is started.
+			match self.bump() {
+				Some('"') => (),
+				c => {
+					let c = c.unwrap_or(EOF_CHAR);
+					return (n_start_hashes, Some(RawStrError::InvalidStarter { bad_char: c }));
+				}
+			}
+	
+			// Skip the string contents and on each '#' character met, check if this is
+			// a raw string termination.
+			loop {
+				self.eat_while(|c| c != '"');
+	
+				if self.is_eof() {
+					return (
+						n_start_hashes,
+						Some(RawStrError::NoTerminator {
+							expected: n_start_hashes,
+							found: max_hashes,
+							possible_terminator_offset,
+						}),
+					);
+				}
+	
+				// Eat closing double quote.
+				self.bump();
+	
+				// Check that amount of closing '#' symbols
+				// is equal to the amount of opening ones.
+				// Note that this will not consume extra trailing \`#\` characters:
+				// \`r###"abcde"####\` is lexed as a \`RawStr { n_hashes: 3 }\`
+				// followed by a \`#\` token.
+				let mut n_end_hashes = 0;
+				while self.first() == '#' && n_end_hashes < n_start_hashes {
+					n_end_hashes += 1;
+					self.bump();
+				}
+	
+				if n_end_hashes == n_start_hashes {
+					return (n_start_hashes, None);
+				} else if n_end_hashes > max_hashes {
+					// Keep track of possible terminators to give a hint about
+					// where there might be a missing terminator
+					possible_terminator_offset =
+						Some(self.len_consumed() - start_pos - n_end_hashes + prefix_len);
+					max_hashes = n_end_hashes;
+				}
+			}`);
+			code_generator.build().run();
+			return has_digits;
+		}}
 		fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
 			debug_assert!(self.prev() == 'r');
 			let start_pos = self.len_consumed();
