@@ -264,8 +264,8 @@ x: {
 		class BlockRef {
 			constructor(value){
 				this.ref='block';
+				this.ptr=__rust.block_vec_ref.length;
 				__rust.block_vec_ref.push([this,value]);
-				this.ptr=ptr;
 			}
 			deref(){
 				return __rust.block_vec_ref[this.ref];
