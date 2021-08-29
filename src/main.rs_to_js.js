@@ -275,6 +275,9 @@ x: {
 			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
 				let ret = [];
+				function c(n){
+					ret?.[ret.length-n];
+				}
 				function a() {
 					return ret?.[ret.length - 2];
 				}
@@ -292,6 +295,9 @@ x: {
 						ret.pop();
 						ret.pop();
 						ret.push('#' + '[]'[0]);
+					}
+					if(c(3)==='#'&&c(2)==='!'&&c(2)==='[]'[0]){
+
 					}
 				}
 				return ret;
@@ -365,6 +371,8 @@ x: {
 		}
 	}
 
+	let __rust_root_scope;
+	__rust_root_scope=__rust.push_block_vec();
 	test_0();
 	function test_0() {
 		let __id=block_id++;
@@ -777,6 +785,7 @@ x: {
 	`;
 	__rust.crates = [];
 	__rust.scope.files = [];
+	__rust.drop(__rust_root_scope);
 	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec, __rust.scope.block_vec_ref]);
 	__rust.crates.push(['onehour-language', __rust.scope.files]);
 	__rust.scope=new __rust.RustScope;
