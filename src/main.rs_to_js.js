@@ -212,7 +212,7 @@ x: {
 			}
 			str_arr = s2_arr;
 			str_arr.push(Symbol.for('EOF'));
-			__rust.block_vec[block_id]??=[];
+			__rust.block_vec[block_id] ??= [];
 			let block = __rust.block_vec[block_id];
 			for (let x of str_arr) {
 				block.push(x);
@@ -261,7 +261,7 @@ x: {
 				Push(Value),
 				Pop,
 				Add,
-			}`,rust_eval_enum.block_id);
+			}`, rust_eval_enum.block_id);
 		}}
 	
 	${function rust_eval_enum(parse_pass) {
@@ -275,7 +275,7 @@ x: {
 				Nothing,
 				Int(i64),
 				String(String),
-			}`,rust_eval_enum.block_id);
+			}`, rust_eval_enum.block_id);
 		}}
 	
 	${function rust_eval_enum(parse_pass) {
@@ -289,7 +289,7 @@ x: {
 			Nothing,
 			Int(i64),
 			String(String),
-		}`,rust_eval_enum.block_id);
+		}`, rust_eval_enum.block_id);
 		}}
 	
 	${function rust_eval_enum(parse_pass) {
@@ -305,7 +305,7 @@ x: {
 			UnknownCommand(String),
 			MissingVariable(String),
 			EmptyStack,
-		}`,rust_eval_enum.block_id);
+		}`, rust_eval_enum.block_id);
 		}}
 	
 	${function rust_eval_struct(parse_pass) {
@@ -317,7 +317,7 @@ x: {
 			__rust.exec_lines(`struct Evaluator {
 			vars:HashMap<String, Value>,
 			stack:Vec<Value>,
-		}`,rust_eval_struct.block_id);
+		}`, rust_eval_struct.block_id);
 		}}
 
 	${function rust_eval_impl(parse_pass) {
@@ -380,7 +380,7 @@ x: {
 				}
 				output
 			}
-		}`,rust_eval_impl.block_id);
+		}`, rust_eval_impl.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -391,7 +391,7 @@ x: {
 			}
 			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 			Ok(var_name.into())
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -408,7 +408,7 @@ x: {
 			} else {
 				Err(EngineError::MismatchType)
 			}
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -424,7 +424,7 @@ x: {
 				Ok(x) => Ok(Value::Int(x)),
 				_ => Err(EngineError::MismatchType),
 			}
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -441,7 +441,7 @@ x: {
 				// Parse the number
 				parse_int(val)
 			}
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -459,7 +459,7 @@ x: {
 			let value = parse_value(input[2])?;
 		
 			Ok(Command::SetVar(var_name, value))
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -476,7 +476,7 @@ x: {
 			let var_name = parse_var_name(input[1])?;
 		
 			Ok(Command::GetVar(var_name))
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -493,7 +493,7 @@ x: {
 			let val = parse_value(input[1])?;
 		
 			Ok(Command::Push(val))
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -564,7 +564,7 @@ x: {
 			}
 			__rust.exec_lines(`struct Typechecker {
 				stack: Vec<Type>,
-			}`,rust_eval_struct.block_id);
+			}`, rust_eval_struct.block_id);
 		}}
 	
 	${function rust_eval_impl(parse_pass) {
@@ -584,7 +584,7 @@ x: {
 					}
 					Ok(Type::Nothing)
 				}
-			}`,rust_eval_impl.block_id);
+			}`, rust_eval_impl.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -607,7 +607,7 @@ x: {
 				assert_eq!(result, Value::Int(100));
 			
 				Ok(())
-			}`,rust_eval_fn.block_id);
+			}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -628,7 +628,7 @@ x: {
 				assert_eq!(result, Value::Int(30));
 			
 				Ok(())
-			}`,rust_eval_fn.block_id);
+			}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -649,7 +649,7 @@ x: {
 				assert_eq!(result, Value::String("hello".into()));
 			
 				Ok(())
-			}`,rust_eval_fn.block_id);
+			}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -670,7 +670,7 @@ x: {
 				assert_eq!(result, Value::Int(130));
 			
 				Ok(())
-			}`,rust_eval_fn.block_id);
+			}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -691,7 +691,7 @@ x: {
 			assert_eq!(result, Value::Int(133));
 		
 			Ok(())
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
@@ -711,7 +711,7 @@ x: {
 			}
 			
 			Ok(())
-		}`,rust_eval_fn.block_id);
+		}`, rust_eval_fn.block_id);
 		}}
 	`;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
@@ -750,8 +750,8 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line('mod cursor;',S_Crate_init.block_id);
-			__rust.exec_line('pub mod unescape;',S_Crate_init.block_id);
+			__rust.exec_line('mod cursor;', S_Crate_init.block_id);
+			__rust.exec_line('pub mod unescape;', S_Crate_init.block_id);
 		}}
 
 	#[cfg(test)]
@@ -763,8 +763,8 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line('#[cfg(test)]',S_Crate_init.block_id);
-			__rust.exec_line('mod tests;',S_Crate_init.block_id);
+			__rust.exec_line('#[cfg(test)]', S_Crate_init.block_id);
+			__rust.exec_line('mod tests;', S_Crate_init.block_id);
 		}}
 	
 	use self::LiteralKind::*;
@@ -778,10 +778,10 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
-			__rust.exec_line('use self::LiteralKind::*;',S_Crate_init.block_id);
-			__rust.exec_line('use self::TokenKind::*;',S_Crate_init.block_id);
-			__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};',S_Crate_init.block_id);
-			__rust.exec_line('use std::convert::TryFrom;',S_Crate_init.block_id);
+			__rust.exec_line('use self::LiteralKind::*;', S_Crate_init.block_id);
+			__rust.exec_line('use self::TokenKind::*;', S_Crate_init.block_id);
+			__rust.exec_line('use crate::cursor::{Cursor, EOF_CHAR};', S_Crate_init.block_id);
+			__rust.exec_line('use std::convert::TryFrom;', S_Crate_init.block_id);
 		}}
 	
 	/// Parsed token.
@@ -794,11 +794,11 @@ x: {
 	}
 
 	${function rust_eval_struct(parse_pass) {
-		if (parse_pass === 0) {
-			block_id++;
-			rust_eval_struct.block_id = block_id;
-			return;
-		}
+			if (parse_pass === 0) {
+				block_id++;
+				rust_eval_struct.block_id = block_id;
+				return;
+			}
 			__rust.exec_line(`/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
 			/// only the type of the token and its size.
@@ -806,7 +806,7 @@ x: {
 			pub struct Token {
 				pub kind: TokenKind,
 				pub len: usize,
-			}`,rust_eval_struct.block_id);
+			}`, rust_eval_struct.block_id);
 		}}
 	
 		${function rust_eval_impl() {
@@ -819,7 +819,7 @@ x: {
 				fn new(kind: TokenKind, len: usize) -> Token {
 					Token { kind, len }
 				}
-			}`,rust_eval_impl.block_id);
+			}`, rust_eval_impl.block_id);
 		}}
 	
 	${function rust_eval_enum() {
@@ -905,7 +905,7 @@ x: {
 			
 				/// Unknown token, not expected by the lexer, e.g. "№"
 				Unknown,
-			}`,rust_eval_struct.block_id);
+			}`, rust_eval_struct.block_id);
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
