@@ -51,6 +51,24 @@ x: {
 	};
 	function rust_static_init() {
 		if (__rust) return;
+		class RemoteRef{
+			constructor(parent) {
+				this.ref_type = 'block';
+				this.ref = null;
+				this.parent=parent;
+			}
+			make_ref(value){
+				let ref_id=this.parent.block_vec_ref.length;
+				this.parent.block_vec_ref.push(value);
+				this.ref=ref_id;
+			}
+			deref() {
+				return this.value;
+			}
+			get value() {
+				return __rust.block_vec_ref[this.ref];
+			}
+		}
 		class Rust {
 			constructor(base){
 				this.sym=my_rust_sym;
@@ -60,7 +78,7 @@ x: {
 				if(data.length===1){
 					data=data[0];
 				}
-				let ref=new RemoteRef();
+				let ref=new RemoteRef(this);
 				ref.make_ref(data);
 				this.block_vec[block_id]=ref;
 			}
@@ -279,23 +297,6 @@ x: {
 			constructor(ref) {
 				this.ref_type = 'block';
 				this.ref = ref;
-			}
-			deref() {
-				return this.value;
-			}
-			get value() {
-				return __rust.block_vec_ref[this.ref];
-			}
-		}
-		class RemoteRef{
-			constructor() {
-				this.ref_type = 'block';
-				this.ref = null;
-			}
-			make_ref(value){
-				let ref_id=__rust.block_vec_ref.length;
-				__rust.block_vec_ref.push(value);
-				this.ref=ref_id;
 			}
 			deref() {
 				return this.value;
