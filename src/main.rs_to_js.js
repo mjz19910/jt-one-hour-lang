@@ -256,7 +256,7 @@ x: {
 			__rust.block_vec=[];
 			debugger;
 			block_id=0;
-			__rust_priv.stack.push({});
+			__rust_priv.stack.push(ret);
 			return ret;
 		}
 		__rust.drop=function(vv){
