@@ -182,6 +182,7 @@ x: {
 			tok_arr = parse_pass_0(str);
 			function parse_pass_0(str) {
 				let tok_arr = [];
+				let cur_regex=is_val_char;
 				let str_d_mat=/"(?:\\.|(?!").)+"/g;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
@@ -205,7 +206,13 @@ x: {
 					};
 					if(cc&&cc[0]==="'"){
 						//could be lifetime
-						console.log(str[mat_idx+1]);
+						let mat_lt=/'[a-zA-Z_]+?(')?/;
+						mat_lt.lastIndex=mat_idx;
+						cc=mat_lt.match(str);
+						console.log(cc,str.slice(mat_idx,mat_idx+7));
+						mat_idx+=cc[0].length;
+						cur_regex.lastIndex=mat_idx;
+						continue;
 						/** fn lifetime_or_char(&mut self) -> TokenKind {
     					    debug_assert!(self.prev() == '\'');
 
