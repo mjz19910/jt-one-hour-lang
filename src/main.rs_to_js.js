@@ -1268,7 +1268,10 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){self=v.value},
+				set self(v){
+					/*can this happen in compilable rust code, if not, what is the error*/
+					self=v.value;
+				},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
