@@ -577,7 +577,7 @@ x: {
 			}`, rust_eval_struct.block_id);
 		}}
 	
-	${function rust_eval_impl(parse_pass) {
+		${function rust_eval_impl(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_impl.block_id = block_id;
@@ -597,7 +597,7 @@ x: {
 			}`, rust_eval_impl.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -620,7 +620,7 @@ x: {
 			}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -641,7 +641,7 @@ x: {
 			}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -662,7 +662,7 @@ x: {
 			}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -683,7 +683,7 @@ x: {
 			}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -704,7 +704,7 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	
-	${function rust_eval_fn(parse_pass) {
+		${function rust_eval_fn(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
 				rust_eval_fn.block_id = block_id;
@@ -726,32 +726,38 @@ x: {
 	`;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
-	//! Low-level Rust lexer.
-	//!
-	//! The idea with \`rustc_lexer\` is to make a reusable library,
-	//! by separating out pure lexing and rustc-specific concerns, like spans,
-	//! error reporting, and interning.  So, rustc_lexer operates directly on \`&str\`,
-	//! produces simple tokens which are a pair of type-tag and a bit of original text,
-	//! and does not report errors, instead storing them as flags on the token.
-	//!
-	//! Tokens produced by this lexer are not yet ready for parsing the Rust syntax.
-	//! For that see [\`rustc_parse::lexer\`], which converts this basic token stream
-	//! into wide tokens used by actual parser.
-	//!
-	//! The purpose of this crate is to convert raw sources into a labeled sequence
-	//! of well-known token types, so building an actual Rust token stream will
-	//! be easier.
-	//!
-	//! The main entity of this crate is the [\`TokenKind\`] enum which represents common
-	//! lexeme types.
-	//!
-	//! [\`rustc_parse::lexer\`]: ../rustc_parse/lexer/index.html
-	// We want to be able to build this crate with a stable compiler, so no
-	// \`#![feature]\` attributes should be added.
-
 		${(function STATIC_init() {
 			rust_static_init();
 		})}
+		${function S_rust_doc_comment_eval(parse_pass) {
+			if (parse_pass === 0) {
+				block_id++;
+				S_rust_doc_comment_eval.block_id = block_id;
+				return;
+			}
+			__rust.exec_lines(`//! Low-level Rust lexer.
+			//!
+			//! The idea with \`rustc_lexer\` is to make a reusable library,
+			//! by separating out pure lexing and rustc-specific concerns, like spans,
+			//! error reporting, and interning.  So, rustc_lexer operates directly on \`&str\`,
+			//! produces simple tokens which are a pair of type-tag and a bit of original text,
+			//! and does not report errors, instead storing them as flags on the token.
+			//!
+			//! Tokens produced by this lexer are not yet ready for parsing the Rust syntax.
+			//! For that see [\`rustc_parse::lexer\`], which converts this basic token stream
+			//! into wide tokens used by actual parser.
+			//!
+			//! The purpose of this crate is to convert raw sources into a labeled sequence
+			//! of well-known token types, so building an actual Rust token stream will
+			//! be easier.
+			//!
+			//! The main entity of this crate is the [\`TokenKind\`] enum which represents common
+			//! lexeme types.
+			//!
+			//! [\`rustc_parse::lexer\`]: ../rustc_parse/lexer/index.html
+			// We want to be able to build this crate with a stable compiler, so no
+			// \`#![feature]\` attributes should be added.`, S_rust_doc_comment_eval.block_id);
+		}}
 	
 		${function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
