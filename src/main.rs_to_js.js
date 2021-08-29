@@ -786,12 +786,13 @@ x: {
 		Ok(())
 	}
 	`;
-	__rust.crates = [];
-	__rust.scope.files = [];
 	__rust.drop(__rust_root_scope);
+	__rust.crates ??= [];
+	__rust.scope.files = [];
 	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec]);
 	__rust.crates.push(['onehour-language', __rust.scope.files]);
 	__rust.scope = new __rust.RustScope;
+	__rust_root_scope = __rust.push_block_vec();
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
 	//! Low-level Rust lexer.
@@ -1643,8 +1644,9 @@ x: {
 		}
 	}
 	`;
+	__rust.drop(__rust_root_scope);
 	__rust.scope.files = [];
-	__rust.scope.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
+	__rust.scope.files.push(['rustc_lexer/lib.rs', __rust.scope.block_vec]);
 	__rust.crates.push(['nightly-rustc', __rust.scope.files]);
 	__rust.scope = new __rust.RustScope;
 	window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
