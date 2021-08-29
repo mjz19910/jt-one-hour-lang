@@ -452,7 +452,7 @@ x: {
 					if(cur.match(/[\n][\n]+/)){
 						let ea=cur.split('');
 						tt_arr.push(...ea);
-						continue;
+						cur=tt_arr.pop();
 					}
 					if(cur==='\n'&&tt_arr[tt_arr.lenght-1]===cur){
 						continue;
