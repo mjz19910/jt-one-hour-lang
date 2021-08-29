@@ -277,20 +277,20 @@ x: {
 			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
 				let ret = [];
-				function pr() {
+				function a() {
 					return ret?.[ret.length - 2];
 				}
-				function c() {
+				function b() {
 					return ret?.[ret.length - 1];
 				}
 				for (let i = 0; i < arr.length; i++) {
 					ret.push(arr[i]);
-					if (pr() === ':' && c() === ':') {
+					if (a() === ':' && b() === ':') {
 						ret.pop();
 						ret.pop();
 						ret.push('::');
 					}
-					if (pr() === '#' && c() === '[]'[0]) {
+					if (a() === '#' && b() === '[]'[0]) {
 						ret.pop();
 						ret.pop();
 						ret.push('#' + '[]'[0]);
