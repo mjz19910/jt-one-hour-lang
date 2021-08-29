@@ -31,8 +31,8 @@ x: {
 		res.push(mm.raw[iter_index++]);
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
-				res.push(cur);
 				cur(parse_pass);
+				res.push(cur.block_id);
 				res.push(mm.raw[iter_index++]);
 			}
 		}
@@ -53,7 +53,7 @@ x: {
 		if (scope) {
 			__rust.drop(scope);
 		}
-		return mm.raw.join('');
+		return res;
 	};
 	function rust_static_init() {
 		if (__rust) return;
