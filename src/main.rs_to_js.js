@@ -11,9 +11,13 @@ x: {
 	let my_rust_sym = Symbol();
 	let ts=performance.now();
 	let block_id = 0;
+	let in_parse=false;
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
-		block_id=0;
+		if(!in_parse){
+			block_id=0;
+			in_parse=true;
+		}
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
