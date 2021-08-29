@@ -267,6 +267,9 @@ x: {
 				this.ref=ref;
 			}
 			deref(){
+				return this.value;
+			}
+			get value(){
 				return __rust.block_vec_ref[this.ref];
 			}
 		}
