@@ -51,16 +51,16 @@ x: {
 	};
 	function rust_static_init() {
 		if (__rust) return;
-		class RemoteRef{
+		class RemoteRef {
 			constructor(parent) {
 				this.ref_type = 'block';
 				this.ref = null;
-				this.parent=parent;
+				this.parent = parent;
 			}
-			make_ref(value){
-				let ref_id=this.parent.block_vec_ref.length;
+			make_ref(value) {
+				let ref_id = this.parent.block_vec_ref.length;
 				this.parent.block_vec_ref.push(value);
-				this.ref=ref_id;
+				this.ref = ref_id;
 			}
 			deref() {
 				return this.value;
@@ -70,17 +70,17 @@ x: {
 			}
 		}
 		class Rust {
-			constructor(base){
-				this.sym=my_rust_sym;
-				this.block_vec=[];
+			constructor(base) {
+				this.sym = my_rust_sym;
+				this.block_vec = [];
 			}
-			set_resolved_block(block_id,...data){
-				if(data.length===1){
-					data=data[0];
+			set_resolved_block(block_id, ...data) {
+				if (data.length === 1) {
+					data = data[0];
 				}
-				let ref=new RemoteRef(this);
+				let ref = new RemoteRef(this);
 				ref.make_ref(data);
-				this.block_vec[block_id]=ref;
+				this.block_vec[block_id] = ref;
 			}
 		}
 		__rust = new Rust;
@@ -1368,10 +1368,9 @@ x: {
 						_ => Unknown,
 					};
 					Token::new(token_kind, self.len_consumed())
-				}
-			`, __id)
+				}`, __id)
 				}}
-			${function rust_eval_any(parse_pass) {
+				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
 						return;
@@ -1862,7 +1861,7 @@ x: {
 						return;
 					}
 					__id = rust_eval_any.block_id;
-					__rust.set_resolved_block(__id,function eat_float_exponent() {
+					__rust.set_resolved_block(__id, function eat_float_exponent() {
 						let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 						self = self.build();
 						__rust.get_for_expr('debug_assert!')
