@@ -148,7 +148,7 @@ x: {
 			return ret;
 		}
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
-		__rust.exec_lines = function(str, block_id_of_str) {
+		__rust.exec_lines = function(str_arr, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
 			}
@@ -166,7 +166,14 @@ x: {
 				mat_idx++;
 			}
 			let fn_cache = new Map;
+			let arr_iter=0;
+			if(str_arr instanceof Array){
+				str=str_arr[arr_iter++];
+			}
 			while (true) {
+				if(mat_idx>=str.length&&(str_arr instanceof Array)){
+					str=str_arr[arr_iter++];
+				}
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
 					debugger;
