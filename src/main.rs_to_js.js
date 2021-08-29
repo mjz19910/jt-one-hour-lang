@@ -12,12 +12,12 @@ x: {
 	let ts=performance.now();
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
-		console.log('p0',performance.now()-ts);
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
 		}
+		console.log('p0 done',performance.now()-ts);
 		parse_pass++;
 		for (i of rust_exec_code_funcs) {
 			for (let cur of rest) {
