@@ -226,8 +226,8 @@ x: {
 			}
 			str_arr = s2_arr;
 			str_arr.push(Symbol.for('EOF'));
-			__rust.block_vec[block_id] ??= [];
-			let block = __rust.block_vec[block_id];
+			__rust.block_vec[block_id_of_str] ??= [];
+			let block = __rust.block_vec[block_id_of_str];
 			for (let x of str_arr) {
 				block.push(x);
 			}
