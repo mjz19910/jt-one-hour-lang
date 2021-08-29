@@ -815,7 +815,7 @@ x: {
 		${function rust_eval_enum(parse_pass) {
 			if (parse_pass === 0) {
 				block_id++;
-				rust_eval_impl.block_id = block_id;
+				rust_eval_enum.block_id = block_id;
 				return;
 			}
 			__rust.exec_lines(`/// Enum representing common lexeme types.
