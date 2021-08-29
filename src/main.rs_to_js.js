@@ -224,7 +224,7 @@ x: {
 							cur_regex.lastIndex=mat_idx;
 							continue;
 						}
-						let starts_with_number=cc[0].match(/[0-9]/)!==null;
+						let starts_with_number=cc[0].charCodeAt(0)>=48&&cc[0].charCodeAt(0)<=57;
 						tok_arr.push({
 							kind: {
 								type:'Lifetime',
