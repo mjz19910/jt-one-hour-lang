@@ -56,7 +56,7 @@ x: {
 		if (scope) {
 			__rust.drop(scope);
 		}
-		return res;
+		return mm.raw.join('');
 	};
 	function rust_static_init() {
 		if (__rust) return;
