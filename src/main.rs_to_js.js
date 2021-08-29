@@ -365,8 +365,8 @@ x: {
 				}
 				return tt_arr;
 			}
-			let tt_arr=tt_parse(tok_arr);
-			console.log(tt_arr);
+			//let tt_arr=tt_parse(tok_arr);
+			//console.log(tt_arr);
 			finish_parse(tok_arr);
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
