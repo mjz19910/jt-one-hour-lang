@@ -367,11 +367,17 @@ x: {
 				throw Error("failed to drop in order");
 			}
 			let last_vec_info = __rust.scope.block_vec_stack.pop();
-			let block_vec_from_stack_id = __rust.scope.block_vec_ref.push(__rust.scope.block_vec);
-			let this_block_vec=__rust.scope.block_vec;
-			__rust.scope.block_vec = last_vec_info[1];
-			cur_block_id = last_vec_info[0];
-			__rust.scope.block_vec.push(new BlockRef(__rust.scope, block_vec_from_stack_id - 1, cur_block_id));
+			let this_block_vec = __rust.scope.block_vec;
+			let parent_block_vec=last_vec_info[1];
+			let this_block_id=__rust.scope.block_vec_ref.length;
+			if(this_block_vec.length===1){
+				__rust.scope.block_vec_ref.push(this_block_vec[0]);
+			}else{
+				__rust.scope.block_vec_ref.push(this_block_vec);
+			}
+			parent_block_id = last_vec_info[0];
+			parent_block_vec.push(new BlockRef(__rust.scope, this_block_id, parent_block_id));
+			__rust.scope.block_vec = parent_block_vec;
 			__rust_priv.stack.length--;
 		}
 	}
