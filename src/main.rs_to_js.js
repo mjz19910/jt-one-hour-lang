@@ -198,7 +198,7 @@ x: {
 					}
 					let mat = 'ws';
 					let kind = 'Whitespace';
-					if (cc&&g[mat]) {
+					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
 						while (true) {
@@ -225,7 +225,7 @@ x: {
 					}
 					let mat = 'ws';
 					let kind = 'Whitespace';
-					if (g?.[mat]) {
+					if (g&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
 						while (true) {
