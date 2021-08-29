@@ -1,8 +1,12 @@
 x: {
-	let rust_exec_code_funcs = ['STATIC_init','S_Crate_init','rust_eval_struct'];
+	let rust_exec_code_funcs = ['STATIC_init','S_Crate_init',['rust_eval_struct','rust_eval_impl']];
 	let rr = function(mm, ...rest) {
 		for (i of rust_exec_code_funcs) {
 			for (let x of rest) {
+				if(x instanceof Array&&i.includes(x.name)){
+					x();
+					continue;
+				}
 				if (x.name === i) {
 					x();
 					continue;
@@ -523,7 +527,22 @@ x: {
 					}
 				}
 				str_arr = s2_arr;
+				str_arr.push(Symbol.for('EOF'));
 				__rust.last_exec = str_arr;
+			}
+			__rust.log_lines=function(callback_function){
+				let rs_lines=[[]];
+				let src_arr=this.last_exec;
+				for(let i=0,ri=0;i<src_arr.length;i++){
+					rs_lines[ri].push(src_arr[i]);
+					if(src_arr[i]==='\n'){
+						console.log(rs_lines[ri]);
+						ri++;
+						rs_lines[ri]=[];
+					}
+				}
+				console.log(rs_lines[rs_lines.length-1]);
+				callback_function();
 			}
 		})}
 	
@@ -575,16 +594,6 @@ pub struct Token {
 	pub len: usize,
 }
 			`);
-			let rs_lines=[[]];
-			let src_arr=__rust.last_exec;
-			for(let i=0,ri=0;i<src_arr.length;i++){
-				rs_lines[ri].push(src_arr[i]);
-				if(src_arr[i]==='\n'){
-					ri++;
-					rs_lines[ri]=[];
-				}
-			}
-			console.log(...rs_lines);
 		})}
 	
 	impl Token {
@@ -592,6 +601,16 @@ pub struct Token {
 			Token { kind, len }
 		}
 	}
+
+	${(function rust_eval_impl(){
+		__rust.exec_line(`
+		impl Token {
+			fn new(kind: TokenKind, len: usize) -> Token {
+				Token { kind, len }
+			}
+		}`);
+		__rust.log_lines(()=>console.log('here'));
+	})}
 	
 	/// Enum representing common lexeme types.
 	// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
