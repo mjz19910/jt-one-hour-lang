@@ -66,7 +66,7 @@ x: {
 				return this.value;
 			}
 			get value() {
-				return __rust.block_vec_ref[this.ref];
+				return this.parent.block_vec_ref[this.ref];
 			}
 		}
 		class Rust {
