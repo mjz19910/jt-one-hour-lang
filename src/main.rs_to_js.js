@@ -25,6 +25,7 @@ x: {
 		}
 		return mm.raw.join('');
 	};
+	let block_id=0;
 	function rust_static_init() {
 		if (__rust) return;
 		__rust = {};
