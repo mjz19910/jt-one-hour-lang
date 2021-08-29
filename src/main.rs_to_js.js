@@ -27,6 +27,7 @@ x: {
 			in_parse = true;
 		}
 		for (let cur of rest) {
+			console.log(cur.name);
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 			}
@@ -328,12 +329,13 @@ x: {
 
 		${(function STATIC_init() { rust_static_init(); })}
 		
-		${(function S_Crate_init(parse_pass) {
+		${(function rust_exec_use(parse_pass) {
 			if (parse_pass === 0) {
-				S_Crate_init.block_id = block_id++;
+				rust_exec_use.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
+			let __id=rust_exec_use.block_id;
+			__rust.exec_lines('use std::collections::HashMap;', __id);
 		})}
 
 		${function rust_exec_enum(parse_pass) {
@@ -341,6 +343,7 @@ x: {
 				rust_exec_enum.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(`enum Command {
 				SetVar(String,Value),
 				GetVar(String),
@@ -348,7 +351,7 @@ x: {
 				Push(Value),
 				Pop,
 				Add,
-			}`, rust_exec_enum.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_enum(parse_pass) {
@@ -356,12 +359,13 @@ x: {
 				rust_exec_enum.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
 			enum Value {
 				Nothing,
 				Int(i64),
 				String(String),
-			}`, rust_exec_enum.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_enum(parse_pass) {
@@ -369,12 +373,13 @@ x: {
 				rust_exec_enum.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
 			enum Value {
 				Nothing,
 				Int(i64),
 				String(String),
-			}`, rust_exec_enum.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_enum(parse_pass) {
@@ -382,6 +387,7 @@ x: {
 				rust_exec_enum.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(`#[derive(Debug)]
 			enum EngineError {
 				MismatchNumParams,
@@ -389,7 +395,7 @@ x: {
 				UnknownCommand(String),
 				MissingVariable(String),
 				EmptyStack,
-			}`, rust_exec_enum.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_struct(parse_pass) {
@@ -397,10 +403,11 @@ x: {
 				rust_exec_struct.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_struct.block_id;
 			__rust.exec_lines(`struct Evaluator {
 				vars:HashMap<String, Value>,
 				stack:Vec<Value>,
-			}`, rust_exec_struct.block_id);
+			}`, __id);
 		}}
 
 		${function rust_exec_impl(parse_pass) {
@@ -408,6 +415,7 @@ x: {
 				rust_exec_impl.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_impl.block_id;
 			__rust.exec_lines(`impl Evaluator {
 				fn new() -> Evaluator {
 					Self {
@@ -462,7 +470,7 @@ x: {
 					}
 					output
 				}
-			}`, rust_exec_impl.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -470,9 +478,10 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 				Ok(var_name.into())
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -480,6 +489,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
 				if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
 					let inner = val[1..(val.len() - 1)].to_string();
@@ -488,7 +498,7 @@ x: {
 				} else {
 					Err(EngineError::MismatchType)
 				}
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -496,6 +506,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
 				let result = val.parse::<i64>();
 			
@@ -503,7 +514,7 @@ x: {
 					Ok(x) => Ok(Value::Int(x)),
 					_ => Err(EngineError::MismatchType),
 				}
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -511,6 +522,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
 				if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
 					// Parse the string
@@ -519,7 +531,7 @@ x: {
 					// Parse the number
 					parse_int(val)
 				}
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -527,6 +539,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 3 {
 					return Err(EngineError::MismatchNumParams);
@@ -536,7 +549,7 @@ x: {
 				let value = parse_value(input[2])?;
 			
 				Ok(Command::SetVar(var_name, value))
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -544,6 +557,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 2 {
 					return Err(EngineError::MismatchNumParams);
@@ -552,7 +566,7 @@ x: {
 				let var_name = parse_var_name(input[1])?;
 			
 				Ok(Command::GetVar(var_name))
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -560,6 +574,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 2 {
 				return Err(EngineError::MismatchNumParams);
@@ -568,7 +583,7 @@ x: {
 			let val = parse_value(input[1])?;
 		
 			Ok(Command::Push(val))
-		}`, rust_exec_fn.block_id);
+		}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -576,6 +591,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 2 {
 					return Err(EngineError::MismatchNumParams);
@@ -584,7 +600,7 @@ x: {
 				let var_name = parse_var_name(input[1])?;
 			
 				Ok(Command::PushVar(var_name))
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -592,6 +608,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 				// set a 100
 				// get a
@@ -626,7 +643,7 @@ x: {
 				}
 			
 				Ok(output)
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 	${function rust_exec_struct(parse_pass) {
@@ -634,9 +651,10 @@ x: {
 				rust_exec_struct.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_struct.block_id;
 			__rust.exec_lines(`struct Typechecker {
 				stack: Vec<Type>,
-			}`, rust_exec_struct.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_impl(parse_pass) {
@@ -644,6 +662,7 @@ x: {
 				rust_exec_impl.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_impl.block_id;
 			__rust.exec_lines(`impl Typechecker {
 				fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
 					Ok(Type::Nothing)
@@ -655,7 +674,7 @@ x: {
 					}
 					Ok(Type::Nothing)
 				}
-			}`, rust_exec_impl.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -663,6 +682,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`#[test]
 			fn test1() -> Result<(), EngineError> {
 				let commands=vec![
@@ -677,7 +697,7 @@ x: {
 				assert_eq!(result, Value::Int(100));
 			
 				Ok(())
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -685,6 +705,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`#[test]
 			fn eval_set_get() -> Result<(), EngineError> {
 				let input = "set x 30\nget x";
@@ -697,7 +718,7 @@ x: {
 				assert_eq!(result, Value::Int(30));
 			
 				Ok(())
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -705,6 +726,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`#[test]
 			fn eval_set_get_string() -> Result<(), EngineError> {
 				let input = "set x \"hello\"\nget x";
@@ -717,7 +739,7 @@ x: {
 				assert_eq!(result, Value::String("hello".into()));
 			
 				Ok(())
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -725,6 +747,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`#[test]
 			fn eval_stack() -> Result<(), EngineError> {
 				let input = "push 100\npush 30\nadd\npop";
@@ -737,7 +760,7 @@ x: {
 				assert_eq!(result, Value::Int(130));
 			
 				Ok(())
-			}`, rust_exec_fn.block_id);
+			}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -745,6 +768,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`#[test]
 		fn eval_pushvar() -> Result<(), EngineError> {
 			let input = "set x 33\npushvar x\npush 100\nadd\npop";
@@ -757,7 +781,7 @@ x: {
 			assert_eq!(result, Value::Int(133));
 		
 			Ok(())
-		}`, rust_exec_fn.block_id);
+		}`, __id);
 		}}
 	
 		${function rust_exec_fn(parse_pass) {
@@ -765,6 +789,7 @@ x: {
 				rust_exec_fn.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_fn.block_id;
 			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
 				for arg in std::env::args().skip(1) {
 					let contents = std::fs::read_to_string(arg).unwrap();
@@ -777,7 +802,7 @@ x: {
 				
 				Ok(())
 			}
-			`, rust_exec_fn.block_id);
+			`, __id);
 		}}
 	`;
 	__rust.crates = [];
@@ -792,10 +817,10 @@ x: {
 		})}
 		${function rust_doc_comment(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_struct.block_id = block_id++;
+				rust_doc_comment.block_id = block_id++;
 				return;
 			}
-			let __id=rust_eval_struct.block_id;
+			let __id=rust_doc_comment.block_id;
 			__rust.exec_lines(rr`
 			//! Low-level Rust lexer.
 			//!
@@ -819,29 +844,31 @@ x: {
 			//! [\`rustc_parse::lexer\`]: ../rustc_parse/lexer/index.html
 			// We want to be able to build this crate with a stable compiler, so no
 			// \`#![feature]\` attributes should be added.
-			`, S_rust_doc_comment_eval.block_id);
+			`, __id);
 		}}
 	
 		${function rust_exec_mod(parse_pass) {
 			if (parse_pass === 0) {
-				S_Crate_init.block_id = block_id++;
+				rust_exec_mod.block_id = block_id++;
 				return;
 			}
+			let __id=rust_exec_mod.block_id;
 			__rust.exec_lines(rr`
 			mod cursor;
 			pub mod unescape;
-			`, S_Crate_init.block_id);
+			`, __id);
 		}}
 	
 		${function rust_exec_mod(parse_pass) {
 			if (parse_pass === 0) {
-				S_Crate_init.block_id = block_id++;
+				rust_exec_mod.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_mod.block_id;
 			__rust.exec_lines(rr`
 			#[cfg(test)]
 			mod tests;
-			`, S_Crate_init.block_id);
+			`, __id);
 		}}
 
 		${function rust_exec_use(parse_pass) {
@@ -849,6 +876,7 @@ x: {
 				S_Crate_init.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_use.block_id;
 			__rust.exec_lines(rr`
 			use self::LiteralKind::*;
 			use self::TokenKind::*;
@@ -862,6 +890,7 @@ x: {
 				rust_exec_struct.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_struct.block_id;
 			__rust.exec_lines(rr`
 			/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
@@ -871,7 +900,7 @@ x: {
 				pub kind: TokenKind,
 				pub len: usize,
 			}
-			`, rust_exec_struct.block_id);
+			`, __id);
 		}}
 	
 		${function rust_exec_impl() {
@@ -883,13 +912,14 @@ x: {
 				rust_exec_impl.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_impl.block_id;
 			__rust.exec_lines(rr`
 			impl Token {
 				fn new(kind: TokenKind, len: usize) -> Token {
 					Token { kind, len }
 				}
 			}
-			`, rust_exec_impl.block_id);
+			`, __id);
 		}}
 	
 		${function rust_exec_enum(parse_pass) {
@@ -897,6 +927,7 @@ x: {
 				rust_exec_enum.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(rr`
 			/// Enum representing common lexeme types.
 			// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
@@ -981,7 +1012,7 @@ x: {
 				/// Unknown token, not expected by the lexer, e.g. "№"
 				Unknown,
 			}
-			`, rust_exec_enum.block_id);
+			`, __id);
 			//__rust.log_lines(() => console.log('here'));
 		}}
 	
@@ -990,13 +1021,14 @@ x: {
 				rust_exec_enum.block_id = block_id++;
 				return;
 			}
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(rr`
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum DocStyle {
 				Outer,
 				Inner,
 			}
-			`, rust_exec_enum.block_id);
+			`, __id);
 		}}
 	
 		${function rust_exec_enum(parse_pass) {
@@ -1053,10 +1085,10 @@ x: {
 		}}
 		${function rust_exec_enum(parse_pass) {
 			if (parse_pass === 0) {
-				rust_eval_all_items.block_id = block_id++;
+				rust_exec_enum.block_id = block_id++;
 				return;
 			}
-			let __id = rust_eval_all_items.block_id;
+			let __id = rust_exec_enum.block_id;
 			__rust.exec_lines(rr`
 				/// Base of numeric literal encoding according to its prefix.
 				#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -1373,7 +1405,7 @@ x: {
 						_ => Unknown,
 					};
 					Token::new(token_kind, self.len_consumed())
-				}`, __id)
+				}`, __id);
 				}}
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1973,7 +2005,7 @@ x: {
 				}}
 
 			}
-			`, rust_exec_impl.block_id);
+			`, __id);
 		}}
 	`;
 	__rust.files = [];
