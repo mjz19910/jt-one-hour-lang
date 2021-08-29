@@ -117,7 +117,7 @@ x: {
 				mat_idx++;
 			}
 			let fn_cache = new Map;
-			console.log('ps1');
+			console.log('parse start 1');
 			while (true) {
 				if (mat_idx > is_val_char.lastIndex) {
 					console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
