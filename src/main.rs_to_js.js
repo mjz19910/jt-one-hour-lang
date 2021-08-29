@@ -8,9 +8,7 @@ x: {
 		],
 	];
 	let rust_autoexec_funcs = [
-		'STATIC_init', 'S_Crate_init',
-		'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum',
-		'rust_exec_fn', 'rust_exec_any', 'rust_doc_comment',
+		...rust_exec_code_funcs.flat(),
 	];
 	let my_rust_sym = Symbol();
 	let ts = performance.now();
