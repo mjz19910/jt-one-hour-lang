@@ -444,6 +444,7 @@ x: {
 					}
 					if(cur.match(/[ ]/)){
 						tt_arr.push(cur);
+						continue;
 					}
 					if(cur.match(/[\t]/)){
 						continue;
@@ -452,6 +453,9 @@ x: {
 						continue;
 					}
 					tt_arr.push(cur);
+					if(tt_arr.at(-1)==='\n'&&tt_arr.at(-2)==='\n'){
+						tt_arr.pop();
+					}
 				}
 				return tt_arr;
 			}
