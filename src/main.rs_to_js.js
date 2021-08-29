@@ -150,9 +150,6 @@ x: {
 		__rust.get_ref_generator = function() {
 			return __rust_priv.ref_generator;
 		};
-		__rust.block_vec = [];
-		__rust.block_vec_stack = [];
-		__rust.block_vec_ref = [];
 		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
 		function get_log_time() {
 			let ret = performance.now() - ts;
@@ -304,7 +301,7 @@ x: {
 			finish_parse(tok_arr);
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
-				__rust.block_vec[block_id_of_str] ??= [];
+				__rust.scope.block_vec[block_id_of_str] ??= [];
 				let block = __rust.block_vec[block_id_of_str];
 				if (!block.push) {
 					debugger;
@@ -772,11 +769,9 @@ x: {
 	`;
 	__rust.crates = [];
 	__rust.files = [];
-	__rust.files.push(['src/main.rs', __rust.block_vec, __rust.block_vec_ref]);
+	__rust.files.push(['src/main.rs', __rust.scope.block_vec, __rust.scope.block_vec_ref]);
 	__rust.crates.push(['onehour-language', __rust.files]);
-	__rust.block_vec = [];
-	__rust.block_vec_stack = [];
-	__rust.block_vec_ref = [];
+	__rust.scope=new __rust.RustScope;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
 	//! Low-level Rust lexer.
