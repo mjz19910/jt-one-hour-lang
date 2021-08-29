@@ -1268,7 +1268,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1408,7 +1408,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1442,7 +1442,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1497,7 +1497,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1521,7 +1521,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1548,7 +1548,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1573,7 +1573,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1660,7 +1660,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1724,7 +1724,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1783,7 +1783,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.set_header(``);
 			code_generator.set_body(``);
@@ -1822,7 +1822,7 @@ x: {
 		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.add_arguments(['prefix_len',prefix_len]);
 			code_generator.set_header(``);
@@ -1856,7 +1856,7 @@ x: {
 
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			code_generator.add_arguments(['prefix_len',prefix_len]);
 			code_generator.set_header(`
@@ -2007,7 +2007,7 @@ x: {
 				get has_digits(){return {type:'value',value:has_digits}},
 				set has_digits(v){has_digits=v.value},
 				get self(){return {type:'&mut value',value:self}},
-				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+				set self(v){self=v.value},
 			});
 			loop_gen.set_body(`{
 				match self.first() {
