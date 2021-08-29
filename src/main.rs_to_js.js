@@ -513,14 +513,14 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
-			if input.len() != 2 {
-				return Err(EngineError::MismatchNumParams);
-			}
-		
-			let var_name = parse_var_name(input[1])?;
-		
-			Ok(Command::PushVar(var_name))
-		}`);
+				if input.len() != 2 {
+					return Err(EngineError::MismatchNumParams);
+				}
+			
+				let var_name = parse_var_name(input[1])?;
+			
+				Ok(Command::PushVar(var_name))
+			}`,rust_eval_fn.block_id);
 		}}
 	
 	${function rust_eval_fn(parse_pass) {
