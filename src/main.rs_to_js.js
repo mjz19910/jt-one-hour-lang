@@ -802,7 +802,7 @@ x: {
 	`;
 	__rust.crates = [];
 	__rust.files = [];
-	__rust.files.push(['src/main.rs', __rust.block_vec[0][0].deref(), __rust.block_vec_ref]);
+	__rust.files.push(['src/main.rs', __rust.block_vec, __rust.block_vec_ref]);
 	__rust.crates.push(['onehour-language', ...__rust.files]);
 	__rust.block_vec = [];
 	__rust.block_vec_stack = [];
