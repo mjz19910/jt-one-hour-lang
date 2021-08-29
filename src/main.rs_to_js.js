@@ -512,7 +512,7 @@ x: {
 				return tt_arr;
 			}
 			let tt_arr = tt_parse(tok_arr);
-			export_scope(tt_arr);
+			let exp_arr=export_scope(tt_arr);
 			function export_scope(out_arr) {
 				let in_defn;
 				let tags = [];
@@ -525,7 +525,7 @@ x: {
 						case '\n':
 							arr_item.push(cur);
 							if(in_defn){
-								console.log(tags, arr_item);
+								//console.log(tags, arr_item);
 								items.push([tags, arr_item]);
 								arr_item = [];
 								tags = [];
@@ -548,7 +548,6 @@ x: {
 								arr_item.push(cur);
 								i++;
 							}
-							console.log(arr_item);
 							in_defn=true;
 							i--;
 							continue;
@@ -562,7 +561,6 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							console.log(arr_item);
 							in_defn=true;
 							i--;
 							continue;
@@ -576,7 +574,6 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							console.log(arr_item);
 							in_defn=true;
 							i--;
 							continue;
@@ -640,12 +637,12 @@ x: {
 							i--;
 							continue;
 					}
-					console.log(JSON.stringify(cur));
 					break;
 				}
+				return items;
 
 			}
-			finish_parse(tt_arr);
+			finish_parse(exp_arr);
 			function finish_parse(arr) {
 				arr.push(Symbol.for('EOF'));
 				__rust.scope.block_vec[block_id_of_str] ??= [];
