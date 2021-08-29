@@ -913,6 +913,8 @@ x: {
 	__rust.files.push(['src/main.rs', __rust.block_vec[0][0].deref()]);
 	__rust.crates.push(['onehour-language', ...__rust.files]);
 	__rust.block_vec = [];
+	__rust.block_vec_stack = [];
+	__rust.block_vec_ref = [];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
 		${(function STATIC_init() {
@@ -2176,6 +2178,8 @@ x: {
 	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec[0][0].deref()]);
 	__rust.crates.push(['nightly-rustc', __rust.files]);
 	__rust.block_vec = [];
+	__rust.block_vec_stack = [];
+	__rust.block_vec_ref = [];
 	window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
 	console.log(__rust.crates);
 	//console.log(rust_code);
