@@ -264,9 +264,16 @@ x: {
 			let iter_index = 0;
 			let str_iter_index = 0;
 			let str_arr_in = [];
+			let last_index=-1;
+			let cur_arr_index=-1;
 			for (; iter_index < tok_arr.length; iter_index++) {
 				let cur_tok = tok_arr[iter_index];
 				let {parent_index}=cur_tok;
+				last_index=cur_arr_index;
+				cur_arr_index=parent_index;
+				if(last_index!==cur_arr_index){
+					str_arr_index=0;
+				}
 				if (cur_tok.kind === '_char') {
 					let ed = str_iter_index + cur_tok.len;
 					while (str_iter_index < ed) {
