@@ -743,7 +743,7 @@ x: {
 	`;
 	__rust.crates = [];
 	__rust.files = [];
-	__rust.files.push(['src/main.rs', __rust.block_vec[0].deref()]);
+	__rust.files.push(['src/main.rs', __rust.block_vec[0]]);
 	__rust.crates.push(['onehour-language', __rust.files]);
 	__rust.block_vec = [];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
