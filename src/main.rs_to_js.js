@@ -778,14 +778,16 @@ x: {
 				rust_eval_struct.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`/// Parsed token.
+			__rust.exec_lines(`
+			/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
 			/// only the type of the token and its size.
 			#[derive(Debug)]
 			pub struct Token {
 				pub kind: TokenKind,
 				pub len: usize,
-			}`, rust_eval_struct.block_id);
+			}
+			`, rust_eval_struct.block_id);
 		}}
 	
 		${function rust_eval_impl() {
