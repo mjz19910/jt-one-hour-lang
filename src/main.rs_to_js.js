@@ -385,7 +385,7 @@ x: {
 			};
 			let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
 			__rust.exec_line = function(str) {
-				let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ ])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
+				let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 				let rx = /^[a-zA-Z_]/;
 				let sp = /^[ ]/;
 				let val_acc = [];
@@ -576,8 +576,16 @@ pub struct Token {
 	pub len: usize,
 }
 			`);
-			let rs_lines=[];
-			console.log(__rust.last_exec);
+			let rs_lines=[[]];
+			let src_arr=__rust.last_exec;
+			for(let i=0,ri=0;i<src_arr.length;i++){
+				rs_lines[ri].push(src_arr[i]);
+				if(src_arr[i]==='\n'){
+					ri++;
+					rs_lines[ri]=[];
+				}
+			}
+			console.log(rs_lines);
 		})}
 	
 	impl Token {
