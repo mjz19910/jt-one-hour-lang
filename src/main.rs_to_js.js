@@ -203,7 +203,7 @@ x: {
 						val_acc = [];
 						continue;
 					};
-					if(cc[0]==="'"){
+					if(cc&&cc[0]==="'"){
 						//could be lifetime
 						console.log(str[mat_idx]);
 						/** fn lifetime_or_char(&mut self) -> TokenKind {
