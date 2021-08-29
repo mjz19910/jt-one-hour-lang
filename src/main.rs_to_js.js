@@ -9,7 +9,7 @@ x: {
 	let rust_autoexec_funcs = [
 		'STATIC_init', 'S_Crate_init',
 		'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum',
-		'rust_exec_fn','rust_exec_any'
+		'rust_exec_fn', 'rust_exec_any'
 	];
 	let my_rust_sym = Symbol();
 	let ts = performance.now();
@@ -19,7 +19,7 @@ x: {
 	let __rust;
 	rust_static_init();
 	let rr = function(mm, ...rest) {
-		let res=[];
+		let res = [];
 		ts += performance.now() - ts;
 		let parse_pass = 0;
 		let scope = null;
@@ -27,7 +27,7 @@ x: {
 		if (!in_parse) {
 			in_parse = true;
 		}
-		let iter_index=0;
+		let iter_index = 0;
 		res.push(mm.raw[iter_index++]);
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
@@ -75,7 +75,8 @@ x: {
 				return this.parent.block_vec_ref[this.ref];
 			}
 		}
-		class Rust {
+		let cur_block_id = 0;
+		class RustRoot {
 			constructor(base) {
 				this.sym = my_rust_sym;
 				this.block_vec = [];
@@ -88,8 +89,11 @@ x: {
 				ref.make_ref(data);
 				this.block_vec[block_id] = ref;
 			}
+			set_current_block(id) {
+				cur_block_id = id;
+			}
 		}
-		__rust = new Rust;
+		__rust = new RustRoot;
 		class RefGenerator {
 			constructor(from) {
 				if (from) {
@@ -303,6 +307,7 @@ x: {
 			constructor(ref) {
 				this.ref_type = 'block';
 				this.ref = ref;
+				this.parent_ref = ref;
 			}
 			deref() {
 				return this.value;
@@ -322,8 +327,8 @@ x: {
 			let last_vec_info = __rust.block_vec_stack.pop();
 			let block_vec_from_stack_id = __rust.block_vec_ref.push(__rust.block_vec);
 			__rust.block_vec = last_vec_info[1];
-			block_id = last_vec_info[0];
-			__rust.block_vec.push([new BlockRef(block_vec_from_stack_id - 1)]);
+			cur_block_id = last_vec_info[0];
+			__rust.block_vec.push([new BlockRef(block_vec_from_stack_id - 1, cur_block_id)]);
 			__rust_priv.stack.length--;
 		}
 	}
@@ -336,7 +341,8 @@ x: {
 				rust_exec_use.block_id = block_id++;
 				return;
 			}
-			let __id=rust_exec_use.block_id;
+			let __id = rust_exec_use.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines('use std::collections::HashMap;', __id);
 		})}
 
@@ -346,6 +352,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`enum Command {
 				SetVar(String,Value),
 				GetVar(String),
@@ -362,6 +369,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
 			enum Value {
 				Nothing,
@@ -376,6 +384,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
 			enum Value {
 				Nothing,
@@ -390,6 +399,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[derive(Debug)]
 			enum EngineError {
 				MismatchNumParams,
@@ -406,6 +416,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_struct.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`struct Evaluator {
 				vars:HashMap<String, Value>,
 				stack:Vec<Value>,
@@ -418,6 +429,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_impl.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`impl Evaluator {
 				fn new() -> Evaluator {
 					Self {
@@ -481,6 +493,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
 				Ok(var_name.into())
 			}`, __id);
@@ -492,6 +505,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
 				if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
 					let inner = val[1..(val.len() - 1)].to_string();
@@ -509,6 +523,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
 				let result = val.parse::<i64>();
 			
@@ -525,6 +540,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
 				if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
 					// Parse the string
@@ -542,6 +558,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 3 {
 					return Err(EngineError::MismatchNumParams);
@@ -560,6 +577,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 2 {
 					return Err(EngineError::MismatchNumParams);
@@ -577,6 +595,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_push(input: &[&str]) -> Result<Command,EngineError> {
 			if input.len() != 2 {
 				return Err(EngineError::MismatchNumParams);
@@ -594,6 +613,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse_pushvar(input: &[&str]) -> Result<Command,EngineError> {
 				if input.len() != 2 {
 					return Err(EngineError::MismatchNumParams);
@@ -611,6 +631,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn parse(input: &str) -> Result<Vec<Command>, EngineError> {
 				// set a 100
 				// get a
@@ -654,6 +675,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_struct.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`struct Typechecker {
 				stack: Vec<Type>,
 			}`, __id);
@@ -665,6 +687,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_impl.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`impl Typechecker {
 				fn typecheck_command(&mut self, command: &Command) -> Result<Type, EngineError> {
 					Ok(Type::Nothing)
@@ -685,6 +708,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[test]
 			fn test1() -> Result<(), EngineError> {
 				let commands=vec![
@@ -708,6 +732,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[test]
 			fn eval_set_get() -> Result<(), EngineError> {
 				let input = "set x 30\nget x";
@@ -729,6 +754,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[test]
 			fn eval_set_get_string() -> Result<(), EngineError> {
 				let input = "set x \"hello\"\nget x";
@@ -750,6 +776,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[test]
 			fn eval_stack() -> Result<(), EngineError> {
 				let input = "push 100\npush 30\nadd\npop";
@@ -771,6 +798,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`#[test]
 		fn eval_pushvar() -> Result<(), EngineError> {
 			let input = "set x 33\npushvar x\npush 100\nadd\npop";
@@ -792,6 +820,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
 				for arg in std::env::args().skip(1) {
 					let contents = std::fs::read_to_string(arg).unwrap();
@@ -822,7 +851,8 @@ x: {
 				rust_doc_comment.block_id = block_id++;
 				return;
 			}
-			let __id=rust_doc_comment.block_id;
+			let __id = rust_doc_comment.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			//! Low-level Rust lexer.
 			//!
@@ -854,7 +884,8 @@ x: {
 				rust_exec_mod.block_id = block_id++;
 				return;
 			}
-			let __id=rust_exec_mod.block_id;
+			let __id = rust_exec_mod.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			mod cursor;
 			pub mod unescape;
@@ -867,6 +898,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_mod.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			#[cfg(test)]
 			mod tests;
@@ -879,6 +911,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_use.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			use self::LiteralKind::*;
 			use self::TokenKind::*;
@@ -893,6 +926,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_struct.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// Parsed token.
 			/// It doesn't contain information about data that has been parsed,
@@ -915,6 +949,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_impl.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			impl Token {
 				fn new(kind: TokenKind, len: usize) -> Token {
@@ -930,6 +965,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// Enum representing common lexeme types.
 			// perf note: Changing all \`usize\` to \`u32\` doesn't change performance. See #77629
@@ -1024,6 +1060,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum DocStyle {
@@ -1039,6 +1076,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 			pub enum LiteralKind {
@@ -1067,6 +1105,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// Error produced validating a raw string. Represents cases like:
 			/// - \`r##~"abcde"##\`: \`InvalidStarter\`
@@ -1091,6 +1130,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_enum.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 				/// Base of numeric literal encoding according to its prefix.
 				#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -1112,6 +1152,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// \`rustc\` allows files to have a shebang, e.g. "#!/usr/bin/rustrun",
 			/// but shebang isn't a part of rust syntax.
@@ -1145,6 +1186,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// Parses the first token from the provided input string.
 			pub fn first_token(input: &str) -> Token {
@@ -1159,6 +1201,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// Creates an iterator that produces tokens from the input string.
 			pub fn tokenize(mut input: &str) -> impl Iterator<Item = Token> + '_ {
@@ -1179,6 +1222,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// True if \`c\` is considered a whitespace according to Rust language definition.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/whitespace.html)
@@ -1219,6 +1263,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// True if \`c\` is valid as a first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
@@ -1239,6 +1284,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			/// True if \`c\` is valid as a non-first character of an identifier.
 			/// See [Rust language reference](https://doc.rust-lang.org/reference/identifiers.html) for
@@ -1260,6 +1306,7 @@ x: {
 				return;
 			}
 			let __id = rust_exec_fn.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(`
 			/// The passed string is lexically an identifier.
 			pub fn is_ident(string: &str) -> bool {
@@ -1286,6 +1333,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					/// Parses a token from the input string.
 					fn advance_token(&mut self) -> Token {
@@ -1415,6 +1463,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn line_comment(&mut self) -> TokenKind {
 						debug_assert!(self.prev() == '/' && self.first() == '/');
@@ -1439,6 +1488,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn block_comment(&mut self) -> TokenKind {
 						debug_assert!(self.prev() == '/' && self.first() == '*');
@@ -1484,6 +1534,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn whitespace(&mut self) -> TokenKind {
 						debug_assert!(is_whitespace(self.prev()));
@@ -1498,6 +1549,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn raw_ident(&mut self) -> TokenKind {
 						debug_assert!(self.prev() == 'r' && self.first() == '#' && is_id_start(self.second()));
@@ -1515,6 +1567,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn ident(&mut self) -> TokenKind {
 						debug_assert!(is_id_start(self.prev()));
@@ -1530,6 +1583,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 				fn number(&mut self, first_digit: char) -> LiteralKind {
 					debug_assert!('0' <= self.prev() && self.prev() <= '9');
@@ -1607,6 +1661,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 				fn lifetime_or_char(&mut self) -> TokenKind {
 					debug_assert!(self.prev() == '\'');
@@ -1661,6 +1716,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 				fn single_quoted_string(&mut self) -> bool {
 					debug_assert!(self.prev() == '\'');
@@ -1710,6 +1766,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					/// Eats double-quoted string and returns true
 					/// if string is terminated.
@@ -1738,6 +1795,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					/// Eats the double-quoted string and returns \`n_hashes\` and an error if encountered.
 					fn raw_double_quoted_string(&mut self, prefix_len: usize) -> (u16, Option<RawStrError>) {
@@ -1759,6 +1817,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
 						debug_assert!(self.prev() == 'r');
@@ -1832,6 +1891,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn eat_decimal_digits(&mut self) -> bool {
 						let mut has_digits = false;
@@ -1857,6 +1917,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					fn eat_hexadecimal_digits(&mut self) -> bool {
 						let mut has_digits = false;
@@ -1882,6 +1943,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					/// Eats the float exponent. Returns true if at least one digit was met,
 					/// and returns false otherwise.
@@ -1900,6 +1962,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.set_resolved_block(__id, function eat_float_exponent() {
 						let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 						self = self.build();
@@ -1918,6 +1981,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 				// Eats the suffix of the literal, e.g. "_u8".
 				fn eat_literal_suffix(&mut self) {
@@ -1931,6 +1995,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 				${function eat_identifier() {
 							let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
@@ -1955,6 +2020,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					// Eats the identifier.
 					fn eat_identifier(&mut self) {
@@ -1973,6 +2039,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 						${function eat_while(predicate_arg) {
 							let self = __rust.get_ref_generator().clone();
@@ -1996,6 +2063,7 @@ x: {
 						return;
 					}
 					let __id = rust_exec_any.block_id;
+					__rust.set_current_block(__id);
 					__rust.exec_lines(rr`
 					/// Eats symbols while predicate returns true or until the end of file is reached.
 					fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
@@ -2011,7 +2079,7 @@ x: {
 		}}
 	`;
 	__rust.files = [];
-	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
+	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec[0][0].deref()]);
 	__rust.crates.push(['nightly-rustc', __rust.files]);
 	__rust.block_vec = [];
 	window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
