@@ -1261,8 +1261,13 @@ x: {
 		}
 	}
 	
-	${function create_impl_Cursor() {
-		// TODO:not done yet
+	${function create_impl() {
+		let Cursor_impl=__rust.get_impl_definition('Cursor');
+		Cursor_impl.set_lifetime_var("'_");
+		let child_vec=Cursor_impl.collect_children();
+		for(let [i,x] of child_vec.entries()){
+			console.log(i,x.type);
+		}
 	}}
 	impl Cursor<'_> {
 		${function advance_token() {
