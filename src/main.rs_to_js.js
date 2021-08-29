@@ -51,7 +51,20 @@ x: {
 	};
 	function rust_static_init() {
 		if (__rust) return;
-		__rust = { sym: my_rust_sym };
+		class Rust {
+			constructor(base){
+				this.sym=my_rust_sym;
+			}
+			set_resolved_block(block_id,...data){
+				if(data.length===1){
+					data=data[0];
+				}
+				let ref=new RemoteRef();
+				ref.make_ref(data);
+				__rust.block_vec[block_id]=ref;
+			}
+		}
+		__rust = new Rust;
 		class RefGenerator {
 			constructor(from) {
 				if (from) {
@@ -265,6 +278,23 @@ x: {
 			constructor(ref) {
 				this.ref_type = 'block';
 				this.ref = ref;
+			}
+			deref() {
+				return this.value;
+			}
+			get value() {
+				return __rust.block_vec_ref[this.ref];
+			}
+		}
+		class RemoteRef{
+			constructor() {
+				this.ref_type = 'block';
+				this.ref = null;
+			}
+			make_ref(value){
+				let ref_id=__rust.block_vec_ref.length;
+				__rust.block_vec_ref.push(value);
+				this.ref=ref_id;
 			}
 			deref() {
 				return this.value;
@@ -1641,26 +1671,26 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				/// Eats double-quoted string and returns true
-				/// if string is terminated.
-				fn double_quoted_string(&mut self) -> bool {
-					debug_assert!(self.prev() == '"');
-					while let Some(c) = self.bump() {
-						match c {
-							'"' => {
-								return true;
+					/// Eats double-quoted string and returns true
+					/// if string is terminated.
+					fn double_quoted_string(&mut self) -> bool {
+						debug_assert!(self.prev() == '"');
+						while let Some(c) = self.bump() {
+							match c {
+								'"' => {
+									return true;
+								}
+								'\\' if self.first() == '\\' || self.first() == '"' => {
+									// Bump again to skip escaped character.
+									self.bump();
+								}
+								_ => (),
 							}
-							'\\' if self.first() == '\\' || self.first() == '"' => {
-								// Bump again to skip escaped character.
-								self.bump();
-							}
-							_ => (),
 						}
+						// End of file reached.
+						false
 					}
-					// End of file reached.
-					false
-				}
-			`, __id)
+				`, __id)
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1669,19 +1699,19 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				/// Eats the double-quoted string and returns \`n_hashes\` and an error if encountered.
-				fn raw_double_quoted_string(&mut self, prefix_len: usize) -> (u16, Option<RawStrError>) {
-					// Wrap the actual function to handle the error with too many hashes.
-					// This way, it eats the whole raw string.
-					let (n_hashes, err) = self.raw_string_unvalidated(prefix_len);
-					// Only up to 65535 \`#\`s are allowed in raw strings
-					match u16::try_from(n_hashes) {
-						Ok(num) => (num, err),
-						// We lie about the number of hashes here :P
-						Err(_) => (0, Some(RawStrError::TooManyDelimiters { found: n_hashes })),
+					/// Eats the double-quoted string and returns \`n_hashes\` and an error if encountered.
+					fn raw_double_quoted_string(&mut self, prefix_len: usize) -> (u16, Option<RawStrError>) {
+						// Wrap the actual function to handle the error with too many hashes.
+						// This way, it eats the whole raw string.
+						let (n_hashes, err) = self.raw_string_unvalidated(prefix_len);
+						// Only up to 65535 \`#\`s are allowed in raw strings
+						match u16::try_from(n_hashes) {
+							Ok(num) => (num, err),
+							// We lie about the number of hashes here :P
+							Err(_) => (0, Some(RawStrError::TooManyDelimiters { found: n_hashes })),
+						}
 					}
-				}
-			`, __id)
+				`, __id)
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1690,71 +1720,71 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
-					debug_assert!(self.prev() == 'r');
-					let start_pos = self.len_consumed();
-					let mut possible_terminator_offset = None;
-					let mut max_hashes = 0;
-			
-					// Count opening '#' symbols.
-					let mut eaten = 0;
-					while self.first() == '#' {
-						eaten += 1;
-						self.bump();
-					}
-					let n_start_hashes = eaten;
-			
-					// Check that string is started.
-					match self.bump() {
-						Some('"') => (),
-						c => {
-							let c = c.unwrap_or(EOF_CHAR);
-							return (n_start_hashes, Some(RawStrError::InvalidStarter { bad_char: c }));
-						}
-					}
-			
-					// Skip the string contents and on each '#' character met, check if this is
-					// a raw string termination.
-					loop {
-						self.eat_while(|c| c != '"');
-			
-						if self.is_eof() {
-							return (
-								n_start_hashes,
-								Some(RawStrError::NoTerminator {
-									expected: n_start_hashes,
-									found: max_hashes,
-									possible_terminator_offset,
-								}),
-							);
-						}
-			
-						// Eat closing double quote.
-						self.bump();
-			
-						// Check that amount of closing '#' symbols
-						// is equal to the amount of opening ones.
-						// Note that this will not consume extra trailing \`#\` characters:
-						// \`r###"abcde"####\` is lexed as a \`RawStr { n_hashes: 3 }\`
-						// followed by a \`#\` token.
-						let mut n_end_hashes = 0;
-						while self.first() == '#' && n_end_hashes < n_start_hashes {
-							n_end_hashes += 1;
+					fn raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>) {
+						debug_assert!(self.prev() == 'r');
+						let start_pos = self.len_consumed();
+						let mut possible_terminator_offset = None;
+						let mut max_hashes = 0;
+				
+						// Count opening '#' symbols.
+						let mut eaten = 0;
+						while self.first() == '#' {
+							eaten += 1;
 							self.bump();
 						}
-			
-						if n_end_hashes == n_start_hashes {
-							return (n_start_hashes, None);
-						} else if n_end_hashes > max_hashes {
-							// Keep track of possible terminators to give a hint about
-							// where there might be a missing terminator
-							possible_terminator_offset =
-								Some(self.len_consumed() - start_pos - n_end_hashes + prefix_len);
-							max_hashes = n_end_hashes;
+						let n_start_hashes = eaten;
+				
+						// Check that string is started.
+						match self.bump() {
+							Some('"') => (),
+							c => {
+								let c = c.unwrap_or(EOF_CHAR);
+								return (n_start_hashes, Some(RawStrError::InvalidStarter { bad_char: c }));
+							}
+						}
+				
+						// Skip the string contents and on each '#' character met, check if this is
+						// a raw string termination.
+						loop {
+							self.eat_while(|c| c != '"');
+				
+							if self.is_eof() {
+								return (
+									n_start_hashes,
+									Some(RawStrError::NoTerminator {
+										expected: n_start_hashes,
+										found: max_hashes,
+										possible_terminator_offset,
+									}),
+								);
+							}
+				
+							// Eat closing double quote.
+							self.bump();
+				
+							// Check that amount of closing '#' symbols
+							// is equal to the amount of opening ones.
+							// Note that this will not consume extra trailing \`#\` characters:
+							// \`r###"abcde"####\` is lexed as a \`RawStr { n_hashes: 3 }\`
+							// followed by a \`#\` token.
+							let mut n_end_hashes = 0;
+							while self.first() == '#' && n_end_hashes < n_start_hashes {
+								n_end_hashes += 1;
+								self.bump();
+							}
+				
+							if n_end_hashes == n_start_hashes {
+								return (n_start_hashes, None);
+							} else if n_end_hashes > max_hashes {
+								// Keep track of possible terminators to give a hint about
+								// where there might be a missing terminator
+								possible_terminator_offset =
+									Some(self.len_consumed() - start_pos - n_end_hashes + prefix_len);
+								max_hashes = n_end_hashes;
+							}
 						}
 					}
-				}
-			`, __id)
+					`, __id);
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1763,23 +1793,23 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn eat_decimal_digits(&mut self) -> bool {
-					let mut has_digits = false;
-					loop {
-						match self.first() {
-							'_' => {
-								self.bump();
+					fn eat_decimal_digits(&mut self) -> bool {
+						let mut has_digits = false;
+						loop {
+							match self.first() {
+								'_' => {
+									self.bump();
+								}
+								'0'..='9' => {
+									has_digits = true;
+									self.bump();
+								}
+								_ => break,
 							}
-							'0'..='9' => {
-								has_digits = true;
-								self.bump();
-							}
-							_ => break,
 						}
+						has_digits
 					}
-					has_digits
-				}
-			`, __id)
+					`, __id)
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1788,23 +1818,23 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				fn eat_hexadecimal_digits(&mut self) -> bool {
-					let mut has_digits = false;
-					loop {
-						match self.first() {
-							'_' => {
-								self.bump();
+					fn eat_hexadecimal_digits(&mut self) -> bool {
+						let mut has_digits = false;
+						loop {
+							match self.first() {
+								'_' => {
+									self.bump();
+								}
+								'0'..='9' | 'a'..='f' | 'A'..='F' => {
+									has_digits = true;
+									self.bump();
+								}
+								_ => break,
 							}
-							'0'..='9' | 'a'..='f' | 'A'..='F' => {
-								has_digits = true;
-								self.bump();
-							}
-							_ => break,
 						}
+						has_digits
 					}
-					has_digits
-				}
-			`, __id)
+					`, __id)
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1813,16 +1843,16 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
-				/// Eats the float exponent. Returns true if at least one digit was met,
-				/// and returns false otherwise.
-				fn eat_float_exponent(&mut self) -> bool {
-					debug_assert!(self.prev() == 'e' || self.prev() == 'E');
-					if self.first() == '-' || self.first() == '+' {
-						self.bump();
+					/// Eats the float exponent. Returns true if at least one digit was met,
+					/// and returns false otherwise.
+					fn eat_float_exponent(&mut self) -> bool {
+						debug_assert!(self.prev() == 'e' || self.prev() == 'E');
+						if self.first() == '-' || self.first() == '+' {
+							self.bump();
+						}
+						self.eat_decimal_digits()
 					}
-					self.eat_decimal_digits()
-				}
-		`, __id)
+					`, __id)
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
@@ -1830,20 +1860,17 @@ x: {
 						return;
 					}
 					__id = rust_eval_any.block_id;
-					__rust.exec_lines(rr`
-				${(function() {
-							let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
-							self = self.build();
-							__rust.get_for_expr('debug_assert!')
-								.inject_tokenstream(`(self.prev() == 'e' || self.prev() == 'E')`)
-								.finish(';').exec();
-							if (self.first() == '-' || self.first() == '+') {
-								self.bump();
-							}
-							self.eat_decimal_digits();
-
-						})}
-			`, __id)
+					__rust.set_resolved_block(__id,function eat_float_exponent() {
+						let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+						self = self.build();
+						__rust.get_for_expr('debug_assert!')
+							.inject_tokenstream(`(self.prev() == 'e' || self.prev() == 'E')`)
+							.finish(';').exec();
+						if (self.first() == '-' || self.first() == '+') {
+							self.bump();
+						}
+						self.eat_decimal_digits();
+					});
 				}}
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
