@@ -278,21 +278,21 @@ x: {
 			function parse_pass_2(arr) {
 				let ret = [];
 				function pr() {
-					return arr?.[arr.length - 2];
+					return ret?.[ret.length - 2];
 				}
 				function c() {
-					return arr?.[arr.length - 1];
+					return ret?.[ret.length - 1];
 				}
 				for (let i = 0; i < arr.length; i++) {
 					ret.push(arr[i]);
 					if (pr() === ':' && c() === ':') {
-						arr.pop();
-						arr.pop();
+						ret.pop();
+						ret.pop();
 						ret.push('::');
 					}
 					if (pr() === '#' && c() === '[]'[0]) {
-						arr.pop();
-						arr.pop();
+						ret.pop();
+						ret.pop();
 						ret.push('#' + '[]'[0]);
 					}
 				}
