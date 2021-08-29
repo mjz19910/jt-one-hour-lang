@@ -256,6 +256,7 @@ x: {
 			__rust.block_vec=[];
 			block_id=0;
 			__rust_priv.stack.push({});
+			return ret;
 		}
 		__rust.drop=function(vv){
 			let last=__rust_priv.stack[__rust_priv.stack.length-1];
