@@ -773,7 +773,6 @@ x: {
 			use std::convert::TryFrom;`, S_Crate_init.block_id);
 		}}
 	
-
 		${function rust_eval_struct(parse_pass) {
 			if (parse_pass === 0) {
 				rust_eval_struct.block_id = block_id++;
