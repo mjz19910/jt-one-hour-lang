@@ -10,7 +10,7 @@ x: {
 	let rust_autoexec_funcs = [
 		'STATIC_init', 'S_Crate_init',
 		'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum',
-		'rust_exec_fn', 'rust_exec_any','rust_doc_comment',
+		'rust_exec_fn', 'rust_exec_any', 'rust_doc_comment',
 	];
 	let my_rust_sym = Symbol();
 	let ts = performance.now();
@@ -25,7 +25,7 @@ x: {
 		let parse_pass = 0;
 		let scope = null;
 		scope = __rust.push_block_vec();
-		let block_inner=[];
+		let block_inner = [];
 		if (!in_parse) {
 			in_parse = true;
 		}
@@ -34,8 +34,8 @@ x: {
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
-				block_inner[cur.block_id]={
-					id:cur.block_id,
+				block_inner[cur.block_id] = {
+					id: cur.block_id,
 				};
 				res.push(block_inner[cur.block_id]);
 				res.push(mm.raw[iter_index++]);
@@ -152,14 +152,13 @@ x: {
 			return ret;
 		}
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
-		__rust.exec_lines = function(str_arr, block_id_of_str) {
+		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
 			}
 			let val_acc = [];
 			let tok_arr = [];
 			let cur;
-			let str;
 			let ci = 0;
 			let mat_idx = 0;
 			function back(n) {
@@ -171,16 +170,8 @@ x: {
 				mat_idx++;
 			}
 			let fn_cache = new Map;
-			let arr_iter=0;
-			if(str_arr instanceof Array){
-				str=str_arr[arr_iter++];
-			}
-			let idx = str_arr[0].indexOf("Cursor<'_>");
-			if(idx>-1){
-				debugger;
-			}
 			parse_pass_0();
-			function parse_pass_0(){
+			function parse_pass_0() {
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -196,7 +187,7 @@ x: {
 						tok_arr.push({
 							kind: 'line_comment',
 							len: mat_idx - is_val_char.lastIndex + 2,
-							parent_index:arr_iter-1,
+							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx + 1;
 						val_acc = [];
@@ -204,18 +195,18 @@ x: {
 					};
 					let g = cc?.groups;
 					if (g?.i_s) {
-						let vaa=[];
+						let vaa = [];
 						mat_idx--;
-						while(true){
+						while (true) {
 							is_val_char.lastIndex = mat_idx;
-							cc=is_val_char.exec(str);
-							if(cc===null){
+							cc = is_val_char.exec(str);
+							if (cc === null) {
 								break;
 							}
-							if(cc.groups.i_s){
+							if (cc.groups.i_s) {
 								vaa.push(cc[0]);
 								bump();
-							}else{
+							} else {
 								break;
 							}
 						}
@@ -223,7 +214,7 @@ x: {
 						tok_arr.push({
 							kind: 'Ident',
 							len: vaa.length,
-							parent_index:arr_iter-1,
+							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx;
 						continue;
@@ -239,7 +230,7 @@ x: {
 						tok_arr.push({
 							kind: kind,
 							len: val_acc.length,
-							parent_index:arr_iter-1,
+							parent_index: arr_iter - 1,
 						});
 						val_acc.length = 0;
 					}
@@ -254,7 +245,7 @@ x: {
 						tok_arr.push({
 							kind: kind,
 							len: val_acc.length,
-							parent_index:arr_iter-1,
+							parent_index: arr_iter - 1,
 						});
 						val_acc.length = 0;
 					}
@@ -269,27 +260,27 @@ x: {
 						tok_arr.push({
 							kind: kind,
 							len: val_acc.length,
-							parent_index:arr_iter-1,
+							parent_index: arr_iter - 1,
 						});
 						val_acc.length = 0;
 					}
 					if (cc === null) {
-						if(str_arr instanceof Array){
+						if (str_arr instanceof Array) {
 							console.log(val_acc.slice());
-							if(arr_iter<str_arr.length){
-								let val=str_arr[arr_iter++];
-								if(val.id){
+							if (arr_iter < str_arr.length) {
+								let val = str_arr[arr_iter++];
+								if (val.id) {
 									tok_arr.push({
 										kind: 'id',
 										len: 1,
-										parent_index:arr_iter-1,
+										parent_index: arr_iter - 1,
 									});
-									mat_idx=0;
-									str=val;
+									mat_idx = 0;
+									str = val;
 									continue;
 								}
-								str=val;
-								mat_idx=0;
+								str = val;
+								mat_idx = 0;
 								continue;
 							}
 						}
@@ -297,36 +288,40 @@ x: {
 					}
 				}
 			}
-			let iter_index = 0;
-			let str_iter_index = 0;
-			let str_arr_in = [];
-			let last_index=-1;
-			let cur_arr_index=-1;
-			console.log(tok_arr);
-			for (; iter_index < tok_arr.length; iter_index++) {
-				let cur_tok = tok_arr[iter_index];
-				let {parent_index}=cur_tok;
-				last_index=cur_arr_index;
-				cur_arr_index=parent_index;
-				if(last_index!==cur_arr_index){
-					str_arr_index=0;
-				}
-				if (cur_tok.kind === '_char') {
-					let ed = str_iter_index + cur_tok.len;
-					while (str_iter_index < ed) {
-						str_arr_in.push(str_arr[parent_index][str_iter_index]);
-						str_iter_index++;
+			parse_pass_1();
+			function parse_pass_1() {
+				let iter_index = 0;
+				let str_iter_index = 0;
+				let str_arr_in = [];
+				let last_index = -1;
+				let cur_arr_index = -1;
+				console.log(tok_arr);
+				for (; iter_index < tok_arr.length; iter_index++) {
+					let cur_tok = tok_arr[iter_index];
+					let { parent_index } = cur_tok;
+					last_index = cur_arr_index;
+					cur_arr_index = parent_index;
+					if (last_index !== cur_arr_index) {
+						str_arr_index = 0;
 					}
-					continue;
+					if (cur_tok.kind === '_char') {
+						let ed = str_iter_index + cur_tok.len;
+						while (str_iter_index < ed) {
+							str_arr_in.push(str_arr[parent_index][str_iter_index]);
+							str_iter_index++;
+						}
+						continue;
+					}
+					if (!str_arr[parent_index].slice) {
+						str_arr_in.push(str_arr[parent_index]);
+						continue;
+					}
+					str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
+					str_iter_index += cur_tok.len;
 				}
-				if(!str_arr[parent_index].slice){
-					str_arr_in.push(str_arr[parent_index]);
-					continue;
-				}
-				str_arr_in.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
-				str_iter_index += cur_tok.len;
 			}
-			function parse_pass_2(arr){
+			str_arr_in = parse_pass_2(str_arr_in);
+			function parse_pass_2(arr) {
 				let ret = [];
 				function pr() {
 					return arr?.[arr.length - 2];
@@ -349,17 +344,20 @@ x: {
 				}
 				return ret;
 			}
-			str_arr_in = parse_pass_2(str_arr_in);
-			str_arr_in.push(Symbol.for('EOF'));
-			__rust.block_vec[block_id_of_str] ??= [];
-			let block = __rust.block_vec[block_id_of_str];
-			if (!block.push) {
-				debugger;
+			finish_parse();
+			function finish_parse() {
+				str_arr_in.push(Symbol.for('EOF'));
+				__rust.block_vec[block_id_of_str] ??= [];
+				let block = __rust.block_vec[block_id_of_str];
+				if (!block.push) {
+					debugger;
+				}
+				for (let x of str_arr_in) {
+					block.push(x);
+				}
+				__rust.last_exec = str_arr_in;
 			}
-			for (let x of str_arr_in) {
-				block.push(x);
-			}
-			__rust.last_exec = str_arr_in;
+
 		}
 		__rust.log_lines = function(callback_function) {
 			let rs_lines = [[]];
@@ -1641,13 +1639,13 @@ x: {
 			self.ref_type('&mut');
 			self.ref.value_type('Self');
 			self.ref.ffi_set_backing_value(this);
-			self=self.build();
+			self = self.build();
 			let predicate = __rust.get_value_generator().clone();
 			predicate.value_type('mut');
 			predicate.value.value_type('impl FnMut(char) -> bool');
 			predicate.ffi_set_backing_value(predicate_arg);
 			predicate.value.throw_if_type_error();
-			predicate=predicate.build();
+			predicate = predicate.build();
 			while (predicate(self.first()) && !self.is_eof()) {
 				self.bump();
 			}
@@ -1661,7 +1659,7 @@ x: {
 	}
 	`;
 	__rust.files = [];
-	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec[0][0].deref(), __rust.block_vec_ref]);
+	__rust.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
 	__rust.crates.push(['nightly-rustc', __rust.files]);
 	__rust.block_vec = [];
 	__rust.block_vec_stack = [];
