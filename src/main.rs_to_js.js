@@ -1,6 +1,6 @@
 x: {
 	let rust_exec_code_funcs = [
-		'STATIC_init', 'S_Crate_init','parse_exec_init',
+		'STATIC_init', 'S_Crate_init', 'parse_exec_init',
 		[
 			'rust_exec_struct', 'rust_exec_impl', 'rust_exec_enum', 'rust_exec_fn',
 			'rust_exec_any',
@@ -79,18 +79,18 @@ x: {
 			}
 		}
 		let cur_block_id = 0;
-		class RustScope{
-			constructor(){
-				this.block_vec=[];
-				this.block_vec_stack=[];
-				this.block_vec_ref=[];
+		class RustScope {
+			constructor() {
+				this.block_vec = [];
+				this.block_vec_stack = [];
+				this.block_vec_ref = [];
 			}
 		};
 		class RustRoot {
 			constructor(base) {
 				this.sym = my_rust_sym;
-				this.RustScope=RustScope;
-				this.scope=new RustScope;
+				this.RustScope = RustScope;
+				this.scope = new RustScope;
 			}
 			set_resolved_block(block_id, ...data) {
 				if (data.length === 1) {
@@ -198,7 +198,7 @@ x: {
 					let g;
 					let mat;
 					let kind;
-					if (cc!==null) {
+					if (cc !== null) {
 						g = cc.groups;
 					}
 					mat = 'i_s';
@@ -275,8 +275,8 @@ x: {
 			tok_arr = parse_pass_2(tok_arr);
 			function parse_pass_2(arr) {
 				let ret = [];
-				function c(n){
-					return ret?.[ret.length-n];
+				function c(n) {
+					return ret?.[ret.length - n];
 				}
 				function a() {
 					return ret?.[ret.length - 2];
@@ -296,11 +296,11 @@ x: {
 						ret.pop();
 						ret.push('#' + '[]'[0]);
 					}
-					if(c(3)==='#'&&c(2)==='!'&&c(1)==='[]'[0]){
-						for(let x=0;x<3;x++){
+					if (c(3) === '#' && c(2) === '!' && c(1) === '[]'[0]) {
+						for (let x = 0; x < 3; x++) {
 							ret.pop();
 						}
-						ret.push('#!'+'[]'[0]);
+						ret.push('#!' + '[]'[0]);
 
 					}
 				}
@@ -345,11 +345,11 @@ x: {
 			return ret;
 		}
 		class BlockRef {
-			constructor(scope,ref,parent_ref) {
+			constructor(scope, ref, parent_ref) {
 				this.ref_type = 'block';
 				this.ref = ref;
 				this.parent_ref = parent_ref;
-				this.scope=scope;
+				this.scope = scope;
 			}
 			deref() {
 				return this.value;
@@ -370,16 +370,16 @@ x: {
 			let block_vec_from_stack_id = __rust.scope.block_vec_ref.push(__rust.scope.block_vec);
 			__rust.scope.block_vec = last_vec_info[1];
 			cur_block_id = last_vec_info[0];
-			__rust.scope.block_vec.push([new BlockRef(__rust.scope,block_vec_from_stack_id - 1, cur_block_id)]);
+			__rust.scope.block_vec.push([new BlockRef(__rust.scope, block_vec_from_stack_id - 1, cur_block_id)]);
 			__rust_priv.stack.length--;
 		}
 	}
 
 	let __rust_root_scope;
-	__rust_root_scope=__rust.push_block_vec();
+	__rust_root_scope = __rust.push_block_vec();
 	test_0();
 	function test_0() {
-		let __id=block_id++;
+		let __id = block_id++;
 		__rust.exec_lines(`#[derive(Debug)]
 		enum Command {
 			SetVar(String, Value),
@@ -391,13 +391,13 @@ x: {
 		}`, __id);
 	}
 	let rust_code = rr`
-	${function parse_exec_init(parse_pass){
-		if(parse_pass===0){
-			parse_exec_init.block_id = block_id++;
-		}
-		let __id=parse_exec_init.block_id;
-		__rust.exec_lines(`#![allow(dead_code)]`, __id);
-	}}
+	${function parse_exec_init(parse_pass) {
+			if (parse_pass === 0) {
+				parse_exec_init.block_id = block_id++;
+			}
+			let __id = parse_exec_init.block_id;
+			__rust.exec_lines(`#![allow(dead_code)]`, __id);
+		}}
 	#![allow(dead_code)]
 
 	use std::collections::HashMap;
@@ -792,7 +792,7 @@ x: {
 	__rust.drop(__rust_root_scope);
 	__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec, __rust.scope.block_vec_ref]);
 	__rust.crates.push(['onehour-language', __rust.scope.files]);
-	__rust.scope=new __rust.RustScope;
+	__rust.scope = new __rust.RustScope;
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
 	//! Low-level Rust lexer.
@@ -1647,7 +1647,7 @@ x: {
 	__rust.scope.files = [];
 	__rust.scope.files.push(['rustc_lexer/lib.rs', __rust.block_vec]);
 	__rust.crates.push(['nightly-rustc', __rust.scope.files]);
-	__rust.scope=new __rust.RustScope;
+	__rust.scope = new __rust.RustScope;
 	window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
 	console.log(__rust.crates);
 	//console.log(rust_code);
