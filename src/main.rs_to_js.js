@@ -1723,6 +1723,37 @@ x: {
 			has_digits
 		}
 	
+		${function eat_hexadecimal_digits() {
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
+			self = self.build();
+
+			let has_digits = false;
+			for(;;) {
+				__rust.do_match(
+					self.first(),
+					["'_'","'0'-'9'|'a'-'f'|'A'-'F'","_"],
+					[
+						()=>{
+							self.bump();
+						},
+						()=>{
+							has_digits=true;
+							self.bump();
+						},
+						()=>{
+							__rust.set_break_flag(true);
+							//break;
+						}
+					],
+				);
+				if(__rust.break_flag()){
+					break;
+				}
+			}
+			return has_digits;
+		}}
 		fn eat_hexadecimal_digits(&mut self) -> bool {
 			let mut has_digits = false;
 			loop {
@@ -1745,8 +1776,13 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
+			let _macro=__rust.get_macro_generator().clone().get_macro_definition('debug_assert!').generate();
 
-			self.eat_identifier();
+			_macro(self.prev() == 'e' || self.prev() == 'E');
+			if (self.first() == '-' || self.first() == '+') {
+				self.bump();
+			}
+			return self.eat_decimal_digits()
 		}}
 		/// Eats the float exponent. Returns true if at least one digit was met,
 		/// and returns false otherwise.
