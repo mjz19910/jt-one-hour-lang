@@ -1712,29 +1712,28 @@ x: {
 			self.ffi_set_backing_value(this);
 			self = self.build();
 
+			let loop_gen=__rust.get_loop_executer().clone();
+
 			let has_digits = false;
-			for(;;) {
-				__rust.do_match(
-					self.first(),
-					["'_'","'0'..='9'","_"],
-					[
-						()=>{
-							self.bump();
-						},
-						()=>{
-							has_digits=true;
-							self.bump();
-						},
-						()=>{
-							__rust.set_break_flag(true);
-							//break;
-						}
-					],
-				);
-				if(__rust.break_flag()){
-					break;
+			loop_gen.set_scope({
+				get has_digits(){return {type:'value',value:has_digits}},
+				set has_digits(v){has_digits=v.value},
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			loop_gen.set_body(`{
+				match self.first() {
+					'_' => {
+						self.bump();
+					}
+					'0'..='9' => {
+						has_digits = true;
+						self.bump();
+					}
+					_ => break,
 				}
-			}
+			}`);
+			loop_gen.build().run();
 			return has_digits;
 		}}
 		fn eat_decimal_digits(&mut self) -> bool {
@@ -1761,28 +1760,25 @@ x: {
 			self = self.build();
 
 			let has_digits = false;
-			for(;;) {
-				__rust.do_match(
-					self.first(),
-					["'_'","'0'..='9'|'a'..='f'|'A'..='F'","_"],
-					[
-						()=>{
-							self.bump();
-						},
-						()=>{
-							has_digits=true;
-							self.bump();
-						},
-						()=>{
-							__rust.set_break_flag(true);
-							//break;
-						}
-					],
-				);
-				if(__rust.break_flag()){
-					break;
+			loop_gen.set_scope({
+				get has_digits(){return {type:'value',value:has_digits}},
+				set has_digits(v){has_digits=v.value},
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
+			});
+			loop_gen.set_body(`{
+				match self.first() {
+					'_' => {
+						self.bump();
+					}
+					'0'..='9' | 'a'..='f' | 'A'..='F' => {
+						has_digits = true;
+						self.bump();
+					}
+					_ => break,
 				}
-			}
+			}`);
+			loop_gen.build().run();
 			return has_digits;
 		}}
 		fn eat_hexadecimal_digits(&mut self) -> bool {
