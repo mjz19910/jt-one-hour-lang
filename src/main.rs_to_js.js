@@ -195,7 +195,7 @@ x: {
 					let g;
 					let mat;
 					let kind;
-					if (cc) {
+					if (cc!==null) {
 						g = cc.groups;
 					}
 					mat = 'i_s';
