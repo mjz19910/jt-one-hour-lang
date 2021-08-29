@@ -535,7 +535,6 @@ x: {
 						case '#!':
 							tags.push(out_arr[i++]);
 							tags.push(out_arr[i]);
-							console.log(tags);
 							continue;
 						case '#':
 							tags.push(out_arr[i++]);
