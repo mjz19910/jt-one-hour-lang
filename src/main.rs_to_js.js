@@ -227,7 +227,6 @@ x: {
 				block.push(x);
 			}
 			__rust.last_exec = str_arr;
-			console.log('parse end',get_log_time());
 		}
 		__rust.log_lines = function(callback_function) {
 			let rs_lines = [[]];
