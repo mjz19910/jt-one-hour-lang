@@ -184,6 +184,10 @@ x: {
 					if((arr_iter+1)>=str_arr.length){
 						break;
 					};
+					let val=str_arr[arr_iter++];
+					if(val.id){
+						continue;
+					}
 					str=str_arr[arr_iter++];
 				}
 				if (mat_idx > is_val_char.lastIndex) {
