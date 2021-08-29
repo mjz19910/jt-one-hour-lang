@@ -30,14 +30,12 @@ x: {
 		let iter_index=0;
 		res.push(mm.raw[iter_index++]);
 		for (let cur of rest) {
-			console.log(cur.name);
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				res.push(cur);
 				cur(parse_pass);
 				res.push(mm.raw[iter_index++]);
 			}
 		}
-		console.log('p0 done', performance.now() - ts);
 		parse_pass++;
 		for (i of rust_exec_code_funcs) {
 			for (let cur of rest) {
@@ -51,7 +49,6 @@ x: {
 				}
 			}
 		}
-		console.log('p1 done', performance.now() - ts);
 		in_parse = false;
 		if (scope) {
 			__rust.drop(scope);
