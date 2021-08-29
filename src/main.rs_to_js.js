@@ -180,24 +180,39 @@ x: {
 					return func(...want_vars);
 				}
 				let loop_res
-				loop_res = dm('ws', 'Whitespace');
-				if (loop_res === 'break') {
-					break;
-				}
-				if (loop_res === 'continue') {
+				let mat='ws';
+				let kind='Whitespace';
+				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
+					val_acc.push([mat,g[mat]]);
+					bump();
 					continue;
 				}
-				if (loop_res === 'leave_scope') {
-					'leave_scope';
+				if(val_acc[0]?.[0]===mat){
+					tok_arr.push({kind:kind,len:val_acc.length});
+					val_acc.length=0;
 				}
-				loop_res = dm('char', '_char');
-				if (loop_res === 'break') {
-					break;
-				}
-				if (loop_res === 'continue') {
+				let mat='char';
+				let kind='_char';
+				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
+					val_acc.push([mat,g[mat]]);
+					bump();
 					continue;
 				}
-				loop_res = dm('line', '_line');
+				if(val_acc[0]?.[0]===mat){
+					tok_arr.push({kind:kind,len:val_acc.length});
+					val_acc.length=0;
+				}
+				let mat='line';
+				let kind='_line';
+				if((val_acc[0]?.[0]===mat||val_acc.length==0)&&cc&&g[mat]){
+					val_acc.push([mat,g[mat]]);
+					bump();
+					continue;
+				}
+				if(val_acc[0]?.[0]===mat){
+					tok_arr.push({kind:kind,len:val_acc.length});
+					val_acc.length=0;
+				}
 				if (cc === null) {
 					break;
 				}
