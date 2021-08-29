@@ -371,7 +371,6 @@ x: {
 			let this_block_vec=__rust.scope.block_vec;
 			__rust.scope.block_vec = last_vec_info[1];
 			cur_block_id = last_vec_info[0];
-			debugger;
 			__rust.scope.block_vec.push(new BlockRef(__rust.scope, block_vec_from_stack_id - 1, cur_block_id));
 			__rust_priv.stack.length--;
 		}
