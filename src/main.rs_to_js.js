@@ -726,6 +726,10 @@ x: {
 		}`, rust_eval_fn.block_id);
 		}}
 	`;
+	console.log(__rust.block_vec);
+	__rust.crates=[];
+	__rust.crates.push(['onehour-language',__rust.block_vec]);
+	__rust.block_vec=[];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
 		${(function STATIC_init() {
