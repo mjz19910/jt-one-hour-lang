@@ -186,7 +186,6 @@ x: {
 						tok_arr.push({
 							kind: 'line_comment',
 							len: mat_idx - is_val_char.lastIndex + 2,
-							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx + 1;
 						val_acc = [];
@@ -220,7 +219,6 @@ x: {
 						tok_arr.push({
 							kind: 'Ident',
 							len: vaa.length,
-							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx;
 						continue;
@@ -274,7 +272,6 @@ x: {
 						tok_arr.push({
 							kind: kind,
 							len: vaa.length,
-							parent_index: arr_iter - 1,
 						});
 						is_val_char.lastIndex = mat_idx;
 						continue;
@@ -316,30 +313,17 @@ x: {
 				let iter_index = 0;
 				let str_iter_index = 0;
 				let tok_arr = [];
-				let last_index = -1;
-				let cur_arr_index = -1;
-				console.log(arr);
 				for (; iter_index < arr.length; iter_index++) {
 					let cur_tok = arr[iter_index];
-					let { parent_index } = cur_tok;
-					last_index = cur_arr_index;
-					cur_arr_index = parent_index;
-					if (last_index !== cur_arr_index) {
-						str_arr_index = 0;
-					}
 					if (cur_tok.kind === '_char') {
 						let ed = str_iter_index + cur_tok.len;
 						while (str_iter_index < ed) {
-							tok_arr.push(str_arr[parent_index][str_iter_index]);
+							tok_arr.push(str[str_iter_index]);
 							str_iter_index++;
 						}
 						continue;
 					}
-					if (!str_arr[parent_index].slice) {
-						tok_arr.push(str_arr[parent_index]);
-						continue;
-					}
-					tok_arr.push(str_arr[parent_index].slice(str_iter_index, str_iter_index + cur_tok.len));
+					tok_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
 					str_iter_index += cur_tok.len;
 				}
 			}
@@ -435,6 +419,7 @@ x: {
 		}
 	}
 
+	test_0();
 	function test_0(){
 		__rust.exec_lines(`#[derive(Debug)]
 		enum Command {
