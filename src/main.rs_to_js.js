@@ -56,7 +56,7 @@ x: {
 		if (scope) {
 			__rust.drop(scope);
 		}
-		let rr_ref=__rust.RemoteRef(__rust.scope,'match-ref');
+		let rr_ref=new __rust.RemoteRef(__rust.scope,'match-ref');
 		rr_ref.make_ref(res);
 		return mm.raw.join('');
 	};
