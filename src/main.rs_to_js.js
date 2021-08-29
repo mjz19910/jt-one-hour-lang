@@ -718,7 +718,8 @@ x: {
 				S_rust_doc_comment_eval.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines(`//! Low-level Rust lexer.
+			__rust.exec_lines(`
+			//! Low-level Rust lexer.
 			//!
 			//! The idea with \`rustc_lexer\` is to make a reusable library,
 			//! by separating out pure lexing and rustc-specific concerns, like spans,
@@ -739,7 +740,8 @@ x: {
 			//!
 			//! [\`rustc_parse::lexer\`]: ../rustc_parse/lexer/index.html
 			// We want to be able to build this crate with a stable compiler, so no
-			// \`#![feature]\` attributes should be added.`, S_rust_doc_comment_eval.block_id);
+			// \`#![feature]\` attributes should be added.
+			`, S_rust_doc_comment_eval.block_id);
 		}}
 	
 		${function S_Crate_init(parse_pass) {
