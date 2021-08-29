@@ -322,7 +322,7 @@ x: {
 			for (let x of str_arr_in) {
 				block.push(x);
 			}
-			if(str_arr_in[4]==='Cursor'){
+			if(str_arr_in.includes('Cursor')){
 				debugger;
 			}
 			__rust.last_exec = str_arr_in;
