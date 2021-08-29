@@ -247,54 +247,59 @@ x: {
 					}
 					mat = 'char';
 					kind = '_char';
-					if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
-						val_acc.push([mat, g[mat]]);
-						bump();
-						continue;
-					}
-					if (val_acc[0]?.[0] === mat) {
+					if (g?.[mat]) {
+						let vaa = [];
+						mat_idx--;
+						while (true) {
+							is_val_char.lastIndex = mat_idx;
+							cc = is_val_char.exec(str);
+							if (cc === null) {
+								break;
+							}
+							if (cc.groups[mat]) {
+								vaa.push(cc[0]);
+								bump();
+							} else {
+								break;
+							}
+						}
+						console.log(vaa);
 						tok_arr.push({
 							kind: kind,
-							len: val_acc.length,
+							len: vaa.length,
 							parent_index: arr_iter - 1,
 						});
-						val_acc.length = 0;
+						is_val_char.lastIndex = mat_idx;
+						continue;
 					}
 					mat = 'line';
 					kind = '_line';
-					if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
-						val_acc.push([mat, g[mat]]);
-						bump();
-						continue;
-					}
-					if (val_acc[0]?.[0] === mat) {
-						tok_arr.push({
-							kind: kind,
-							len: val_acc.length,
-							parent_index: arr_iter - 1,
-						});
-						val_acc.length = 0;
-					}
-					if (cc === null) {
-						if (str_arr instanceof Array) {
-							console.log(val_acc.slice());
-							if (arr_iter < str_arr.length) {
-								let val = str_arr[arr_iter++];
-								if (val.id) {
-									tok_arr.push({
-										kind: 'id',
-										len: 1,
-										parent_index: arr_iter - 1,
-									});
-									mat_idx = 0;
-									str = val;
-									continue;
-								}
-								str = val;
-								mat_idx = 0;
-								continue;
+					if (g?.[mat]) {
+						let vaa = [];
+						mat_idx--;
+						while (true) {
+							is_val_char.lastIndex = mat_idx;
+							cc = is_val_char.exec(str);
+							if (cc === null) {
+								break;
+							}
+							if (cc.groups[mat]) {
+								vaa.push(cc[0]);
+								bump();
+							} else {
+								break;
 							}
 						}
+						console.log(vaa);
+						tok_arr.push({
+							kind: kind,
+							len: vaa.length,
+							parent_index: arr_iter - 1,
+						});
+						is_val_char.lastIndex = mat_idx;
+						continue;
+					}
+					if (cc === null) {
 						break;
 					}
 				}
