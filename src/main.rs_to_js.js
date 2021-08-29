@@ -458,7 +458,7 @@ x: {
 						continue;
 					}
 					tt_arr.push(cur);
-					if(tt_arr.at(-1)==='\n'&&tt_arr.at(-2)==='\n'){
+					while(tt_arr.at(-1)==='\n'&&tt_arr.at(-2)==='\n'){
 						tt_arr.pop();
 					}
 				}
