@@ -35,7 +35,6 @@ x: {
 				if (from) {
 					console.log(from);
 				}
-				this.rust_type = null;
 				this.host_backing_value = null;
 				if (from) {
 					this.rust_type = from.rust_type;
@@ -50,12 +49,19 @@ x: {
 				}
 				this.rust_type(type);
 				this.ffi_set_backing_value(_this);
+				return this;
 			}
 			ffi_set_backing_value(value) {
 				if (this.is_mut_borrow) {
 					throw Error('can\' borrow');
 				}
 				this.host_backing_value = value;
+			}
+			rust_type(value){
+				if (this.is_mut_borrow) {
+					throw Error('can\' borrow');
+				}
+				this._rust_type=value;
 			}
 			no_mut() {
 				this.is_mut_borrow = true;
