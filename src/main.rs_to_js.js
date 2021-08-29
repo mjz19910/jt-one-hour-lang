@@ -230,6 +230,9 @@ x: {
 			str_arr.push(Symbol.for('EOF'));
 			__rust.block_vec[block_id_of_str] ??= [];
 			let block = __rust.block_vec[block_id_of_str];
+			if(!block.push){
+				debugger;
+			}
 			for (let x of str_arr) {
 				block.push(x);
 			}
@@ -270,7 +273,7 @@ x: {
 			let last_id=__rust_block_vec_ref.push(__rust.block_vec);
 			__rust.block_vec=last_vec_info[1];
 			block_id=last_vec_info[0];
-			__rust.block_vec.push({ref:'block',ptr:last_id-1});
+			__rust.block_vec.push([{ref:'block',ptr:last_id-1}]);
 			__rust_priv.stack.length--;
 		}
 	}
