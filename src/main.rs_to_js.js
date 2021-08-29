@@ -54,6 +54,7 @@ x: {
 		class Rust {
 			constructor(base){
 				this.sym=my_rust_sym;
+				this.block_vec=[];
 			}
 			set_resolved_block(block_id,...data){
 				if(data.length===1){
@@ -61,7 +62,7 @@ x: {
 				}
 				let ref=new RemoteRef();
 				ref.make_ref(data);
-				__rust.block_vec[block_id]=ref;
+				this.block_vec[block_id]=ref;
 			}
 		}
 		__rust = new Rust;
