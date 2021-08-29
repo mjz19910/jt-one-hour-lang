@@ -1397,8 +1397,11 @@ x: {
 				rust_exec_impl.block_id = block_id++;
 				return;
 			}
+			let __id=rust_exec_impl.block_id;
+			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			impl Cursor<'_> {
+				
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -1529,6 +1532,7 @@ x: {
 					Token::new(token_kind, self.len_consumed())
 				}`, __id);
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -1554,7 +1558,8 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1600,7 +1605,8 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1615,7 +1621,8 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1633,7 +1640,8 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1649,7 +1657,8 @@ x: {
 					}
 				`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1727,7 +1736,8 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1782,7 +1792,8 @@ x: {
 				}
 			`, __id)
 				}}
-			${function rust_exec_any(parse_pass) {
+
+				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
 						return;
@@ -1832,6 +1843,7 @@ x: {
 				}
 			`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -1861,6 +1873,7 @@ x: {
 					}
 				`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -1883,6 +1896,7 @@ x: {
 					}
 				`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -1957,6 +1971,7 @@ x: {
 					}
 					`, __id);
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -1983,6 +1998,7 @@ x: {
 					}
 					`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2009,6 +2025,7 @@ x: {
 					}
 					`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2028,6 +2045,7 @@ x: {
 					}
 					`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2047,6 +2065,7 @@ x: {
 						self.eat_decimal_digits();
 					});
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2061,6 +2080,7 @@ x: {
 				}
 			`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2086,6 +2106,7 @@ x: {
 						}}
 			`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2105,6 +2126,7 @@ x: {
 					}
 			`, __id);
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
@@ -2129,6 +2151,7 @@ x: {
 						}}
 					`, __id)
 				}}
+
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
