@@ -373,6 +373,9 @@ x: {
 			let parent_block_vec = last_vec_info[1];
 			let alloc_ref_id=last_vec_info[2];
 			if(this_block_vec.length===1){
+				if(this_block_vec[0] instanceof BlockRef){
+					this_block_vec[0]=this_block_vec[0].deref();
+				}
 				__rust.scope.block_vec_ref[alloc_ref_id]=this_block_vec[0];
 			}else{
 				__rust.scope.block_vec_ref[alloc_ref_id]=this_block_vec;
