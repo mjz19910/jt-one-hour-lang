@@ -287,7 +287,6 @@ x: {
 					if (g && g[mat]) {
 						str_d_mat.lastIndex=mat_idx;
 						cc=str_d_mat.exec(str);
-						console.log(cc);
 						mat_idx+=cc[0].length;
 						tok_arr.push({
 							kind: kind,
