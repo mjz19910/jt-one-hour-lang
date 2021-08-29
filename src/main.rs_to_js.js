@@ -766,17 +766,18 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn main() -> Result<(), EngineError> {
-			for arg in std::env::args().skip(1) {
-				let contents = std::fs::read_to_string(arg).unwrap();
-				let mut engine = Evaluator::new();
-				let commands = parse(&contents)?;
-				let answer = engine.evaluate(&commands)?;
-		
-				println!("{:?}", answer);
-			}
+				for arg in std::env::args().skip(1) {
+					let contents = std::fs::read_to_string(arg).unwrap();
+					let mut engine = Evaluator::new();
+					let commands = parse(&contents)?;
+					let answer = engine.evaluate(&commands)?;
 			
-			Ok(())
-		}`, rust_exec_fn.block_id);
+					println!("{:?}", answer);
+				}
+				
+				Ok(())
+			}
+			`, rust_exec_fn.block_id);
 		}}
 	`;
 	__rust.crates = [];
