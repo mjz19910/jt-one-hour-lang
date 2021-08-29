@@ -1608,7 +1608,8 @@ x: {
 					let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 					self = self.build();
 					__rust.get_for_expr('debug_assert!')
-						.inject_tokenstream(`(self.prev() == 'e' || self.prev() == 'E');`);
+						.inject_tokenstream(`(self.prev() == 'e' || self.prev() == 'E')`)
+						.finish(';').exec();
 					if (self.first() == '-' || self.first() == '+') {
 						self.bump();
 					}
