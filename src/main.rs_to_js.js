@@ -1255,37 +1255,22 @@ x: {
 	}
 	
 	${function create_impl_Cursor() {
-		let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
-		self.rust_type('&mut');
-		self.ffi_set_backing_value(this);
-		self = self.build();
-
-		let code_generator=__rust.get_code_generator().clone();
-
-		let has_digits = false;
-		code_generator.set_scope({
-			get self(){return {type:'&mut value',value:self}},
-			set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
-		});
-		code_generator.set_body(``);
-		let body=code_generator.build();
-		body.run();
-		return body.return_value;
+		// TODO:not done yet
 	}}
 	impl Cursor<'_> {
 		${function advance_token() {
-			let self_builder = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
-			self_builder.rust_type('&mut');
-			self_builder.ffi_set_backing_value(this);
+			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			self.rust_type('&mut');
+			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
-				get self(){return {type:self_builder.get_type(),value:self}},
-				set self(v){self=v.value},
+				get self(){return {type:'&mut value',value:self}},
+				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1418,14 +1403,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1452,14 +1437,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1507,14 +1492,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1531,14 +1516,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1558,14 +1543,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1583,14 +1568,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1670,14 +1655,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1734,14 +1719,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1793,14 +1778,14 @@ x: {
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1826,19 +1811,21 @@ x: {
 			false
 		}
 	
-		${function raw_double_quoted_string() {
+		${function raw_double_quoted_string(prefix_len) {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-
+			prefix_len=__rust.get_type_validator().ensure_type(prefix_len,'usize').convert();
+		
 			let code_generator=__rust.get_code_generator().clone();
-
-			let has_digits = false;
+		
 			code_generator.set_scope({
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.add_arguments(['prefix_len',prefix_len]);
+			code_generator.set_header(``);
 			code_generator.set_body(``);
 			let body=code_generator.build();
 			body.run();
@@ -1857,11 +1844,13 @@ x: {
 			}
 		}
 
-		${function raw_string_unvalidated() {
+		${function raw_string_unvalidated(prefix_len) {
 			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			prefix_len=__rust.get_type_validator().ensure_type(prefix_len,'usize');
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
+			prefix_len=prefix_len.convert();
 
 			let code_generator=__rust.get_code_generator().clone();
 
@@ -1869,6 +1858,7 @@ x: {
 				get self(){return {type:'&mut value',value:self}},
 				set self(v){/*can this happen in compilable rust code, if not, what is the error*/self=v.value},
 			});
+			code_generator.add_arguments(['prefix_len',prefix_len]);
 			code_generator.set_header(`
 			raw_string_unvalidated(&mut self, prefix_len: usize) -> (usize, Option<RawStrError>)
 			`);
@@ -2097,13 +2087,13 @@ x: {
 		}
 	
 		${function eat_float_exponent() {
-			let self = __rust.get_ref_generator().clone().ffi_use_this('&mut', this);
+			let self = __rust.get_ref_generator().clone();
 			self.rust_type('&mut');
 			self.ffi_set_backing_value(this);
 			self = self.build();
-			let _macro=__rust.get_macro_generator().clone().get_macro_definition('debug_assert!').generate();
+			let _macro_debug_assert=__rust.get_macro_generator().clone().get_macro_definition('debug_assert!').generate();
 
-			_macro(self.prev() == 'e' || self.prev() == 'E');
+			_macro_debug_assert(`(self.prev() == 'e' || self.prev() == 'E')`);
 			if (self.first() == '-' || self.first() == '+') {
 				self.bump();
 			}
