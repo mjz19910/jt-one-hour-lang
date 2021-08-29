@@ -276,7 +276,7 @@ x: {
 			function parse_pass_2(arr) {
 				let ret = [];
 				function c(n){
-					ret?.[ret.length-n];
+					return ret?.[ret.length-n];
 				}
 				function a() {
 					return ret?.[ret.length - 2];
