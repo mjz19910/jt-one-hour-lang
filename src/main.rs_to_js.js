@@ -338,7 +338,8 @@ x: {
 		__rust_priv.stack = [];
 		__rust.push_block_vec = function() {
 			let ret = {};
-			__rust.scope.block_vec_stack.push([block_id, __rust.scope.block_vec]);
+			__rust.scope.block_vec_stack.push([block_id, __rust.scope.block_vec, __rust.scope.block_vec_ref.length]);
+			__rust.scope.block_vec_ref.push(null);
 			__rust.scope.block_vec = [];
 			block_id = 0;
 			__rust_priv.stack.push(ret);
@@ -370,13 +371,13 @@ x: {
 			let this_block_vec = __rust.scope.block_vec;
 			let parent_block_id = last_vec_info[0];
 			let parent_block_vec = last_vec_info[1];
-			let this_block_id=__rust.scope.block_vec_ref.length;
+			let alloc_ref_id=last_vec_info[2];
 			if(this_block_vec.length===1){
-				__rust.scope.block_vec_ref.push(this_block_vec[0]);
+				__rust.scope.block_vec_ref[alloc_ref_id]=this_block_vec[0];
 			}else{
-				__rust.scope.block_vec_ref.push(this_block_vec);
+				__rust.scope.block_vec_ref[alloc_ref_id]=this_block_vec;
 			}
-			parent_block_vec.push(new BlockRef(__rust.scope, this_block_id, parent_block_id));
+			parent_block_vec.push(new BlockRef(__rust.scope, alloc_ref_id, parent_block_id));
 			__rust.scope.block_vec = parent_block_vec;
 			__rust_priv.stack.length--;
 		}
