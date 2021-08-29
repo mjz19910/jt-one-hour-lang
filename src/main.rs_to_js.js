@@ -1241,7 +1241,6 @@ x: {
 			}
 			__rust.exec_lines(rr`
 			impl Cursor<'_> {
-				/// Parses a token from the input string.
 				${function rust_eval_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_eval_any.block_id = block_id++;
@@ -1249,6 +1248,7 @@ x: {
 					}
 					__id = rust_eval_any.block_id;
 					__rust.exec_lines(rr`
+					/// Parses a token from the input string.
 					fn advance_token(&mut self) -> Token {
 					let first_char = self.bump().unwrap();
 					let token_kind = match first_char {
