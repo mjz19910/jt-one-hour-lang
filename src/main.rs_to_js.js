@@ -192,8 +192,13 @@ x: {
 						val_acc = [];
 						continue;
 					};
-					let g = cc?.groups;
-					if (g?.i_s) {
+					let g;
+					if(cc){
+						g=cc.groups;
+					}
+					let mat = 'ws';
+					let kind = 'Whitespace';
+					if (cc&&g[mat]) {
 						let vaa = [];
 						mat_idx--;
 						while (true) {
