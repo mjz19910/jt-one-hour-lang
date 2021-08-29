@@ -210,16 +210,16 @@ x: {
 						while(true){
 							is_val_char.lastIndex = mat_idx;
 							cc=is_val_char.exec(str);
-							bump();
 							if(cc.groups.i_s){
 								vaa.push(cc[0]);
+								bump();
 							}else{
 								break;
 							}
 						}
 						tok_arr.push({
 							kind: 'Ident',
-							len: vaa.length-1,
+							len: vaa.length,
 							parent_index:arr_iter-1,
 						});
 						continue;
