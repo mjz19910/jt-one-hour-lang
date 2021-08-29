@@ -744,7 +744,7 @@ x: {
 	__rust.crates = [];
 	__rust.files = [];
 	__rust.files.push(['src/main.rs', __rust.block_vec[0]]);
-	__rust.crates.push(['onehour-language', __rust.files]);
+	__rust.crates.push(['onehour-language', ...__rust.files]);
 	__rust.block_vec = [];
 	//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
 	let rustc_lexer_lib_file = rr`
