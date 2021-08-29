@@ -280,7 +280,6 @@ x: {
 				throw Error("failed to drop in order");
 			}
 			let last_vec_info=__rust.block_vec_stack.pop();
-			let block_vec_from_stack_id=__rust.block_vec_ref.push(__rust.block_vec);
 			__rust.block_vec=last_vec_info[1];
 			block_id=last_vec_info[0];
 			__rust.block_vec.push([new BlockRef(__rust.block_vec)]);
