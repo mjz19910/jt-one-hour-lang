@@ -1401,7 +1401,6 @@ x: {
 			__rust.set_current_block(__id);
 			__rust.exec_lines(rr`
 			impl Cursor<'_> {
-				
 				${function rust_exec_any(parse_pass) {
 					if (parse_pass === 0) {
 						rust_exec_any.block_id = block_id++;
