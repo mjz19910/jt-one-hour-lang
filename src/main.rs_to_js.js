@@ -11,7 +11,7 @@ x: {
 	let my_rust_sym = Symbol();
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
-		for (let x of rest) {
+		for (let cur of rest) {
 			if(cur.name)console.log(cur.name);
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
@@ -19,13 +19,13 @@ x: {
 		}
 		parse_pass++;
 		for (i of rust_exec_code_funcs) {
-			for (let x of rest) {
-				if (i instanceof Array && i.includes(x.name)) {
-					x(parse_pass);
+			for (let cur of rest) {
+				if (i instanceof Array && i.includes(cur.name)) {
+					cur(parse_pass);
 					continue;
 				}
-				if (x.name === i) {
-					x(parse_pass);
+				if (cur.name === i) {
+					cur(parse_pass);
 					continue;
 				}
 			}
@@ -256,6 +256,7 @@ x: {
 				S_Crate_init.block_id = block_id;
 				return;
 			}
+			debugger;
 			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
 		})}
 
