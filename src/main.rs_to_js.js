@@ -1635,7 +1635,6 @@ x: {
 						self.bump();
 					}
 				})}
-			
 				/// Eats symbols while predicate returns true or until the end of file is reached.
 				fn eat_while(&mut self, mut predicate: impl FnMut(char) -> bool) {
 					while predicate(self.first()) && !self.is_eof() {
