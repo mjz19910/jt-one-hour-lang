@@ -220,18 +220,30 @@ x: {
 					}
 					let mat = 'ws';
 					let kind = 'Whitespace';
-					if ((val_acc[0]?.[0] === mat || val_acc.length == 0) && cc && g[mat]) {
-						val_acc.push([mat, g[mat]]);
-						bump();
-						continue;
-					}
-					if (val_acc[0]?.[0] === mat) {
+					if (g?.[mat]) {
+						let vaa = [];
+						mat_idx--;
+						while (true) {
+							is_val_char.lastIndex = mat_idx;
+							cc = is_val_char.exec(str);
+							if (cc === null) {
+								break;
+							}
+							if (cc.groups.i_s) {
+								vaa.push(cc[0]);
+								bump();
+							} else {
+								break;
+							}
+						}
+						console.log(vaa);
 						tok_arr.push({
-							kind: kind,
-							len: val_acc.length,
+							kind: 'Ident',
+							len: vaa.length,
 							parent_index: arr_iter - 1,
 						});
-						val_acc.length = 0;
+						is_val_char.lastIndex = mat_idx;
+						continue;
 					}
 					mat = 'char';
 					kind = '_char';
