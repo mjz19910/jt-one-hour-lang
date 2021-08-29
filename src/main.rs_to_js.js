@@ -152,7 +152,10 @@ x: {
 		__rust.get_ref_generator = function() {
 			return __rust_priv.ref_generator;
 		};
-		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"]
+		let rust_chars = [";", ",", ".", "(", ")", "{", "}", "[", "]", "@", "#", "~", "?", ":", "$", "=", "!", "<", ">", "-", "&", "|", "+", "*", "/", "^", "%"];
+		let rust_tt_chars=['()','{}','{}'];
+		let rust_tt_start=rust_tt_chars.map(([e])=>e);
+		let rust_tt_end=rust_tt_chars.map(([,e])=>e);
 		function get_log_time() {
 			let ret = performance.now() - ts;
 			ts = performance.now();
