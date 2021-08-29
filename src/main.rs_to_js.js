@@ -38,6 +38,7 @@ x: {
 			}
 		}
 		console.log('p1 done',performance.now()-ts);
+		in_parse=false;
 		return mm.raw.join('');
 	};
 	let __rust;
