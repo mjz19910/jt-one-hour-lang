@@ -186,6 +186,11 @@ x: {
 					};
 					let val=str_arr[arr_iter++];
 					if(val.id){
+						tok_arr.push({
+							kind: 'id',
+							len: 1,
+							parent_index:arr_iter-1,
+						});
 						continue;
 					}
 					str=str_arr[arr_iter++];
