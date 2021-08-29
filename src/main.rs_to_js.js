@@ -290,11 +290,11 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`#[derive(Clone, PartialEq, Debug)]
-		enum Value {
-			Nothing,
-			Int(i64),
-			String(String),
-		}`, rust_eval_enum.block_id);
+			enum Value {
+				Nothing,
+				Int(i64),
+				String(String),
+			}`, rust_eval_enum.block_id);
 		}}
 	
 		${function rust_eval_enum(parse_pass) {
@@ -303,13 +303,13 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`#[derive(Debug)]
-		enum EngineError {
-			MismatchNumParams,
-			MismatchType,
-			UnknownCommand(String),
-			MissingVariable(String),
-			EmptyStack,
-		}`, rust_eval_enum.block_id);
+			enum EngineError {
+				MismatchNumParams,
+				MismatchType,
+				UnknownCommand(String),
+				MissingVariable(String),
+				EmptyStack,
+			}`, rust_eval_enum.block_id);
 		}}
 	
 		${function rust_eval_struct(parse_pass) {
@@ -318,9 +318,9 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`struct Evaluator {
-			vars:HashMap<String, Value>,
-			stack:Vec<Value>,
-		}`, rust_eval_struct.block_id);
+				vars:HashMap<String, Value>,
+				stack:Vec<Value>,
+			}`, rust_eval_struct.block_id);
 		}}
 
 		${function rust_eval_impl(parse_pass) {
@@ -329,60 +329,60 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`impl Evaluator {
-			fn new() -> Evaluator {
-				Self {
-					vars:HashMap::new(),
-					stack:vec![],
-				}
-			}
-		
-			fn pop(&mut self) -> Result<Value, EngineError> {
-				let result = self.stack.pop();
-				match result {
-					Some(v)=> Ok(v),
-					None =>	Err(EngineError::EmptyStack),
-				}
-			}
-		
-			fn add(&self, lhs: Value, rhs: Value) -> Result<Value, EngineError> {
-				match (lhs, rhs) {
-					(Value::Int(i1), Value::Int(i2)) => Ok(Value::Int(i1 + i2)),
-					(Value::String(s1), Value::String(s2)) => Ok(Value::String(s1 + s2)),
-					_ => Err(EngineError::MismatchType),
-				}
-			}
-		
-			fn evaluate(&mut self, commands: &[Command]) -> Result<Value, EngineError> {
-				let output=Ok(Value::Nothing);
-				for command in commands {
-					match command {
-						Command::SetVar(name, value) => {
-							self.vars.insert(name.into(), value.clone());
-						}
-						Command::GetVar(name) => match self.vars.get(name) {
-							Some(value) => output = Ok(value.clone()),
-							None => return Err(EngineError::MissingVariable(name.into())),
-						},
-						Command::PushVar(name) => match self.vars.get(name) {
-							Some(value) => self.stack.push(value.clone()),
-							None => return Err(EngineError::MissingVariable(name.into())),
-						},
-						Command::Push(v) => self.stack.push(v.clone()),
-						Command::Pop => {
-							output = self.pop();
-						},
-						Command::Add => {
-							let lhs = self.pop()?;
-							let rhs = self.pop()?;
-		
-							let result = self.add(lhs, rhs)?;
-							self.stack.push(result)
-						}
+				fn new() -> Evaluator {
+					Self {
+						vars:HashMap::new(),
+						stack:vec![],
 					}
 				}
-				output
-			}
-		}`, rust_eval_impl.block_id);
+			
+				fn pop(&mut self) -> Result<Value, EngineError> {
+					let result = self.stack.pop();
+					match result {
+						Some(v)=> Ok(v),
+						None =>	Err(EngineError::EmptyStack),
+					}
+				}
+			
+				fn add(&self, lhs: Value, rhs: Value) -> Result<Value, EngineError> {
+					match (lhs, rhs) {
+						(Value::Int(i1), Value::Int(i2)) => Ok(Value::Int(i1 + i2)),
+						(Value::String(s1), Value::String(s2)) => Ok(Value::String(s1 + s2)),
+						_ => Err(EngineError::MismatchType),
+					}
+				}
+			
+				fn evaluate(&mut self, commands: &[Command]) -> Result<Value, EngineError> {
+					let output=Ok(Value::Nothing);
+					for command in commands {
+						match command {
+							Command::SetVar(name, value) => {
+								self.vars.insert(name.into(), value.clone());
+							}
+							Command::GetVar(name) => match self.vars.get(name) {
+								Some(value) => output = Ok(value.clone()),
+								None => return Err(EngineError::MissingVariable(name.into())),
+							},
+							Command::PushVar(name) => match self.vars.get(name) {
+								Some(value) => self.stack.push(value.clone()),
+								None => return Err(EngineError::MissingVariable(name.into())),
+							},
+							Command::Push(v) => self.stack.push(v.clone()),
+							Command::Pop => {
+								output = self.pop();
+							},
+							Command::Add => {
+								let lhs = self.pop()?;
+								let rhs = self.pop()?;
+			
+								let result = self.add(lhs, rhs)?;
+								self.stack.push(result)
+							}
+						}
+					}
+					output
+				}
+			}`, rust_eval_impl.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
@@ -391,8 +391,8 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_var_name(var_name: &str) -> Result<String, EngineError> {
-			Ok(var_name.into())
-		}`, rust_eval_fn.block_id);
+				Ok(var_name.into())
+			}`, rust_eval_fn.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
@@ -401,14 +401,14 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_string(val: &str) -> Result<Value, EngineError>{
-			if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
-				let inner = val[1..(val.len() - 1)].to_string();
-		
-				Ok(Value::String(inner))
-			} else {
-				Err(EngineError::MismatchType)
-			}
-		}`, rust_eval_fn.block_id);
+				if val.starts_with("\"") && val.ends_with("\"") && val.len() > 1 {
+					let inner = val[1..(val.len() - 1)].to_string();
+			
+					Ok(Value::String(inner))
+				} else {
+					Err(EngineError::MismatchType)
+				}
+			}`, rust_eval_fn.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
@@ -417,13 +417,13 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_int(val: &str) -> Result<Value, EngineError>{
-			let result = val.parse::<i64>();
-		
-			match result {
-				Ok(x) => Ok(Value::Int(x)),
-				_ => Err(EngineError::MismatchType),
-			}
-		}`, rust_eval_fn.block_id);
+				let result = val.parse::<i64>();
+			
+				match result {
+					Ok(x) => Ok(Value::Int(x)),
+					_ => Err(EngineError::MismatchType),
+				}
+			}`, rust_eval_fn.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
@@ -432,14 +432,14 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_value(val: &str) -> Result<Value, EngineError>{
-			if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
-				// Parse the string
-				parse_string(val)
-			}else{
-				// Parse the number
-				parse_int(val)
-			}
-		}`, rust_eval_fn.block_id);
+				if val.starts_with('"') && val.ends_with('"') && val.len() > 1 {
+					// Parse the string
+					parse_string(val)
+				}else{
+					// Parse the number
+					parse_int(val)
+				}
+			}`, rust_eval_fn.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
@@ -448,15 +448,15 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_set(input: &[&str]) -> Result<Command,EngineError> {
-			if input.len() != 3 {
-				return Err(EngineError::MismatchNumParams);
-			}
-		
-			let var_name = parse_var_name(input[1])?;
-			let value = parse_value(input[2])?;
-		
-			Ok(Command::SetVar(var_name, value))
-		}`, rust_eval_fn.block_id);
+				if input.len() != 3 {
+					return Err(EngineError::MismatchNumParams);
+				}
+			
+				let var_name = parse_var_name(input[1])?;
+				let value = parse_value(input[2])?;
+			
+				Ok(Command::SetVar(var_name, value))
+			}`, rust_eval_fn.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
@@ -465,14 +465,14 @@ x: {
 				return;
 			}
 			__rust.exec_lines(`fn parse_get(input: &[&str]) -> Result<Command,EngineError> {
-			if input.len() != 2 {
-				return Err(EngineError::MismatchNumParams);
-			}
-		
-			let var_name = parse_var_name(input[1])?;
-		
-			Ok(Command::GetVar(var_name))
-		}`, rust_eval_fn.block_id);
+				if input.len() != 2 {
+					return Err(EngineError::MismatchNumParams);
+				}
+			
+				let var_name = parse_var_name(input[1])?;
+			
+				Ok(Command::GetVar(var_name))
+			}`, rust_eval_fn.block_id);
 		}}
 	
 		${function rust_eval_fn(parse_pass) {
