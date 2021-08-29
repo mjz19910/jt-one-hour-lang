@@ -743,8 +743,10 @@ x: {
 				S_Crate_init.block_id = block_id++;
 				return;
 			}
-			__rust.exec_lines('mod cursor;', S_Crate_init.block_id);
-			__rust.exec_lines('pub mod unescape;', S_Crate_init.block_id);
+			__rust.exec_lines(`
+			mod cursor;
+			pub mod unescape;
+			`, S_Crate_init.block_id);
 		}}
 	
 		${function S_Crate_init(parse_pass) {
