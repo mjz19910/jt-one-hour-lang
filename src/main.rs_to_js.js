@@ -242,41 +242,45 @@ x: {
 			}
 			let iter_index = 0;
 			let str_iter_index = 0;
-			let str_arr = [];
+			let str_arr_in = [];
 			for (; iter_index < tok_arr.length; iter_index++) {
 				let cur_tok = tok_arr[iter_index];
 				if (cur_tok.kind === '_char') {
 					let ed = str_iter_index + cur_tok.len;
 					while (str_iter_index < ed) {
-						str_arr.push(str[str_iter_index]);
+						str_arr_in.push(str[str_iter_index]);
 						str_iter_index++;
 					}
 					continue;
 				}
-				str_arr.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
+				str_arr_in.push(str.slice(str_iter_index, str_iter_index + cur_tok.len));
 				str_iter_index += cur_tok.len;
 			}
-			let s2_arr = [];
-			function pr() {
-				return s2_arr?.[s2_arr.length - 2];
-			}
-			function c() {
-				return s2_arr?.[s2_arr.length - 1];
-			}
-			for (let i = 0; i < str_arr.length; i++) {
-				s2_arr.push(str_arr[i]);
-				if (pr() === ':' && c() === ':') {
-					s2_arr.pop();
-					s2_arr.pop();
-					s2_arr.push('::');
+			function parse_pass_2(arr){
+				let ret = [];
+				function pr() {
+					return arr?.[arr.length - 2];
 				}
-				if (pr() === '#' && c() === '[]'[0]) {
-					s2_arr.pop();
-					s2_arr.pop();
-					s2_arr.push('#' + '[]'[0]);
+				function c() {
+					return arr?.[arr.length - 1];
+				}
+				for (let i = 0; i < arr.length; i++) {
+					ret.push(arr[i]);
+					if (pr() === ':' && c() === ':') {
+						arr.pop();
+						arr.pop();
+						ret.push('::');
+						i++;
+					}
+					if (pr() === '#' && c() === '[]'[0]) {
+						arr.pop();
+						arr.pop();
+						ret.push('#' + '[]'[0]);
+						i++;
+					}
 				}
 			}
-			str_arr = s2_arr;
+			str_arr = str_arr_next;
 			str_arr.push(Symbol.for('EOF'));
 			__rust.block_vec[block_id_of_str] ??= [];
 			let block = __rust.block_vec[block_id_of_str];
