@@ -10,8 +10,10 @@ x: {
 	];
 	let my_rust_sym = Symbol();
 	let ts=performance.now();
+	let block_id = 0;
 	let rr = function(mm, ...rest) {
 		let parse_pass = 0;
+		block_id=0;
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
 				cur(parse_pass);
@@ -34,7 +36,6 @@ x: {
 		console.log('p1 done',performance.now()-ts);
 		return mm.raw.join('');
 	};
-	let block_id = 0;
 	let __rust;
 	function rust_static_init() {
 		if (__rust) return;
