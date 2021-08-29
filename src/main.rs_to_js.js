@@ -18,7 +18,7 @@ x: {
 			}
 		}
 		parse_pass++;
-		console.log(performance.now()-ts);
+		console.log('p1',performance.now()-ts);
 		for (i of rust_exec_code_funcs) {
 			for (let cur of rest) {
 				if (i instanceof Array && i.includes(cur.name)) {
@@ -31,6 +31,7 @@ x: {
 				}
 			}
 		}
+		console.log('done',performance.now()-ts);
 		return mm.raw.join('');
 	};
 	let block_id = 0;
