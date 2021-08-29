@@ -18,11 +18,9 @@ x: {
 		ts += performance.now() - ts;
 		let parse_pass = 0;
 		let scope=null;
+		scope = __rust.push_block_vec();
 		if (!in_parse) {
-			block_id = 0;
 			in_parse = true;
-		}else{
-			scope = __rust.push_block_vec();
 		}
 		for (let cur of rest) {
 			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
