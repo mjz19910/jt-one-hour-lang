@@ -253,10 +253,12 @@ x: {
 		
 		${(function S_Crate_init(parse_pass) {
 			if (parse_pass === 0) {
+				debugger;
 				block_id++;
 				S_Crate_init.block_id = block_id;
 				return;
 			}
+			console.log(S_Crate_init.block_id);
 			__rust.exec_lines('use std::collections::HashMap;', S_Crate_init.block_id);
 		})}
 
