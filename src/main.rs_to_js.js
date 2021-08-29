@@ -204,8 +204,21 @@ x: {
 					};
 					let g = cc?.groups;
 					if ((val_acc[0]?.[0] === 'i_s' || val_acc.length == 0) && cc && g.i_s) {
-						val_acc.push(['i_s', g.i_s]);
-						bump();
+						let vaa=[];
+						vaa.push(cc[0]);
+						while(true){
+							cc=is_val_char.exec(str);
+							if(cc.groups.i_s){
+								vaa.push(cc[0]);
+							}else{
+								break;
+							}
+						}
+						tok_arr.push({
+							kind: 'Ident',
+							len: vaa.length,
+							parent_index:arr_iter-1,
+						});
 						continue;
 					}
 					if (val_acc[0]?.[0] === 'i_s') {
