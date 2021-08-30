@@ -211,7 +211,7 @@ x: {
 				this.tt_attribute_vec = arr;
 			}
 		};
-		let global_parse_count=0;
+		let global_parse_count = 0;
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
@@ -266,7 +266,7 @@ x: {
 						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
-						if (cc === null||cc[1]==="'") {
+						if (cc === null || cc[1] === "'") {
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
 							cc = mat_str.exec(str);
@@ -493,7 +493,7 @@ x: {
 				return ret;
 			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
-			console.log(out_arr,in_arr,global_parse_count);
+			console.log(out_arr, in_arr, global_parse_count);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -508,14 +508,14 @@ x: {
 					if (rust_tt_end.includes(cur)) {
 						let tt_tmp = tt_arr;
 						tt_arr.push(cur);
-						let cti=rust_tt_end.indexOf(cur);
-						let sti=rust_tt_start.indexOf(tt_arr[0]);
-						if(cur!==rust_tt_end[sti]){
+						let cti = rust_tt_end.indexOf(cur);
+						let sti = rust_tt_start.indexOf(tt_arr[0]);
+						if (cur !== rust_tt_end[sti]) {
 							console.log(tt_arr.slice(-12));
-							throw Error('wrong type:'+cur+' want:'+rust_tt_end[sti]);
+							throw Error('wrong type:' + cur + ' want:' + rust_tt_end[sti]);
 						}
-						if(tt_arr[0]!==rust_tt_start[cti]){
-							throw Error('wrong type:'+tt_arr[0]+' want:'+rust_tt_start[cti]);
+						if (tt_arr[0] !== rust_tt_start[cti]) {
+							throw Error('wrong type:' + tt_arr[0] + ' want:' + rust_tt_start[cti]);
 						}
 						tt_arr = tt_stack.pop();
 						tt_arr.push(tt_tmp);
@@ -539,8 +539,8 @@ x: {
 					}
 					tt_arr.push(cur);
 				}
-				if(tt_stack.length>0){
-					console.log(tt_arr,tt_stack);
+				if (tt_stack.length > 0) {
+					console.log(tt_arr, tt_stack);
 					throw Error('unbalanced');
 				}
 				arr.push(Symbol.for('EOF'));
@@ -1228,9 +1228,9 @@ x: {
 		}
 		let __id = scope_push.block_id;
 		if (parse_pass === 1) {
-			try{
+			try {
 				__rust.exec_lines(rust_code, __id);
-			}catch(e){
+			} catch (e) {
 				console.log(e);
 			}
 		}
@@ -2481,9 +2481,9 @@ x: {
 		}
 		let __id = scope_push.block_id;
 		if (parse_pass === 1) {
-			try{
+			try {
 				__rust.exec_lines(rustc_lexer_lib_file, __id);
-			}catch(e){
+			} catch (e) {
 				console.log(e);
 			}
 		}
