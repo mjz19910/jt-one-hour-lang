@@ -211,6 +211,11 @@ x: {
 				this.tt_attribute_vec = arr;
 			}
 		};
+		class RustRawComment {
+			set_body(body){
+				this.body=body;
+			}
+		}
 		let global_parse_count = 0;
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
@@ -747,6 +752,12 @@ x: {
 				let cur_obj = null;
 				for (let i = 0; i < in_vec.length; i++) {
 					let cur = in_vec[i];
+					if (cur[1] === null && cur[0] instanceof Array) {
+						cur_obj = new RustCrateScope;
+						cur_obj.set_tt_attribute_vec(cur[0]);
+						out_vec.push(cur_obj);
+						continue;
+					}
 					if (cur[1] === null && cur[0][0] && cur[0][0][0] === '#!') {
 						cur_obj = new RustCrateScope;
 						cur_obj.set_tt_attribute_vec(cur[0]);
@@ -761,6 +772,11 @@ x: {
 						cur[1].splice(0, 1);
 					}
 					let kw_id = cur[1][0];
+					if(kw_id.slice(0,2)==='//'){
+						cur_obj = new RustRawComment;
+						cur_obj.set_body(cur);
+						out_vec.push(cur_obj);
+					}
 					switch (kw_id) {
 						case 'use':
 							cur_obj = new RustKWUse;
