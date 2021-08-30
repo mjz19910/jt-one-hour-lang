@@ -521,7 +521,7 @@ x: {
 					if (cur.match(/[\t]/)) {
 						continue;
 					}
-					if (cur.match(/[\n][\n]+/)) {
+					if (cur.match(/^[\n][\n]+/)) {
 						let ea = cur.split('');
 						tt_arr.push(...ea);
 						cur = tt_arr.pop();
