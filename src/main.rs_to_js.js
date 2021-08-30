@@ -206,6 +206,11 @@ x: {
 		class RustKWStruct extends RustKw { };
 		class RustKWImpl extends RustKw { };
 		class RustKWFn extends RustKw { };
+		class RustCrateScope {
+			set_tt_attribute_vec(arr){
+				this.tt_attribute_vec=arr;
+			}
+		};
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
@@ -536,6 +541,8 @@ x: {
 				let arr_item = [];
 				let enditem = [' ', ';'];
 				let items = [];
+				let crate_attr_vec=[];
+				items.push([crate_attr_vec,null]);
 				for (let i = 0; i < out_arr.length; i++) {
 					let cur = out_arr[i];
 					switch (cur) {
@@ -556,6 +563,8 @@ x: {
 							if (cur == '\n') {
 								tags.push(cur);
 							}
+							crate_attr_vec.push(tags);
+							tags=[];
 							i--;
 							continue;
 						case '#':
@@ -679,7 +688,10 @@ x: {
 				for (let i = 0; i < in_vec.length; i++) {
 					let cur = in_vec[i];
 					if(cur[1]===null){
-						out_vec.push(cur);
+						cur_obj=new RustCrateScope;
+						cur_obj.set_tt_attribute_vec(cur[0]);
+						out_vec.push(cur_obj);
+						continue;
 					}
 					if (cur[1][0] === '\n') {
 						cur[1].splice(0, 1);
