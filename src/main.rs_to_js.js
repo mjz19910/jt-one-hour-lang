@@ -619,6 +619,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
+								console.log(arr_item);
 								while (!enditem.includes(cur = out_arr[i])) {
 									arr_item.push(cur);
 									i++;
@@ -659,7 +660,13 @@ x: {
 										i++;
 									}
 								}
-								while (!enditem.includes(cur = out_arr[i])) {
+								x:while (!enditem.includes(cur = out_arr[i])) {
+									b:switch(cur){
+										case 'impl':
+											arr_item.push(out_arr[i++]);
+											arr_item.push(out_arr[i++]);
+											continue x;
+									}
 									if (cur === '<') {
 										parse_gt();
 									}
@@ -667,7 +674,10 @@ x: {
 									i++;
 								}
 								arr_item.push(out_arr[i++]);
+								cur=out_arr[i];
+								i++;
 								arr_item.push(out_arr[i++]);
+								console.log(cur,arr_item);
 								in_defn = true;
 								i--;
 								return true;
@@ -723,7 +733,7 @@ x: {
 						}
 						return false;
 					}
-					console.log('!', [cur]);
+					console.log('!', out_arr.slice(i-5,i+2));
 					break;
 				}
 				return items;
