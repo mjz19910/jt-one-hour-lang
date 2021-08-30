@@ -211,11 +211,13 @@ x: {
 				this.tt_attribute_vec = arr;
 			}
 		};
+		let global_parse_count=0;
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
 			}
+			global_parse_count++;
 			let val_acc = [];
 			let tok_arr;
 			let in_arr;
@@ -490,8 +492,11 @@ x: {
 				}
 				return ret;
 			}
+			if(global_parse_count===2){
+				debugger;
+			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
-			console.log(out_arr,in_arr);
+			console.log(out_arr,in_arr,global_parse_count);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -527,6 +532,10 @@ x: {
 						cur = tt_arr.pop();
 					}
 					tt_arr.push(cur);
+				}
+				if(tt_stack.length>0){
+					console.log(tt_arr,tt_stack);
+					throw Error('unbalanced');
 				}
 				arr.push(Symbol.for('EOF'));
 				return tt_arr;
