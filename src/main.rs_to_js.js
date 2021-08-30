@@ -783,7 +783,10 @@ x: {
 							}
 							if (cur[1][0] === 'pub') {
 								out_vec.push(new RustKWPub);
-								break y;
+								cur[1].splice(0, 1);
+								// remove space too;
+								cur[1].splice(0, 1);
+								continue;
 							}
 							break;
 						}
