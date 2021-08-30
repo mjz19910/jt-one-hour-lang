@@ -770,7 +770,7 @@ x: {
 						console.log('!', cur);
 						break;
 					}
-					x: for (;;) {
+					x: for (let i=0;i<800;i++) {
 						y: {
 							if (cur[1][0] === '\n') {
 								break y;
