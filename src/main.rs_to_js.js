@@ -619,7 +619,6 @@ x: {
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
-								console.log(arr_item);
 								while (!enditem.includes(cur = out_arr[i])) {
 									arr_item.push(cur);
 									i++;
