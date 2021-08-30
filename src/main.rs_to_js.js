@@ -212,8 +212,8 @@ x: {
 			}
 		};
 		class RustRawComment {
-			set_body(body){
-				this.body=body;
+			set_body(body) {
+				this.body = body;
 			}
 		}
 		let global_parse_count = 0;
@@ -562,11 +562,11 @@ x: {
 				items.push([crate_attr_vec, null]);
 				for (let i = 0; i < out_arr.length; i++) {
 					let cur = out_arr[i];
-					if(cur.slice(0,2)==='//'){
-						cur='//';
+					if (cur.slice(0, 2) === '//') {
+						cur = '//';
 					}
-					let cont=do_item(cur,false);
-					if(cont){
+					let cont = do_item(cur, false);
+					if (cont) {
 						continue;
 					}
 					function parse_gt() {
@@ -589,7 +589,7 @@ x: {
 							i++;
 						}
 					}
-					function do_item(cur,has_pub){
+					function do_item(cur, has_pub) {
 						switch (cur) {
 							case '\n':
 								arr_item.push(cur);
@@ -664,8 +664,8 @@ x: {
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
-								x:while (!enditem.includes(cur = out_arr[i])) {
-									b:switch(cur){
+								x: while (!enditem.includes(cur = out_arr[i])) {
+									b: switch (cur) {
 										case 'impl':
 											arr_item.push(out_arr[i++]);
 											arr_item.push(out_arr[i++]);
@@ -678,8 +678,8 @@ x: {
 									i++;
 								}
 								arr_item.push(out_arr[i++]);
-								arr_item.push(cur=out_arr[i++]);
-								if(cur==='+'){
+								arr_item.push(cur = out_arr[i++]);
+								if (cur === '+') {
 									arr_item.push(out_arr[i++]);
 									arr_item.push(out_arr[i++]);
 									arr_item.push(out_arr[i++]);
@@ -718,14 +718,14 @@ x: {
 								i--;
 								return true;
 							case 'pub':
-								if(has_pub){
+								if (has_pub) {
 									throw Error('multiple pub keywords incorrect');
 								}
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
-								cur=out_arr[i];
-								let ii_ret=do_item(cur,true);
-								if(ii_ret === false){
+								cur = out_arr[i];
+								let ii_ret = do_item(cur, true);
+								if (ii_ret === false) {
 									debugger;
 								}
 								return true;
@@ -740,7 +740,7 @@ x: {
 						}
 						return false;
 					}
-					console.log('!', out_arr.slice(i-5,i+2));
+					console.log('!', out_arr.slice(i - 5, i + 2));
 					break;
 				}
 				return items;
@@ -768,15 +768,21 @@ x: {
 						console.log('!', cur);
 						break;
 					}
-					while (cur[1][0] === '\n') {
-						cur[1].splice(0, 1);
+					for (; ;) {
+						if (cur[1][0] === '\n') {
+							cur[1].splice(0, 1);
+							continue;
+						}
+						if (cur[1][0].slice(0, 2) === '//') {
+							cur_obj = new RustRawComment;
+							cur_obj.set_body(cur[1][0]);
+							out_vec.push(cur_obj);
+							cur[1].splice(0, 1);
+							continue;
+						}
+						break;
 					}
 					let kw_id = cur[1][0];
-					if(kw_id.slice(0,2)==='//'){
-						cur_obj = new RustRawComment;
-						cur_obj.set_body(cur);
-						out_vec.push(cur_obj);
-					}
 					switch (kw_id) {
 						case 'use':
 							cur_obj = new RustKWUse;
