@@ -527,9 +527,6 @@ x: {
 						cur = tt_arr.pop();
 					}
 					tt_arr.push(cur);
-					while (tt_arr.at(-1) === '\n' && tt_arr.at(-2) === '\n') {
-						tt_arr.pop();
-					}
 				}
 				arr.push(Symbol.for('EOF'));
 				return tt_arr;
