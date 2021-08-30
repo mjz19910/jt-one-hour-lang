@@ -493,7 +493,8 @@ x: {
 				return ret;
 			}
 			if(global_parse_count===2){
-				debugger;
+				console.log('error incomming');
+				//debugger;
 			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
 			console.log(out_arr,in_arr,global_parse_count);
@@ -514,6 +515,7 @@ x: {
 						let cti=rust_tt_end.indexOf(cur);
 						let sti=rust_tt_start.indexOf(tt_arr[0]);
 						if(cur!==rust_tt_end[sti]){
+							console.log(tt_arr.slice(-12));
 							throw Error('wrong type:'+cur+' want:'+rust_tt_end[sti]);
 						}
 						if(tt_arr[0]!==rust_tt_start[cti]){
