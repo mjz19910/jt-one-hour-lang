@@ -538,7 +538,12 @@ x: {
 							continue;
 						case '#!':
 							tags.push(out_arr[i++]);
-							tags.push(out_arr[i]);
+							tags.push(out_arr[i++]);
+							cur=out_arr[i++];
+							if(cur=='\n'){
+								tags.push(cur);
+							}
+							i--;
 							continue;
 						case '#':
 							tags.push(out_arr[i++]);
@@ -658,6 +663,11 @@ x: {
 			function react_exports(in_vec){
 				let out_vec=[];
 				let cur_obj=null;
+				for(let i=0;i<in_vec.length;i++){
+					let cur=in_vec[i];
+					console.log(cur[0],cur[1]);
+					break;
+				}
 			}
 			finish_parse(exp_arr);
 			function finish_parse(arr) {
