@@ -536,7 +536,6 @@ x: {
 				return tt_arr;
 			}
 			finalize_parse(out_arr = in_arr = tt_arr);
-			return;
 			function finalize_parse(arr) {
 				arr.push(Symbol.for('EOF'));
 			}
