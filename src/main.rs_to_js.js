@@ -748,7 +748,7 @@ x: {
 							out_vec.push(cur_obj);
 							continue;
 					}
-					console.log('!', kw_id);
+					console.log('!', kw_id, cur);
 					break;
 				}
 				return out_vec;
