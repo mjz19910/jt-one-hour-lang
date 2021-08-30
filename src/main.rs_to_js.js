@@ -266,7 +266,6 @@ x: {
 						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
-						console.log(cc);
 						if (cc === null) {
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
