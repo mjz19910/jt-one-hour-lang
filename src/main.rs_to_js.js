@@ -1218,7 +1218,7 @@ x: {
 			__rust.exec_lines(rust_code, __id);
 		}
 	}}`;
-	// filter out stuff we didn't use exec_lines while executing the template...
+	// filter out stuff we didn't call exec_lines during template execution...
 	__rust.scope.block_vec = __rust.scope.block_vec.filter(e => e.value.length > 0);
 	__rust.drop(__rust_root_scope);
 	__rust.crates = [];
