@@ -491,6 +491,7 @@ x: {
 				return ret;
 			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
+			debugger;
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -678,6 +679,7 @@ x: {
 							}
 							continue;
 					}
+					debugger;
 					console.log('!', [cur]);
 					break;
 				}
