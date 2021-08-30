@@ -815,6 +815,11 @@ x: {
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
+						case 'mod':
+							cur_obj = new RustKWMod;
+							cur_obj.set_tt_body_vec(cur[1]);
+							cur_obj.set_tt_attribute_vec(cur[0]);
+							out_vec.push(cur_obj);
 					}
 					console.log('!', kw_id, cur);
 					break;
