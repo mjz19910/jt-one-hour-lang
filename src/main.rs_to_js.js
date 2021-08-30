@@ -712,7 +712,7 @@ x: {
 						console.log('!', cur);
 						break;
 					}
-					if (cur[1][0] === '\n') {
+					while (cur[1][0] === '\n') {
 						cur[1].splice(0, 1);
 					}
 					let kw_id = cur[1][0];
