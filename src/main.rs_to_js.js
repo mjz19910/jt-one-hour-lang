@@ -234,6 +234,9 @@ x: {
 				let tok_arr = [];
 				let cur_regex = is_val_char;
 				let str_d_mat = /"(?:\\.|(?!").)+"/g;
+				function fs(l){
+					return str[mat_idx+l]
+				}
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -244,7 +247,10 @@ x: {
 					if (ci++ > 8192) {
 						break;
 					}
-					if (back(1) === '/' && cc[0] === '/') {
+					if(cc&&cc[0] === '/'){
+						console.log(bs(1));
+					}
+					if (fs(1) === '/' && cc[0] === '/') {
 						mat_idx = str.indexOf('\n', mat_idx);
 						tok_arr.push({
 							kind: 'line_comment',
@@ -421,6 +427,7 @@ x: {
 				return tok_arr;
 			}
 			tok_arr = parse_pass_1(tok_arr);
+			console.log(tok_arr);
 			function parse_pass_1(arr) {
 				let iter_index = 0;
 				let str_iter_index = 0;
@@ -485,6 +492,7 @@ x: {
 				}
 				return ret;
 			}
+			let tt_arr = tt_parse(tok_arr);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -529,7 +537,6 @@ x: {
 				}
 				return tt_arr;
 			}
-			let tt_arr = tt_parse(tok_arr);
 			finalize_parse(tt_arr);
 			function finalize_parse(arr) {
 				arr.push(Symbol.for('EOF'));
@@ -687,7 +694,7 @@ x: {
 				let cur_obj = null;
 				for (let i = 0; i < in_vec.length; i++) {
 					let cur = in_vec[i];
-					if(cur[1]===null&&cur[0][0][0]==='#!'){
+					if(cur[1]===null&&cur[0][0]&&cur[0][0][0]==='#!'){
 						cur_obj=new RustCrateScope;
 						cur_obj.set_tt_attribute_vec(cur[0]);
 						out_vec.push(cur_obj);
