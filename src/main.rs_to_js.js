@@ -560,7 +560,10 @@ x: {
 					if(cur.slice(0,2)==='//'){
 						cur='//';
 					}
-					do_item(cur,false);
+					let cont=do_item(cur,false);
+					if(cont){
+						continue;
+					}
 					function do_item(cur,has_pub){
 						switch (cur) {
 							case '\n':
@@ -572,7 +575,7 @@ x: {
 									tags = [];
 									in_defn = false;
 								}
-								continue;
+								return true;
 							case '#!':
 								tags.push(out_arr[i++]);
 								tags.push(out_arr[i++]);
@@ -583,11 +586,11 @@ x: {
 								crate_attr_vec.push(tags);
 								tags = [];
 								i--;
-								continue;
+								return true;
 							case '#':
 								tags.push(out_arr[i++]);
 								tags.push(out_arr[i]);
-								continue;
+								return true;
 							case 'use':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -598,7 +601,7 @@ x: {
 								}
 								in_defn = true;
 								i--;
-								continue;
+								return true;
 							case 'struct':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -611,7 +614,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								continue;
+								return true;
 							case 'impl':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -624,7 +627,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								continue;
+								return true;
 							case 'fn':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -667,10 +670,10 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								continue;
+								return true;
 							case ';':
 								arr_item.push(cur);
-								continue;
+								return true;
 							case 'enum':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -683,10 +686,10 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								continue;
+								return true;
 							case '//':
 								arr_item.push(out_arr[i]);
-								continue;
+								return true;
 							case 'mod':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -696,7 +699,7 @@ x: {
 								}
 								in_defn = true;
 								i--;
-								continue;
+								return true;
 							case 'pub':
 								if(has_pub){
 									throw Error('multiple pub keywords incorrect');
@@ -705,7 +708,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								cur=out_arr[i];
 								do_item(cur,true);
-								continue;
+								return true;
 							case Symbol.for('EOF'):
 								if (arr_item.length > 0) {
 									throw new Error('unexpected eof, arr_item not empty')
@@ -713,7 +716,7 @@ x: {
 								if (tags.length > 0) {
 									items.push([tags, null]);
 								}
-								continue;
+								return true;
 						}
 					}
 					console.log('!', [cur]);
