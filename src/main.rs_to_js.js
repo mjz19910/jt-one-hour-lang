@@ -493,7 +493,7 @@ x: {
 				return ret;
 			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
-			console.log(out_arr, in_arr, global_parse_count);
+			//console.log(out_arr, in_arr, global_parse_count);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -674,10 +674,13 @@ x: {
 									i++;
 								}
 								arr_item.push(out_arr[i++]);
-								cur=out_arr[i];
-								i++;
+								arr_item.push(cur=out_arr[i++]);
+								if(cur==='+'){
+									arr_item.push(out_arr[i++]);
+									arr_item.push(out_arr[i++]);
+									arr_item.push(out_arr[i++]);
+								}
 								arr_item.push(out_arr[i++]);
-								console.log(cur,arr_item);
 								in_defn = true;
 								i--;
 								return true;
