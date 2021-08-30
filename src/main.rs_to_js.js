@@ -247,9 +247,6 @@ x: {
 					if (ci++ > 8192) {
 						break;
 					}
-					if(cc&&cc[0] === '/'){
-						console.log(bs(1));
-					}
 					if (fs(1) === '/' && cc[0] === '/') {
 						mat_idx = str.indexOf('\n', mat_idx);
 						tok_arr.push({
