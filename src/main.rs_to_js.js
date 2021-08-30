@@ -2458,6 +2458,15 @@ x: {
 		}
 	}
 	`;
+	rr`${function scope_push(parse_pass) {
+		if (parse_pass === 0) {
+			scope_push.block_id = block_id++;
+		}
+		let __id = scope_push.block_id;
+		if (parse_pass === 1) {
+			__rust.exec_lines(rust_code, __id);
+		}
+	}}`;
 	__rust.drop(__rust_root_scope);
 	__rust.scope.files = [];
 	__rust.scope.files.push(['rustc_lexer/lib.rs', __rust.scope.block_vec]);
