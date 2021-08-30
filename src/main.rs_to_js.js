@@ -490,7 +490,7 @@ x: {
 				}
 				return ret;
 			}
-			let tt_arr = out_arr = finalize_parse(tt_parse(in_arr = tok_arr));
+			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -533,11 +533,8 @@ x: {
 						tt_arr.pop();
 					}
 				}
-				return tt_arr;
-			}
-			function finalize_parse(arr) {
 				arr.push(Symbol.for('EOF'));
-				return arr;
+				return tt_arr;
 			}
 			let exp_arr = out_arr = export_scope(in_arr = tt_arr);
 			function export_scope(out_arr) {
