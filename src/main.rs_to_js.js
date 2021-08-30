@@ -491,7 +491,7 @@ x: {
 				return ret;
 			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
-			debugger;
+			console.log(out_arr,in_arr);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -525,9 +525,6 @@ x: {
 						let ea = cur.split('');
 						tt_arr.push(...ea);
 						cur = tt_arr.pop();
-					}
-					if (cur === '\n' && tt_arr[tt_arr.lenght - 1] === cur) {
-						continue;
 					}
 					tt_arr.push(cur);
 					while (tt_arr.at(-1) === '\n' && tt_arr.at(-2) === '\n') {
