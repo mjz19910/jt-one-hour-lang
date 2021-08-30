@@ -564,6 +564,26 @@ x: {
 					if(cont){
 						continue;
 					}
+					function parse_gt() {
+						arr_item.push(cur);
+						i++;
+						wl: for (; ;) {
+							cur = out_arr[i];
+							if (cur === '<') {
+								arr_item.push(cur);
+								cur = out_arr[++i];
+								arr_item.push(cur);
+								i++;
+								cur = out_arr[i];
+								parse_gt();
+							}
+							if (cur === '>') {
+								break wl;
+							}
+							arr_item.push(cur);
+							i++;
+						}
+					}
 					function do_item(cur,has_pub){
 						switch (cur) {
 							case '\n':
@@ -639,26 +659,6 @@ x: {
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
-								function parse_gt() {
-									arr_item.push(cur);
-									i++;
-									wl: for (; ;) {
-										cur = out_arr[i];
-										if (cur === '<') {
-											arr_item.push(cur);
-											cur = out_arr[++i];
-											arr_item.push(cur);
-											i++;
-											cur = out_arr[i];
-											parse_gt();
-										}
-										if (cur === '>') {
-											break wl;
-										}
-										arr_item.push(cur);
-										i++;
-									}
-								}
 								x:while (!enditem.includes(cur = out_arr[i])) {
 									b:switch(cur){
 										case 'impl':
