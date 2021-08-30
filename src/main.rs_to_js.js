@@ -266,10 +266,28 @@ x: {
 						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
+						console.log(cc);
 						if (cc === null) {
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
 							cc = mat_str.exec(str);
+							console.log('m2',cc);
+							mat_idx += cc[0].length;
+							tok_arr.push({
+								kind: {
+									type: 'Char',
+									terminated: true
+								},
+								len: cc[0].length,
+							});
+							cur_regex.lastIndex = mat_idx;
+							continue;
+						}
+						if(cc[1]==="'"){
+							let mat_str = /'(\\.|((?!').))+?'/g;
+							mat_str.lastIndex = mat_idx;
+							cc = mat_str.exec(str);
+							console.log('m1',cc);
 							mat_idx += cc[0].length;
 							tok_arr.push({
 								kind: {
@@ -491,10 +509,6 @@ x: {
 					}
 				}
 				return ret;
-			}
-			if(global_parse_count===2){
-				console.log('error incomming');
-				//debugger;
 			}
 			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
 			console.log(out_arr,in_arr,global_parse_count);
