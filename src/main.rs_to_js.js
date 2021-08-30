@@ -687,11 +687,15 @@ x: {
 				let cur_obj = null;
 				for (let i = 0; i < in_vec.length; i++) {
 					let cur = in_vec[i];
-					if(cur[1]===null){
+					if(cur[1]===null&&cur[0][0][0]==='#!'){
 						cur_obj=new RustCrateScope;
 						cur_obj.set_tt_attribute_vec(cur[0]);
 						out_vec.push(cur_obj);
 						continue;
+					}
+					if(cur[1]===null){
+						console.log('!',cur);
+						break;
 					}
 					if (cur[1][0] === '\n') {
 						cur[1].splice(0, 1);
