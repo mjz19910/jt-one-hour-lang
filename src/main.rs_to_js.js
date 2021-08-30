@@ -193,11 +193,19 @@ x: {
 			ts = performance.now();
 			return ret;
 		}
-		class RustKWUse { };
-		class RustKWEnum { };
-		class RustKWStruct { };
-		class RustKWImpl { };
-		class RustKWFn { };
+		class RustKw {
+			set_tt_body_vec(arr){
+				this.tt_body_vec=arr;
+			}
+			set_tt_attribute_vec(arr){
+				this.tt_attribute_vec=arr;
+			}
+		}
+		class RustKWUse extends RustKw { };
+		class RustKWEnum extends RustKw { };
+		class RustKWStruct extends RustKw { };
+		class RustKWImpl extends RustKw { };
+		class RustKWFn extends RustKw { };
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
@@ -677,18 +685,38 @@ x: {
 					switch (kw_id) {
 						case 'use':
 							console.log(kw_id);
+							cur_obj=new RustKWUse;
+							cur_obj.set_tt_body(cur[1]);
+							cur_obj.set_attribute(cur[0]);
+							out_vec.push(cur_obj);
 							continue;
 						case 'enum':
 							console.log(kw_id);
+							cur_obj=new RustKWEnum;
+							cur_obj.set_tt_body(cur[1]);
+							cur_obj.set_attribute(cur[0]);
+							out_vec.push(cur_obj);
 							continue;
 						case 'struct':
 							console.log(kw_id);
+							cur_obj=new RustKWStruct;
+							cur_obj.set_tt_body(cur[1]);
+							cur_obj.set_attribute(cur[0]);
+							out_vec.push(cur_obj);
 							continue;
 						case 'impl':
 							console.log(kw_id);
+							cur_obj=new RustKWImpl;
+							cur_obj.set_tt_body(cur[1]);
+							cur_obj.set_attribute(cur[0]);
+							out_vec.push(cur_obj);
 							continue;
 						case 'fn':
 							console.log(kw_id);
+							cur_obj=new RustKWFn;
+							cur_obj.set_tt_body(cur[1]);
+							cur_obj.set_attribute(cur[0]);
+							out_vec.push(cur_obj);
 							continue;
 					}
 					console.log('!', kw_id);
