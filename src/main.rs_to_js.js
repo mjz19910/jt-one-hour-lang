@@ -557,136 +557,164 @@ x: {
 				items.push([crate_attr_vec, null]);
 				for (let i = 0; i < out_arr.length; i++) {
 					let cur = out_arr[i];
-					switch (cur) {
-						case '\n':
-							arr_item.push(cur);
-							if (in_defn) {
-								//console.log(tags, arr_item);
-								items.push([tags, arr_item]);
-								arr_item = [];
+					if(cur.slice(0,2)==='//'){
+						cur='//';
+					}
+					do_item(cur,false);
+					function do_item(cur,has_pub){
+						switch (cur) {
+							case '\n':
+								arr_item.push(cur);
+								if (in_defn) {
+									//console.log(tags, arr_item);
+									items.push([tags, arr_item]);
+									arr_item = [];
+									tags = [];
+									in_defn = false;
+								}
+								continue;
+							case '#!':
+								tags.push(out_arr[i++]);
+								tags.push(out_arr[i++]);
+								cur = out_arr[i++];
+								if (cur == '\n') {
+									tags.push(cur);
+								}
+								crate_attr_vec.push(tags);
 								tags = [];
-								in_defn = false;
-							}
-							continue;
-						case '#!':
-							tags.push(out_arr[i++]);
-							tags.push(out_arr[i++]);
-							cur = out_arr[i++];
-							if (cur == '\n') {
-								tags.push(cur);
-							}
-							crate_attr_vec.push(tags);
-							tags = [];
-							i--;
-							continue;
-						case '#':
-							tags.push(out_arr[i++]);
-							tags.push(out_arr[i]);
-							continue;
-						case 'use':
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							while (!enditem.includes(cur = out_arr[i])) {
-								arr_item.push(cur);
-								i++;
-							}
-							in_defn = true;
-							i--;
-							continue;
-						case 'struct':
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							while (!enditem.includes(cur = out_arr[i])) {
-								arr_item.push(cur);
-								i++;
-							}
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							in_defn = true;
-							i--;
-							continue;
-						case 'impl':
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							while (!enditem.includes(cur = out_arr[i])) {
-								arr_item.push(cur);
-								i++;
-							}
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							in_defn = true;
-							i--;
-							continue;
-						case 'fn':
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							while (!enditem.includes(cur = out_arr[i])) {
-								arr_item.push(cur);
-								i++;
-							}
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							function parse_gt() {
-								arr_item.push(cur);
-								i++;
-								wl: for (; ;) {
-									cur = out_arr[i];
-									if (cur === '<') {
-										arr_item.push(cur);
-										cur = out_arr[++i];
+								i--;
+								continue;
+							case '#':
+								tags.push(out_arr[i++]);
+								tags.push(out_arr[i]);
+								continue;
+							case 'use':
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								while (!enditem.includes(cur = out_arr[i])) {
+									arr_item.push(cur);
+									i++;
+								}
+								in_defn = true;
+								i--;
+								continue;
+							case 'struct':
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								while (!enditem.includes(cur = out_arr[i])) {
+									arr_item.push(cur);
+									i++;
+								}
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								in_defn = true;
+								i--;
+								continue;
+							case 'impl':
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								while (!enditem.includes(cur = out_arr[i])) {
+									arr_item.push(cur);
+									i++;
+								}
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								in_defn = true;
+								i--;
+								continue;
+							case 'fn':
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								while (!enditem.includes(cur = out_arr[i])) {
+									arr_item.push(cur);
+									i++;
+								}
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								function parse_gt() {
+									arr_item.push(cur);
+									i++;
+									wl: for (; ;) {
+										cur = out_arr[i];
+										if (cur === '<') {
+											arr_item.push(cur);
+											cur = out_arr[++i];
+											arr_item.push(cur);
+											i++;
+											cur = out_arr[i];
+											parse_gt();
+										}
+										if (cur === '>') {
+											break wl;
+										}
 										arr_item.push(cur);
 										i++;
-										cur = out_arr[i];
-										parse_gt();
 									}
-									if (cur === '>') {
-										break wl;
+								}
+								while (!enditem.includes(cur = out_arr[i])) {
+									if (cur === '<') {
+										parse_gt();
 									}
 									arr_item.push(cur);
 									i++;
 								}
-							}
-							while (!enditem.includes(cur = out_arr[i])) {
-								if (cur === '<') {
-									parse_gt();
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								in_defn = true;
+								i--;
+								continue;
+							case ';':
+								arr_item.push(cur);
+								continue;
+							case 'enum':
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								while (!enditem.includes(cur = out_arr[i])) {
+									arr_item.push(cur);
+									i++;
 								}
-								arr_item.push(cur);
-								i++;
-							}
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							in_defn = true;
-							i--;
-							continue;
-						case ';':
-							arr_item.push(cur);
-							continue;
-						case 'enum':
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							while (!enditem.includes(cur = out_arr[i])) {
-								arr_item.push(cur);
-								i++;
-							}
-							arr_item.push(out_arr[i++]);
-							arr_item.push(out_arr[i++]);
-							in_defn = true;
-							i--;
-							continue;
-						case Symbol.for('EOF'):
-							if (arr_item.length > 0) {
-								throw new Error('unexpected eof, arr_item not empty')
-							}
-							if (tags.length > 0) {
-								items.push([tags, null]);
-							}
-							continue;
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								in_defn = true;
+								i--;
+								continue;
+							case '//':
+								arr_item.push(out_arr[i]);
+								continue;
+							case 'mod':
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								while (!enditem.includes(cur = out_arr[i])) {
+									arr_item.push(cur);
+									i++;
+								}
+								in_defn = true;
+								i--;
+								continue;
+							case 'pub':
+								if(has_pub){
+									throw Error('multiple pub keywords incorrect');
+								}
+								arr_item.push(out_arr[i++]);
+								arr_item.push(out_arr[i++]);
+								cur=out_arr[i];
+								do_item(cur,true);
+								continue;
+							case Symbol.for('EOF'):
+								if (arr_item.length > 0) {
+									throw new Error('unexpected eof, arr_item not empty')
+								}
+								if (tags.length > 0) {
+									items.push([tags, null]);
+								}
+								continue;
+						}
 					}
 					console.log('!', [cur]);
 					break;
@@ -2488,6 +2516,7 @@ x: {
 			}
 		}
 	}}`;
+	__rust.scope.block_vec = __rust.scope.block_vec.filter(e => e.value.length > 0);
 	__rust.drop(__rust_root_scope);
 	__rust.scope.files = [];
 	__rust.scope.files.push(['rustc_lexer/lib.rs', __rust.scope.block_vec]);
