@@ -193,6 +193,11 @@ x: {
 			ts = performance.now();
 			return ret;
 		}
+		class RustKWUse { };
+		class RustKWEnum { };
+		class RustKWStruct { };
+		class RustKWImpl { };
+		class RustKWFn { };
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
@@ -513,10 +518,10 @@ x: {
 			}
 			let tt_arr = tt_parse(tok_arr);
 			finalize_parse(tt_arr);
-			function finalize_parse(arr){
+			function finalize_parse(arr) {
 				arr.push(Symbol.for('EOF'));
 			}
-			let exp_arr=export_scope(tt_arr);
+			let exp_arr = export_scope(tt_arr);
 			function export_scope(out_arr) {
 				let in_defn;
 				let tags = [];
@@ -528,19 +533,19 @@ x: {
 					switch (cur) {
 						case '\n':
 							arr_item.push(cur);
-							if(in_defn){
+							if (in_defn) {
 								//console.log(tags, arr_item);
 								items.push([tags, arr_item]);
 								arr_item = [];
 								tags = [];
-								in_defn=false;
+								in_defn = false;
 							}
 							continue;
 						case '#!':
 							tags.push(out_arr[i++]);
 							tags.push(out_arr[i++]);
-							cur=out_arr[i++];
-							if(cur=='\n'){
+							cur = out_arr[i++];
+							if (cur == '\n') {
 								tags.push(cur);
 							}
 							i--;
@@ -557,7 +562,7 @@ x: {
 								arr_item.push(cur);
 								i++;
 							}
-							in_defn=true;
+							in_defn = true;
 							i--;
 							continue;
 						case 'struct':
@@ -570,7 +575,7 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							in_defn=true;
+							in_defn = true;
 							i--;
 							continue;
 						case 'impl':
@@ -583,7 +588,7 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							in_defn=true;
+							in_defn = true;
 							i--;
 							continue;
 						case 'fn':
@@ -597,12 +602,12 @@ x: {
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							function parse_gt(){
+							function parse_gt() {
 								arr_item.push(cur);
 								i++;
-								wl:for(;;){
+								wl: for (; ;) {
 									cur = out_arr[i];
-									if(cur==='<'){
+									if (cur === '<') {
 										arr_item.push(cur);
 										cur = out_arr[++i];
 										arr_item.push(cur);
@@ -610,7 +615,7 @@ x: {
 										cur = out_arr[i];
 										parse_gt();
 									}
-									if(cur==='>'){
+									if (cur === '>') {
 										break wl;
 									}
 									arr_item.push(cur);
@@ -618,7 +623,7 @@ x: {
 								}
 							}
 							while (!enditem.includes(cur = out_arr[i])) {
-								if(cur==='<'){
+								if (cur === '<') {
 									parse_gt();
 								}
 								arr_item.push(cur);
@@ -626,7 +631,7 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							in_defn=true;
+							in_defn = true;
 							i--;
 							continue;
 						case ';':
@@ -642,14 +647,14 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
-							in_defn=true;
+							in_defn = true;
 							i--;
 							continue;
 						case Symbol.for('EOF'):
-							if(arr_item.length>0){
+							if (arr_item.length > 0) {
 								throw new Error('unexpected eof, arr_item not empty')
 							}
-							if(tags.length>0){
+							if (tags.length > 0) {
 								items.push([tags, null]);
 							}
 							continue;
@@ -659,13 +664,34 @@ x: {
 				return items;
 
 			}
-			let res_vec=react_exports(exp_arr);
-			function react_exports(in_vec){
-				let out_vec=[];
-				let cur_obj=null;
-				for(let i=0;i<in_vec.length;i++){
-					let cur=in_vec[i];
-					console.log(cur[0],cur[1]);
+			let res_vec = react_exports(exp_arr);
+			function react_exports(in_vec) {
+				let out_vec = [];
+				let cur_obj = null;
+				for (let i = 0; i < in_vec.length; i++) {
+					let cur = in_vec[i];
+					if (cur[1][0] === '\n') {
+						cur[1].splice(0, 1);
+					}
+					let kw_id = cur[1][0];
+					switch (kw_id) {
+						case 'use':
+							console.log(kw_id);
+							continue;
+						case 'enum':
+							console.log(kw_id);
+							continue;
+						case 'struct':
+							console.log(kw_id);
+							continue;
+						case 'impl':
+							console.log(kw_id);
+							continue;
+						case 'fn':
+							console.log(kw_id);
+							continue;
+					}
+					console.log('!', kw_id);
 					break;
 				}
 			}
