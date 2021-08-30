@@ -206,7 +206,7 @@ x: {
 		class RustKWStruct extends RustKW { };
 		class RustKWImpl extends RustKW { };
 		class RustKWFn extends RustKW { };
-		class RustKWMod extends RustKW {};
+		class RustKWMod extends RustKW { };
 		class RustCrateScope {
 			set_tt_attribute_vec(arr) {
 				this.tt_attribute_vec = arr;
