@@ -566,8 +566,8 @@ x: {
 					if (cur.slice(0, 2) === '//') {
 						cur = '//';
 					}
-					let cont = do_item(cur, false);
-					if (cont) {
+					let ret = do_item(cur, false);
+					if (ret) {
 						continue;
 					}
 					function parse_gt() {
@@ -820,6 +820,7 @@ x: {
 							cur_obj.set_tt_body_vec(cur[1]);
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
+							continue;
 					}
 					console.log('!', kw_id, cur);
 					break;
