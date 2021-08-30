@@ -437,7 +437,7 @@ x: {
 				let iter_index = 0;
 				let str_iter_index = 0;
 				let tok_arr = [];
-				for (; iter_index < arr.length; iter_index++) {
+				for (;iter_index < arr.length;iter_index++) {
 					let cur_tok = arr[iter_index];
 					if (cur_tok.kind === '_char') {
 						let ed = str_iter_index + cur_tok.len;
@@ -465,7 +465,7 @@ x: {
 				function b() {
 					return ret?.[ret.length - 1];
 				}
-				for (let i = 0; i < arr.length; i++) {
+				for (let i = 0;i < arr.length;i++) {
 					ret.push(arr[i]);
 					if (a() === ':' && b() === ':') {
 						ret.pop();
@@ -483,13 +483,13 @@ x: {
 						ret.push('#' + '[]'[0]);
 					}
 					if (!valid_tt && c(3) === '#' && c(2) === '!' && c(1) === '[]'[0]) {
-						for (let x = 0; x < 3; x++) {
+						for (let x = 0;x < 3;x++) {
 							ret.pop();
 						}
 						ret.push('#!' + '[]'[0]);
 					}
 					if (valid_tt && c(2) === '#' && c(1) === '!') {
-						for (let x = 0; x < 2; x++) {
+						for (let x = 0;x < 2;x++) {
 							ret.pop();
 						}
 						ret.push('#!');
@@ -503,7 +503,7 @@ x: {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
 				let tt_stack = [];
-				for (let cur, i = 0; i < arr.length; i++) {
+				for (let cur, i = 0;i < arr.length;i++) {
 					cur = arr[i];
 					if (rust_tt_start.includes(cur)) {
 						tt_stack.push(tt_arr);
@@ -560,7 +560,7 @@ x: {
 				let items = [];
 				let crate_attr_vec = [];
 				items.push([crate_attr_vec, null]);
-				for (let i = 0; i < out_arr.length; i++) {
+				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
 					if (cur.slice(0, 2) === '//') {
 						cur = '//';
@@ -572,7 +572,7 @@ x: {
 					function parse_gt() {
 						arr_item.push(cur);
 						i++;
-						wl: for (; ;) {
+						wl: for (;;) {
 							cur = out_arr[i];
 							if (cur === '<') {
 								arr_item.push(cur);
@@ -750,7 +750,7 @@ x: {
 			function react_exports(in_vec) {
 				let out_vec = [];
 				let cur_obj = null;
-				for (let i = 0; i < in_vec.length; i++) {
+				for (let i = 0;i < in_vec.length;i++) {
 					let cur = in_vec[i];
 					if (cur[1] === null && cur[0] instanceof Array) {
 						cur_obj = new RustCrateScope;
@@ -768,7 +768,7 @@ x: {
 						console.log('!', cur);
 						break;
 					}
-					for (; ;) {
+					for (;;) {
 						if (cur[1][0] === '\n') {
 							cur[1].splice(0, 1);
 							continue;
@@ -837,7 +837,7 @@ x: {
 		__rust.log_lines = function(callback_function) {
 			let rs_lines = [[]];
 			let src_arr = this.last_exec;
-			for (let i = 0, ri = 0; i < src_arr.length; i++) {
+			for (let i = 0, ri = 0;i < src_arr.length;i++) {
 				rs_lines[ri].push(src_arr[i]);
 				if (src_arr[i] === '\n') {
 					console.log(rs_lines[ri]);
@@ -2644,7 +2644,7 @@ x: {
 		}
 		let cur;
 		let in_comment_prev = false;
-		for (; cur = regex.exec(input);) {
+		for (;cur = regex.exec(input);) {
 			let iter = accept_result(cur, str_loc);
 			let str0 = iter.next().value;
 			str_loc = iter.next().value;
