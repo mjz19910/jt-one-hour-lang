@@ -514,11 +514,11 @@ x: {
 						tt_arr.push(cur);
 						continue;
 					}
-					if (cur.match(/[ ]/)) {
+					if (cur.match(/^[ ]/)) {
 						tt_arr.push(cur);
 						continue;
 					}
-					if (cur.match(/[\t]/)) {
+					if (cur.match(/^[\t]/)) {
 						continue;
 					}
 					if (cur.match(/^[\n][\n]+/)) {
