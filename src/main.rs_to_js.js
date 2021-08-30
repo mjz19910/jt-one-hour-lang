@@ -678,52 +678,51 @@ x: {
 				let cur_obj = null;
 				for (let i = 0; i < in_vec.length; i++) {
 					let cur = in_vec[i];
+					if(cur[1]===null){
+						out_vec.push(cur);
+					}
 					if (cur[1][0] === '\n') {
 						cur[1].splice(0, 1);
 					}
 					let kw_id = cur[1][0];
 					switch (kw_id) {
 						case 'use':
-							console.log(kw_id);
 							cur_obj=new RustKWUse;
-							cur_obj.set_tt_body(cur[1]);
-							cur_obj.set_attribute(cur[0]);
+							cur_obj.set_tt_body_vec(cur[1]);
+							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'enum':
-							console.log(kw_id);
 							cur_obj=new RustKWEnum;
-							cur_obj.set_tt_body(cur[1]);
-							cur_obj.set_attribute(cur[0]);
+							cur_obj.set_tt_body_vec(cur[1]);
+							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'struct':
-							console.log(kw_id);
 							cur_obj=new RustKWStruct;
-							cur_obj.set_tt_body(cur[1]);
-							cur_obj.set_attribute(cur[0]);
+							cur_obj.set_tt_body_vec(cur[1]);
+							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'impl':
-							console.log(kw_id);
 							cur_obj=new RustKWImpl;
-							cur_obj.set_tt_body(cur[1]);
-							cur_obj.set_attribute(cur[0]);
+							cur_obj.set_tt_body_vec(cur[1]);
+							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'fn':
-							console.log(kw_id);
 							cur_obj=new RustKWFn;
-							cur_obj.set_tt_body(cur[1]);
-							cur_obj.set_attribute(cur[0]);
+							cur_obj.set_tt_body_vec(cur[1]);
+							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 					}
-					console.log('!', kw_id);
+					console.log('!',kw_id);
 					break;
 				}
+				return out_vec;
 			}
-			finish_parse(exp_arr);
+			finish_parse(res_vec);
 			function finish_parse(arr) {
 				__rust.scope.block_vec[block_id_of_str] ??= [];
 				let block = __rust.scope.block_vec[block_id_of_str];
