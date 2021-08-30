@@ -271,7 +271,6 @@ x: {
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
 							cc = mat_str.exec(str);
-							console.log('m2',cc);
 							mat_idx += cc[0].length;
 							tok_arr.push({
 								kind: {
@@ -287,7 +286,6 @@ x: {
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
 							cc = mat_str.exec(str);
-							console.log('m1',cc);
 							mat_idx += cc[0].length;
 							tok_arr.push({
 								kind: {
