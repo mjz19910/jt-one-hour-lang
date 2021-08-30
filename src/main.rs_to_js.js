@@ -707,7 +707,10 @@ x: {
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
 								cur=out_arr[i];
-								do_item(cur,true);
+								let ii_ret=do_item(cur,true);
+								if(ii_ret === false){
+									debugger;
+								}
 								return true;
 							case Symbol.for('EOF'):
 								if (arr_item.length > 0) {
