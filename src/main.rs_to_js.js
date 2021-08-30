@@ -2464,7 +2464,7 @@ x: {
 		}
 		let __id = scope_push.block_id;
 		if (parse_pass === 1) {
-			__rust.exec_lines(rust_code, __id);
+			__rust.exec_lines(rustc_lexer_lib_file, __id);
 		}
 	}}`;
 	__rust.drop(__rust_root_scope);
