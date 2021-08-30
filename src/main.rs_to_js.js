@@ -193,7 +193,7 @@ x: {
 			ts = performance.now();
 			return ret;
 		}
-		class RustKw {
+		class RustKW {
 			set_tt_body_vec(arr) {
 				this.tt_body_vec = arr;
 			}
@@ -201,11 +201,12 @@ x: {
 				this.tt_attribute_vec = arr;
 			}
 		}
-		class RustKWUse extends RustKw { };
-		class RustKWEnum extends RustKw { };
-		class RustKWStruct extends RustKw { };
-		class RustKWImpl extends RustKw { };
-		class RustKWFn extends RustKw { };
+		class RustKWUse extends RustKW { };
+		class RustKWEnum extends RustKW { };
+		class RustKWStruct extends RustKW { };
+		class RustKWImpl extends RustKW { };
+		class RustKWFn extends RustKW { };
+		class RustKWMod extends RustKW {};
 		class RustCrateScope {
 			set_tt_attribute_vec(arr) {
 				this.tt_attribute_vec = arr;
