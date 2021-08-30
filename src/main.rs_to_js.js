@@ -770,23 +770,26 @@ x: {
 						console.log('!', cur);
 						break;
 					}
-					for (;;) {
-						if (cur[1][0] === '\n') {
-							cur[1].splice(0, 1);
-							continue;
+					x: for (;;) {
+						y: {
+							if (cur[1][0] === '\n') {
+								break y;
+							}
+							if (cur[1][0].slice(0, 2) === '//') {
+								cur_obj = new RustRawComment;
+								cur_obj.set_body(cur[1][0]);
+								out_vec.push(cur_obj);
+								break y;
+							}
+							if (cur[1][0] === 'pub') {
+								out_vec.push(new RustKWPub);
+								break y;
+							}
+							break;
 						}
-						if (cur[1][0].slice(0, 2) === '//') {
-							cur_obj = new RustRawComment;
-							cur_obj.set_body(cur[1][0]);
-							out_vec.push(cur_obj);
-							cur[1].splice(0, 1);
-							continue;
-						}
-						if(cur[1][0] === 'pub'){
-							out_vec.push(new RustKWPub);
-							continue;
-						}
-						break;
+						cur[1].splice(0, 1);
+						continue;
+
 					}
 					let kw_id = cur[1][0];
 					switch (kw_id) {
