@@ -512,6 +512,10 @@ x: {
 				return tt_arr;
 			}
 			let tt_arr = tt_parse(tok_arr);
+			finalize_parse(tt_arr);
+			function finalize_parse(arr){
+				arr.push(Symbol.for('EOF'));
+			}
 			let exp_arr=export_scope(tt_arr);
 			function export_scope(out_arr) {
 				let in_defn;
@@ -636,15 +640,27 @@ x: {
 							in_defn=true;
 							i--;
 							continue;
+						case Symbol.for('EOF'):
+							if(arr_item.length>0){
+								throw new Error('unexpected eof, arr_item not empty')
+							}
+							if(tags.length>0){
+								items.push([tags, null]);
+							}
+							continue;
 					}
 					break;
 				}
 				return items;
 
 			}
+			let res_vec=react_exports(exp_arr);
+			function react_exports(in_vec){
+				let out_vec=[];
+				let cur_obj=null;
+			}
 			finish_parse(exp_arr);
 			function finish_parse(arr) {
-				arr.push(Symbol.for('EOF'));
 				__rust.scope.block_vec[block_id_of_str] ??= [];
 				let block = __rust.scope.block_vec[block_id_of_str];
 				if (!block.push) {
