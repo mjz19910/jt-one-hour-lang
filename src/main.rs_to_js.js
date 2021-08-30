@@ -673,7 +673,6 @@ x: {
 							}
 							continue;
 					}
-					debugger;
 					console.log('!', [cur]);
 					break;
 				}
