@@ -263,7 +263,7 @@ x: {
 					};
 					x: if (cc && cc[0] === "'") {
 						//could be lifetime
-						let mat_lt = /^'[a-zA-Z_0-9]+?(')?/g;
+						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
 						if (cc === null) {
@@ -500,7 +500,7 @@ x: {
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
-				let tt_stack = [tt_arr];
+				let tt_stack = [];
 				for (let cur, i = 0; i < arr.length; i++) {
 					cur = arr[i];
 					if (rust_tt_start.includes(cur)) {
