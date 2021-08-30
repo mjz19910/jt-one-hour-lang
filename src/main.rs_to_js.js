@@ -266,22 +266,7 @@ x: {
 						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
-						if (cc === null) {
-							let mat_str = /'(\\.|((?!').))+?'/g;
-							mat_str.lastIndex = mat_idx;
-							cc = mat_str.exec(str);
-							mat_idx += cc[0].length;
-							tok_arr.push({
-								kind: {
-									type: 'Char',
-									terminated: true
-								},
-								len: cc[0].length,
-							});
-							cur_regex.lastIndex = mat_idx;
-							continue;
-						}
-						if(cc[1]==="'"){
+						if (cc === null||cc[1]==="'") {
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
 							cc = mat_str.exec(str);
