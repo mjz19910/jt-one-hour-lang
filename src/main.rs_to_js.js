@@ -263,7 +263,7 @@ x: {
 					};
 					x: if (cc && cc[0] === "'") {
 						//could be lifetime
-						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
+						let mat_lt = /^'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
 						if (cc === null) {
@@ -511,6 +511,14 @@ x: {
 					if (rust_tt_end.includes(cur)) {
 						let tt_tmp = tt_arr;
 						tt_arr.push(cur);
+						let cti=rust_tt_end.indexOf(cur);
+						let sti=rust_tt_start.indexOf(tt_arr[0]);
+						if(cur!==rust_tt_end[sti]){
+							throw Error('wrong type:'+cur+' want:'+rust_tt_end[sti]);
+						}
+						if(tt_arr[0]!==rust_tt_start[cti]){
+							throw Error('wrong type:'+tt_arr[0]+' want:'+rust_tt_start[cti]);
+						}
 						tt_arr = tt_stack.pop();
 						tt_arr.push(tt_tmp);
 						continue;
@@ -1222,7 +1230,11 @@ x: {
 		}
 		let __id = scope_push.block_id;
 		if (parse_pass === 1) {
-			__rust.exec_lines(rust_code, __id);
+			try{
+				__rust.exec_lines(rust_code, __id);
+			}catch(e){
+				console.log(e);
+			}
 		}
 	}}`;
 	// filter out stuff we didn't call exec_lines on during template execution...
@@ -2471,7 +2483,11 @@ x: {
 		}
 		let __id = scope_push.block_id;
 		if (parse_pass === 1) {
-			__rust.exec_lines(rustc_lexer_lib_file, __id);
+			try{
+				__rust.exec_lines(rustc_lexer_lib_file, __id);
+			}catch(e){
+				console.log(e);
+			}
 		}
 	}}`;
 	__rust.drop(__rust_root_scope);
