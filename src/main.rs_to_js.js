@@ -194,11 +194,11 @@ x: {
 			return ret;
 		}
 		class RustKw {
-			set_tt_body_vec(arr){
-				this.tt_body_vec=arr;
+			set_tt_body_vec(arr) {
+				this.tt_body_vec = arr;
 			}
-			set_tt_attribute_vec(arr){
-				this.tt_attribute_vec=arr;
+			set_tt_attribute_vec(arr) {
+				this.tt_attribute_vec = arr;
 			}
 		}
 		class RustKWUse extends RustKw { };
@@ -207,8 +207,8 @@ x: {
 		class RustKWImpl extends RustKw { };
 		class RustKWFn extends RustKw { };
 		class RustCrateScope {
-			set_tt_attribute_vec(arr){
-				this.tt_attribute_vec=arr;
+			set_tt_attribute_vec(arr) {
+				this.tt_attribute_vec = arr;
 			}
 		};
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
@@ -218,6 +218,8 @@ x: {
 			}
 			let val_acc = [];
 			let tok_arr;
+			let in_arr;
+			let out_arr;
 			let cur;
 			let ci = 0;
 			let mat_idx = 0;
@@ -229,13 +231,13 @@ x: {
 			function bump() {
 				mat_idx++;
 			}
-			tok_arr = parse_pass_0(str);
+			tok_arr = out_arr = parse_pass_0(str);
 			function parse_pass_0(str) {
 				let tok_arr = [];
 				let cur_regex = is_val_char;
 				let str_d_mat = /"(?:\\.|(?!").)+"/g;
-				function fs(l){
-					return str[mat_idx+l]
+				function fs(l) {
+					return str[mat_idx + l]
 				}
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
@@ -251,9 +253,9 @@ x: {
 						mat_idx = str.indexOf('\n', mat_idx);
 						tok_arr.push({
 							kind: 'line_comment',
-							len: mat_idx - is_val_char.lastIndex + 2,
+							len: mat_idx - is_val_char.lastIndex + 1,
 						});
-						is_val_char.lastIndex = mat_idx + 1;
+						is_val_char.lastIndex = mat_idx;
 						val_acc = [];
 						continue;
 					};
@@ -423,8 +425,7 @@ x: {
 				}
 				return tok_arr;
 			}
-			tok_arr = parse_pass_1(tok_arr);
-			console.log(tok_arr);
+			tok_arr = out_arr = parse_pass_1(in_arr = tok_arr);
 			function parse_pass_1(arr) {
 				let iter_index = 0;
 				let str_iter_index = 0;
@@ -444,7 +445,7 @@ x: {
 				}
 				return tok_arr;
 			}
-			tok_arr = parse_pass_2(tok_arr);
+			tok_arr = out_arr = parse_pass_2(in_arr = tok_arr);
 			function parse_pass_2(arr) {
 				let valid_tt = true;
 				let ret = [];
@@ -489,7 +490,7 @@ x: {
 				}
 				return ret;
 			}
-			let tt_arr = tt_parse(tok_arr);
+			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
 			function tt_parse(arr) {
 				let tt_arr = [];
 				let kw = ['fn', 'enum', 'impl', 'use', 'struct', '#'];
@@ -534,19 +535,20 @@ x: {
 				}
 				return tt_arr;
 			}
-			finalize_parse(tt_arr);
+			finalize_parse(out_arr = in_arr = tt_arr);
+			return;
 			function finalize_parse(arr) {
 				arr.push(Symbol.for('EOF'));
 			}
-			let exp_arr = export_scope(tt_arr);
+			let exp_arr = out_arr = export_scope(in_arr = tt_arr);
 			function export_scope(out_arr) {
 				let in_defn;
 				let tags = [];
 				let arr_item = [];
 				let enditem = [' ', ';'];
 				let items = [];
-				let crate_attr_vec=[];
-				items.push([crate_attr_vec,null]);
+				let crate_attr_vec = [];
+				items.push([crate_attr_vec, null]);
 				for (let i = 0; i < out_arr.length; i++) {
 					let cur = out_arr[i];
 					switch (cur) {
@@ -568,7 +570,7 @@ x: {
 								tags.push(cur);
 							}
 							crate_attr_vec.push(tags);
-							tags=[];
+							tags = [];
 							i--;
 							continue;
 						case '#':
@@ -680,25 +682,26 @@ x: {
 							}
 							continue;
 					}
+					console.log('!', [cur]);
 					break;
 				}
 				return items;
 
 			}
-			let res_vec = react_exports(exp_arr);
+			let res_vec = out_arr = react_exports(in_arr = exp_arr);
 			function react_exports(in_vec) {
 				let out_vec = [];
 				let cur_obj = null;
 				for (let i = 0; i < in_vec.length; i++) {
 					let cur = in_vec[i];
-					if(cur[1]===null&&cur[0][0]&&cur[0][0][0]==='#!'){
-						cur_obj=new RustCrateScope;
+					if (cur[1] === null && cur[0][0] && cur[0][0][0] === '#!') {
+						cur_obj = new RustCrateScope;
 						cur_obj.set_tt_attribute_vec(cur[0]);
 						out_vec.push(cur_obj);
 						continue;
 					}
-					if(cur[1]===null){
-						console.log('!',cur);
+					if (cur[1] === null) {
+						console.log('!', cur);
 						break;
 					}
 					if (cur[1][0] === '\n') {
@@ -707,37 +710,37 @@ x: {
 					let kw_id = cur[1][0];
 					switch (kw_id) {
 						case 'use':
-							cur_obj=new RustKWUse;
+							cur_obj = new RustKWUse;
 							cur_obj.set_tt_body_vec(cur[1]);
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'enum':
-							cur_obj=new RustKWEnum;
+							cur_obj = new RustKWEnum;
 							cur_obj.set_tt_body_vec(cur[1]);
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'struct':
-							cur_obj=new RustKWStruct;
+							cur_obj = new RustKWStruct;
 							cur_obj.set_tt_body_vec(cur[1]);
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'impl':
-							cur_obj=new RustKWImpl;
+							cur_obj = new RustKWImpl;
 							cur_obj.set_tt_body_vec(cur[1]);
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 						case 'fn':
-							cur_obj=new RustKWFn;
+							cur_obj = new RustKWFn;
 							cur_obj.set_tt_body_vec(cur[1]);
 							cur_obj.set_tt_attribute_vec(cur[0]);
 							out_vec.push(cur_obj);
 							continue;
 					}
-					console.log('!',kw_id);
+					console.log('!', kw_id);
 					break;
 				}
 				return out_vec;
