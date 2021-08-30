@@ -207,6 +207,7 @@ x: {
 		class RustKWImpl extends RustKW { };
 		class RustKWFn extends RustKW { };
 		class RustKWMod extends RustKW { };
+		class RustKWPub { };
 		class RustCrateScope {
 			set_tt_attribute_vec(arr) {
 				this.tt_attribute_vec = arr;
@@ -779,6 +780,10 @@ x: {
 							cur_obj.set_body(cur[1][0]);
 							out_vec.push(cur_obj);
 							cur[1].splice(0, 1);
+							continue;
+						}
+						if(cur[1][0] === 'pub'){
+							out_vec.push(new RustKWPub);
 							continue;
 						}
 						break;
