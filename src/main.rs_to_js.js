@@ -727,7 +727,7 @@ x: {
 								//fn_body
 								step();
 								if (cur instanceof Array && cur[0] !== "{}"[0]) {
-									throw ['e',cur];
+									throw ['Err',['(','fn_body',cur,')']];
 								}
 								in_defn = true;
 								return true;
