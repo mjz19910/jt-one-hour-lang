@@ -577,7 +577,10 @@ x: {
 				items.push([crate_attr_vec, null]);
 				let has_pub;
 				let cur;
-				/**@returns {['Ok',['(',boolean,number,')']]|['Err','has_pub']} */
+				/**
+				 * @returns {['Ok',['(',boolean,number,')']]|['Err','has_pub']}
+				 * @arg {string} cur @arg {number} i
+				*/
 				function do_item(cur,i) {
 					switch (cur) {
 						case '\n':
