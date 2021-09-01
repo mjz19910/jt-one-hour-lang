@@ -783,8 +783,8 @@ x: {
 									arr_item.push(cur);
 									return true;
 								}
+								return false;
 						}
-						return false;
 					}
 					console.log('!', out_arr.slice(i - 5, i-1),out_arr.slice(i-1, i + 2));
 					break;
