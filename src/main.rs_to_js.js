@@ -231,7 +231,6 @@ x: {
 			global_parse_count++;
 			let ret;
 			let val_acc = [];
-			let tok_arr;
 			let in_arr;
 			let out_arr;
 			let cur;
@@ -245,8 +244,17 @@ x: {
 			function bump() {
 				mat_idx++;
 			}
-			tok_arr = out_arr = parse_pass_0(str);
-			/**@arg {string} str */
+			/**@returns {{kind:{type:'Char',terminated:boolean},len:number}} */
+			function ret_Char(){}
+			/**@returns {{kind: 'line_comment',len: number}} */
+			function ret_line_comment(){}
+			/** @returns {ReturnType<ret_Char>|ReturnType<ret_line_comment>} */
+			function pass_0_return(){}
+			let tok_arr_0 = out_arr = parse_pass_0(str);
+			/**
+			 * @arg {string} str 
+			 * @returns {ReturnType<<U extends ReturnType<pass_0_return>>() => U>}
+			 * */
 			function parse_pass_0(str) {
 				let tok_arr = [];
 				let cur_regex = is_val_char;
@@ -257,6 +265,7 @@ x: {
 				}
 				/**@type {RegExpExecArray} */
 				let cc;
+				/**@type {string} */
 				let cur;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
@@ -442,7 +451,8 @@ x: {
 				}
 				return tok_arr;
 			}
-			tok_arr = out_arr = parse_pass_1(in_arr = tok_arr);
+			let tok_arr_1 = out_arr = parse_pass_1(in_arr = tok_arr_0);
+			/**@arg {tok_arr_0} arr */
 			function parse_pass_1(arr) {
 				let iter_index = 0;
 				let str_iter_index = 0;
@@ -462,7 +472,7 @@ x: {
 				}
 				return tok_arr;
 			}
-			tok_arr = out_arr = parse_pass_2(in_arr = tok_arr);
+			let tok_arr_2 = out_arr = parse_pass_2(in_arr = tok_arr_1);
 			function parse_pass_2(arr) {
 				let valid_tt = true;
 				let ret = [];
@@ -507,7 +517,7 @@ x: {
 				}
 				return ret;
 			}
-			let tt_arr = out_arr = tt_parse(in_arr = tok_arr);
+			let tt_arr = out_arr = tt_parse(in_arr = tok_arr_2);
 			//console.log(out_arr, in_arr, global_parse_count);
 			function tt_parse(arr) {
 				let tt_arr = [];
