@@ -269,6 +269,10 @@ x: {
 				let cc;
 				/**@type {string} */
 				let cur;
+				/**@type {'ws'|'char'} */
+				let mat;
+				/**@type {'Whitespace'|'_char'} */
+				let kind;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -283,10 +287,11 @@ x: {
 					if (ci++ > 8192) {
 						break;
 					}
+					kind='LineComment';
 					if (fs(1) === '/' && cur === '/') {
 						mat_idx = str.indexOf('\n', mat_idx);
 						tok_arr.push({
-							kind: 'line_comment',
+							kind: kind,
 							len: mat_idx - is_val_char.lastIndex + 1,
 						});
 						is_val_char.lastIndex = mat_idx;
@@ -299,6 +304,7 @@ x: {
 						mat_lt.lastIndex = mat_idx;
 						cc = mat_lt.exec(str);
 						if (cc === null || cc[1] === "'") {
+							kind='Char';
 							let mat_str = /'(\\.|((?!').))+?'/g;
 							mat_str.lastIndex = mat_idx;
 							cc = mat_str.exec(str);
@@ -313,6 +319,7 @@ x: {
 							cur_regex.lastIndex = mat_idx;
 							continue;
 						}
+						kind='Lifetime';
 						let starts_with_number = cc[0].charCodeAt(0) >= 48 && cc[0].charCodeAt(0) <= 57;
 						tok_arr.push({
 							kind: {
@@ -371,9 +378,6 @@ x: {
 						} */
 					}
 					let g = cc.groups;
-					/**@type {'ws'|'char'} */
-					let mat;
-					let kind;
 					mat = 'i_s';
 					kind = 'Ident';
 					if (g && g[mat]) {
