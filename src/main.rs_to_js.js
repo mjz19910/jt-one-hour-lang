@@ -676,7 +676,7 @@ x: {
 								step();
 								function parse_imm_type(dep) {
 									let ed=dep;
-									for (let i = 0;i < 8;i++) {
+									for (let j = 0;j < 8;j++) {
 										switch (cur) {
 											case '<':
 												dep++;
@@ -684,12 +684,14 @@ x: {
 												step();
 												//next
 												step();
+												console.log('i1',[cur]);
 												continue;
 											case ',':
 												//type
 												step();
 												//next
 												step();
+												console.log('i2',[cur]);
 												continue;
 											case '>':
 												dep--;
@@ -699,7 +701,17 @@ x: {
 												step();
 												console.log('i3',[cur]);
 												continue;
+											case '=':
+												step();
+												step();
+												console.log('=',[cur]);
+												continue;
+												throw ['e',cur];
 											default:
+												if(dep===0){
+													i--;
+													return;
+												}
 												console.log([cur]);
 												throw 1;
 										}
@@ -708,11 +720,28 @@ x: {
 								function parse_type(dep = 0) {
 									parse_imm_type(dep);
 								}
-								if (cur === '->') {
+								function parse_type_impl(){
+									// impl kw
+									step();
 									// type
 									step();
-									// next
+									parse_type();
+								}
+								x:if (cur === '->') {
+									// type
 									step();
+									console.log('t0',[cur]);
+									if(cur==='impl'){
+										parse_type_impl();
+										break x;
+									}
+									// next
+									cur = out_arr[i++];
+									arr_item.push(cur);
+									if(cur===' '){
+										break x;
+									}
+									console.log('t1',[cur]);
 									parse_type();
 								}
 								//fn_body
@@ -777,7 +806,7 @@ x: {
 						}
 						return false;
 					}
-					console.log('!', out_arr.slice(i - 5, i + 2));
+					console.log('!', out_arr.slice(i - 5, i),out_arr.slice(i,i + 2));
 					break;
 				}
 				return items;
