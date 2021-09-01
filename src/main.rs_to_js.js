@@ -578,7 +578,6 @@ x: {
 				let has_pub;
 				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
-					debugger;
 					let ret = do_item(cur, false);
 					if (ret[0]==='Ok'&&ret[1]===true) {
 						continue;
