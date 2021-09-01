@@ -257,6 +257,7 @@ x: {
 				}
 				/**@type {RegExpExecArray} */
 				let cc;
+				let cur;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
@@ -264,6 +265,10 @@ x: {
 					}
 					is_val_char.lastIndex = mat_idx;
 					cc = is_val_char.exec(str);
+					if (cc === null) {
+						console.log('null');
+						break;
+					}
 					if (ci++ > 8192) {
 						break;
 					}
@@ -436,9 +441,6 @@ x: {
 							len: vaa.length,
 						});
 						is_val_char.lastIndex = mat_idx;
-					}
-					if (cc === null) {
-						break;
 					}
 				}
 				return tok_arr;
