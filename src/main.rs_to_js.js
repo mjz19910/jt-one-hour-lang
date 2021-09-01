@@ -771,8 +771,7 @@ x: {
 									return ['Err','has_pub'];
 								}
 								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								cur = out_arr[i];
+								arr_item.push(out_arr[i]);
 								return ['Ok',true];
 							case Symbol.for('EOF'):
 								if (arr_item.length > 0) {
