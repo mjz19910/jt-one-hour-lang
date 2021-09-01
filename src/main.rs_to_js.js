@@ -571,28 +571,6 @@ x: {
 					if (ret) {
 						continue;
 					}
-					function parse_gt() {
-						i++;
-						wl: for (;;) {
-							cur = out_arr[i];
-							console.log(cur);
-							if (cur === '<') {
-								arr_item.push(cur);
-								cur = out_arr[++i];
-								arr_item.push(cur);
-								i++;
-								cur = out_arr[i];
-								arr_item.push(cur);
-								parse_gt();
-							}
-							if (cur === '>') {
-								arr_item.push(cur);
-								break wl;
-							}
-							arr_item.push(cur);
-							i++;
-						}
-					}
 					function do_item(cur, has_pub) {
 						switch (cur) {
 							case '\n':
