@@ -578,7 +578,6 @@ x: {
 						continue;
 					}
 					if(ret[0]==='Err'){
-						debugger;
 						return ret;
 					}
 					function do_item(cur, has_pub) {
