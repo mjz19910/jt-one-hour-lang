@@ -789,7 +789,7 @@ x: {
 					console.log('!', out_arr.slice(i - 5, i-1),out_arr.slice(i-1, i + 2));
 					break;
 				}
-				return items;
+				return ['Ok',items];
 
 			}
 			let res_vec = out_arr = react_exports(in_arr = exp_arr);
