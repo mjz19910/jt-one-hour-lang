@@ -129,7 +129,7 @@ x: {
 				if (data.length === 1) {
 					data = data[0];
 				}
-				if(this.scope === null){
+				if (this.scope === null) {
 					throw Error('need a scope that is not null');
 				}
 				let ref = new RemoteRef(this.scope, 'block');
@@ -658,36 +658,52 @@ x: {
 								i--;
 								return true;
 							case 'fn':
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								while (!enditem.includes(cur = out_arr[i])) {
+								function step() {
+									cur = out_arr[i++];
 									arr_item.push(cur);
-									i++;
-								}
-								cur=out_arr[i++];
-								if(cur!==' '){
-									debugger;
-									throw Error('Stop()');
-								}
-								arr_item.push(cur);
-								cur=out_arr[i++];
-								arr_item.push(cur);
-								if(cur==='->'){
-									cur=out_arr[i++];
-									arr_item.push(cur);
-									cur=out_arr[i++];
-									arr_item.push(cur);
-									cur=out_arr[i++];
-									arr_item.push(cur);
-									i--;
-									if(cur==='<'){
-										parse_gt();
+									if (cur === ' ') {
+										cur = out_arr[i++];
+										arr_item.push(cur);
 									}
-									cur=out_arr[i++];
-									console.log([cur]);
-									arr_item.push(cur);
-									console.log(arr_item);
+								}
+								// fn kw
+								step();
+								// fn_name
+								step();
+								// arguments
+								step();
+								// after_func
+								step();
+								function parse_type(dep = 0) {
+									// type
+									step();
+									console.log('t1', [cur]);
+									switch (cur) {
+										case ',':
+											parse_type(dep);
+											return;
+									}
+									// next
+									step();
+									switch (cur) {
+										case '<':
+											parse_type(dep + 1);
+											break;
+										case ',':
+											parse_type(dep);
+											return;
+									}
+									console.log('t2', [cur]);
+									throw 1;
+								}
+								if (cur === '->') {
+									parse_type();
+								}
+								//fn_body
+								step();
+								console.log(cur);
+								if (cur instanceof Array && cur[0] !== "{}"[0]) {
+									throw 1;
 								}
 								in_defn = true;
 								return true;
@@ -738,7 +754,7 @@ x: {
 								}
 								return true;
 							default:
-								if(cur.slice(0, 2) === '//'){
+								if (cur.slice(0, 2) === '//') {
 									arr_item.push(cur);
 									return true;
 								}
@@ -843,7 +859,7 @@ x: {
 			}
 			finish_parse(res_vec);
 			function finish_parse(arr) {
-				if(__rust.scope===null){
+				if (__rust.scope === null) {
 					throw Error('needs a scope that is not null')
 				}
 				__rust.scope.block_vec[block_id_of_str] ??= [];
@@ -874,7 +890,7 @@ x: {
 		}
 		__rust_priv.stack = [];
 		__rust.push_block_vec = function() {
-			if(__rust.scope===null){
+			if (__rust.scope === null) {
 				throw Error('needs a scope that is not null')
 			}
 			let ret = {};
@@ -887,7 +903,7 @@ x: {
 		}
 		class BlockRef {
 			constructor(scope, ref, parent_block_id) {
-				if(scope===null){
+				if (scope === null) {
 					throw Error('needs a scope that is not null')
 				}
 				this.ref_type = 'block';
@@ -911,7 +927,7 @@ x: {
 			if (last !== vv) {
 				throw Error("failed to drop in order");
 			}
-			if(__rust.scope===null){
+			if (__rust.scope === null) {
 				throw Error('needs a scope that is not null')
 			}
 			let last_vec_info = __rust.scope.block_vec_stack.pop();
@@ -1348,7 +1364,8 @@ x: {
 		__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec]);
 		__rust.crates.push(['onehour-language', __rust.scope.files]);
 	}
-	{
+	x1: {
+		break x1;
 		__rust.scope = new __rust.RustScope;
 		__rust_root_scope = __rust.push_block_vec();
 		//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
@@ -2604,23 +2621,23 @@ x: {
 	{
 		__rust.scope = new __rust.RustScope;
 		window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
-		function accept_tok_vec(token_vec){
+		function accept_tok_vec(token_vec) {
 			console.log(token_vec[0].value);
 		}
-		function accept_file(file){
-			console.log('file',file[0]);
+		function accept_file(file) {
+			console.log('file', file[0]);
 			accept_tok_vec(file[1]);
 		}
-		function accept_files(file_vec){
-			for(let x of file_vec){
+		function accept_files(file_vec) {
+			for (let x of file_vec) {
 				accept_file(x);
 			}
 		}
-		function accept_crate(crate){
-			console.log('crate',crate[0]);
+		function accept_crate(crate) {
+			console.log('crate', crate[0]);
 			accept_files(crate[1]);
 		}
-		for(let x of __rust.crates){
+		for (let x of __rust.crates) {
 			accept_crate(x);
 		}
 	}
