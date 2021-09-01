@@ -574,6 +574,7 @@ x: {
 				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
 					let ret = do_item(cur, false);
+					console.log(ret);
 					if (ret[0]==='Ok'&&ret[1]===true) {
 						continue;
 					}
