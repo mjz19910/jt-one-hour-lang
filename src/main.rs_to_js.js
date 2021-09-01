@@ -577,6 +577,7 @@ x: {
 				items.push([crate_attr_vec, null]);
 				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
+					debugger;
 					let ret = do_item(cur, false);
 					if (ret[0]==='Ok'&&ret[1]===true) {
 						continue;
@@ -788,7 +789,7 @@ x: {
 							default:
 								if (cur.slice(0, 2) === '//') {
 									arr_item.push(cur);
-									return true;
+									return ['Ok',true];
 								}
 								return ['Ok',false];
 						}
