@@ -291,7 +291,8 @@ x: {
 					if (fs(1) === '/' && cur === '/') {
 						mat_idx = str.indexOf('\n', mat_idx);
 						//LineComment { doc_style: Option<DocStyle> }
-						tok_arr.push({
+						/**@type {{kind:{type:'LineComment',doc_style:{type:'Optional',value:'None'}},len:number}} */
+						let new_tok={
 							kind: {
 								type:'LineComment',
 								doc_style:{
@@ -300,7 +301,8 @@ x: {
 								}
 							},
 							len: mat_idx - is_val_char.lastIndex + 1,
-						});
+						};
+						tok_arr.push(new_tok);
 						is_val_char.lastIndex = mat_idx;
 						val_acc = [];
 						continue;
