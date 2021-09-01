@@ -223,6 +223,7 @@ x: {
 		}
 		let global_parse_count = 0;
 		let is_val_char = /(?<i_s>[a-zA-Z_])|(?<ws>[ \t])|(?<d_quo>")|(?<s_quo>')|(?<char>[;,\.(){}\[\]@#~\?:\$=!<>\-&\|\+\*\/\^%])|(?<line>[\n])/g;
+		/**@arg {string} str */
 		__rust.exec_lines = function(str, block_id_of_str) {
 			if (block_id_of_str === void 0) {
 				throw Error('BAD');
@@ -245,13 +246,17 @@ x: {
 				mat_idx++;
 			}
 			tok_arr = out_arr = parse_pass_0(str);
+			/**@arg {string} str */
 			function parse_pass_0(str) {
 				let tok_arr = [];
 				let cur_regex = is_val_char;
 				let str_d_mat = /"(?:\\.|(?!").)+"/g;
+				/**@arg {number} l */
 				function fs(l) {
-					return str[mat_idx + l]
+					return str[mat_idx + l];
 				}
+				/**@type {RegExpExecArray} */
+				let cc;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
 						console.log(is_val_char.lastIndex, mat_idx, cc, str.slice(mat_idx, cc.index));
