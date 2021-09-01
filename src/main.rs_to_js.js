@@ -228,6 +228,7 @@ x: {
 				throw Error('BAD');
 			}
 			global_parse_count++;
+			let ret;
 			let val_acc = [];
 			let tok_arr;
 			let in_arr;
@@ -556,7 +557,12 @@ x: {
 				arr.push(Symbol.for('EOF'));
 				return tt_arr;
 			}
-			let exp_arr = out_arr = export_scope(in_arr = tt_arr);
+			ret=export_scope(in_arr = tt_arr);
+			if(ret[0]==='Err'){
+				debugger;
+				return ret;
+			}
+			let exp_arr = out_arr = ret[1];
 			function export_scope(out_arr) {
 				let in_defn;
 				let tags = [];
