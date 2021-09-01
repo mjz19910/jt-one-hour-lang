@@ -577,224 +577,236 @@ x: {
 				items.push([crate_attr_vec, null]);
 				let has_pub;
 				let cur;
+				/**@returns {['Ok',['(',boolean,number,')']]|['Err','has_pub']} */
+				function do_item(cur,i) {
+					switch (cur) {
+						case '\n':
+							arr_item.push(cur);
+							if (in_defn) {
+								//console.log(tags, arr_item);
+								items.push([tags, arr_item]);
+								arr_item = [];
+								tags = [];
+								in_defn = false;
+							}
+							return ['Ok',['(',true,i,')']];
+						case '#!':
+							tags.push(out_arr[i++]);
+							tags.push(out_arr[i++]);
+							cur = out_arr[i++];
+							if (cur == '\n') {
+								tags.push(cur);
+							}
+							crate_attr_vec.push(tags);
+							tags = [];
+							i--;
+							return ['Ok',['(',true,i,')']];
+						case '#':
+							tags.push(out_arr[i++]);
+							tags.push(out_arr[i]);
+							return ['Ok',['(',true,i,')']];
+						case 'use':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							in_defn = true;
+							i--;
+							return ['Ok',['(',true,i,')']];
+						case 'struct':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							in_defn = true;
+							i--;
+							return ['Ok',['(',true,i,')']];
+						case 'impl':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							in_defn = true;
+							i--;
+							return ['Ok',['(',true,i,')']];
+						case 'fn':
+							function step() {
+								cur = out_arr[i++];
+								arr_item.push(cur);
+								if (cur === ' ') {
+									cur = out_arr[i++];
+									arr_item.push(cur);
+								}
+							}
+							// fn kw
+							step();
+							// fn_name
+							step();
+							// arguments
+							step();
+							// after_func
+							step();
+							function parse_imm_type(dep) {
+								let ed=dep;
+								for (let j = 0;j < 8;j++) {
+									switch (cur) {
+										case '<':
+											dep++;
+											//type
+											step();
+											//next
+											step();
+											continue;
+										case ',':
+											//type
+											step();
+											//next
+											step();
+											console.log('i2',[cur]);
+											continue;
+										case '>':
+											dep--;
+											if(ed===dep){
+												return;
+											}
+											step();
+											console.log('i3',[cur]);
+											continue;
+										case '=':
+											step();
+											step();
+											continue;
+										default:
+											if(dep===0){
+												i--;
+												return;
+											}
+											console.log([cur]);
+											throw 1;
+									}
+								}
+							}
+							function parse_type(dep = 0) {
+								parse_imm_type(dep);
+							}
+							function parse_type_impl(){
+								// impl kw
+								step();
+								// type
+								step();
+								parse_type();
+								step();
+								switch(cur){
+									case '+':
+										step();
+										return;
+								}
+								console.log('t4',[cur]);
+							}
+							x:if (cur === '->') {
+								// type
+								step();
+								if(cur==='impl'){
+									parse_type_impl();
+									break x;
+								}
+								// next
+								cur = out_arr[i++];
+								arr_item.push(cur);
+								if(cur===' '){
+									break x;
+								}
+								parse_type();
+							}
+							//fn_body
+							step();
+							if (cur instanceof Array && cur[0] !== "{}"[0]) {
+								return ['Err',['(','fn_body',cur,')']];
+							}
+							in_defn = true;
+							return ['Ok',['(',true,i,')']];
+						case ';':
+							arr_item.push(cur);
+							return ['Ok',['(',true,i,')']];
+						case 'enum':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							in_defn = true;
+							i--;
+							return ['Ok',['(',true,i,')']];
+						case 'mod':
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i++]);
+							while (!enditem.includes(cur = out_arr[i])) {
+								arr_item.push(cur);
+								i++;
+							}
+							in_defn = true;
+							i--;
+							return ['Ok',['(',true,i,')']];
+						case 'pub':
+							if (has_pub) {
+								return ['Err','has_pub'];
+							}
+							has_pub=true;
+							arr_item.push(out_arr[i++]);
+							arr_item.push(out_arr[i]);
+							return ['Ok',['(',true,i,')']];
+						case Symbol.for('EOF'):
+							if (arr_item.length > 0) {
+								throw new Error('unexpected eof, arr_item not empty')
+							}
+							if (tags.length > 0) {
+								items.push([tags, null]);
+							}
+							return ['Ok',['(',true,i,')']];
+						default:
+							if (cur.slice(0, 2) === '//') {
+								arr_item.push(cur);
+								return ['Ok',['(',true,i,')']];
+							}
+							return ['Ok',['(',false,i,')']];
+					}
+				}
 				for (let i = 0;i < out_arr.length;i++) {
 					cur = out_arr[i];
-					let ret = do_item(cur, false);
-					if (ret[0]==='Ok'&&ret[1]===true) {
-						continue;
+					let ret = do_item(cur, i);
+					/**@arg {ReturnType<do_item>} ret*/
+					function unwrap(ret){
+						if(ret[0]==='Err'){
+							throw Error('panic');
+						}
+						return ret[1];
+					}
+					if (ret[0]==='Ok') {
+						let ret=unwrap(ret);
+						i=ret[2];
+						if(ret[1]){
+							continue;
+						}
 					}
 					if(ret[0]==='Err'){
 						return ret;
-					}
-					function do_item(cur,i) {
-						switch (cur) {
-							case '\n':
-								arr_item.push(cur);
-								if (in_defn) {
-									//console.log(tags, arr_item);
-									items.push([tags, arr_item]);
-									arr_item = [];
-									tags = [];
-									in_defn = false;
-								}
-								return ['Ok',['(',true,i,')']];
-							case '#!':
-								tags.push(out_arr[i++]);
-								tags.push(out_arr[i++]);
-								cur = out_arr[i++];
-								if (cur == '\n') {
-									tags.push(cur);
-								}
-								crate_attr_vec.push(tags);
-								tags = [];
-								i--;
-								return ['Ok',['(',true,i,')']];
-							case '#':
-								tags.push(out_arr[i++]);
-								tags.push(out_arr[i]);
-								return ['Ok',['(',true,i,')']];
-							case 'use':
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								while (!enditem.includes(cur = out_arr[i])) {
-									arr_item.push(cur);
-									i++;
-								}
-								in_defn = true;
-								i--;
-								return ['Ok',['(',true,i,')']];
-							case 'struct':
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								while (!enditem.includes(cur = out_arr[i])) {
-									arr_item.push(cur);
-									i++;
-								}
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								in_defn = true;
-								i--;
-								return ['Ok',['(',true,i,')']];
-							case 'impl':
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								while (!enditem.includes(cur = out_arr[i])) {
-									arr_item.push(cur);
-									i++;
-								}
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								in_defn = true;
-								i--;
-								return ['Ok',['(',true,i,')']];
-							case 'fn':
-								function step() {
-									cur = out_arr[i++];
-									arr_item.push(cur);
-									if (cur === ' ') {
-										cur = out_arr[i++];
-										arr_item.push(cur);
-									}
-								}
-								// fn kw
-								step();
-								// fn_name
-								step();
-								// arguments
-								step();
-								// after_func
-								step();
-								function parse_imm_type(dep) {
-									let ed=dep;
-									for (let j = 0;j < 8;j++) {
-										switch (cur) {
-											case '<':
-												dep++;
-												//type
-												step();
-												//next
-												step();
-												continue;
-											case ',':
-												//type
-												step();
-												//next
-												step();
-												console.log('i2',[cur]);
-												continue;
-											case '>':
-												dep--;
-												if(ed===dep){
-													return;
-												}
-												step();
-												console.log('i3',[cur]);
-												continue;
-											case '=':
-												step();
-												step();
-												continue;
-											default:
-												if(dep===0){
-													i--;
-													return;
-												}
-												console.log([cur]);
-												throw 1;
-										}
-									}
-								}
-								function parse_type(dep = 0) {
-									parse_imm_type(dep);
-								}
-								function parse_type_impl(){
-									// impl kw
-									step();
-									// type
-									step();
-									parse_type();
-									step();
-									switch(cur){
-										case '+':
-											step();
-											return;
-									}
-									console.log('t4',[cur]);
-								}
-								x:if (cur === '->') {
-									// type
-									step();
-									if(cur==='impl'){
-										parse_type_impl();
-										break x;
-									}
-									// next
-									cur = out_arr[i++];
-									arr_item.push(cur);
-									if(cur===' '){
-										break x;
-									}
-									parse_type();
-								}
-								//fn_body
-								step();
-								if (cur instanceof Array && cur[0] !== "{}"[0]) {
-									return ['Err',['(','fn_body',cur,')']];
-								}
-								in_defn = true;
-								return ['Ok',['(',true,i,')']];
-							case ';':
-								arr_item.push(cur);
-								return ['Ok',['(',true,i,')']];
-							case 'enum':
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								while (!enditem.includes(cur = out_arr[i])) {
-									arr_item.push(cur);
-									i++;
-								}
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								in_defn = true;
-								i--;
-								return ['Ok',['(',true,i,')']];
-							case 'mod':
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								while (!enditem.includes(cur = out_arr[i])) {
-									arr_item.push(cur);
-									i++;
-								}
-								in_defn = true;
-								i--;
-								return ['Ok',true];
-							case 'pub':
-								if (has_pub) {
-									return ['Err','has_pub'];
-								}
-								has_pub=true;
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i]);
-								return ['Ok',['(',true,i,')']];
-							case Symbol.for('EOF'):
-								if (arr_item.length > 0) {
-									throw new Error('unexpected eof, arr_item not empty')
-								}
-								if (tags.length > 0) {
-									items.push([tags, null]);
-								}
-								return ['Ok',['(',true,i,')']];
-							default:
-								if (cur.slice(0, 2) === '//') {
-									arr_item.push(cur);
-									return ['Ok',['(',true,i,')']];
-								}
-								return ['Ok',['(',false,i,')']];
-						}
 					}
 					console.log('!', out_arr.slice(i - 5, i-1),out_arr.slice(i-1, i + 2));
 					break;
