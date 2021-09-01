@@ -684,7 +684,6 @@ x: {
 												step();
 												//next
 												step();
-												console.log('i1',[cur]);
 												continue;
 											case ',':
 												//type
@@ -704,9 +703,7 @@ x: {
 											case '=':
 												step();
 												step();
-												console.log('=',[cur]);
 												continue;
-												throw ['e',cur];
 											default:
 												if(dep===0){
 													i--;
@@ -726,11 +723,17 @@ x: {
 									// type
 									step();
 									parse_type();
+									step();
+									switch(cur){
+										case '+':
+											step();
+											return;
+									}
+									console.log('t4',[cur]);
 								}
 								x:if (cur === '->') {
 									// type
 									step();
-									console.log('t0',[cur]);
 									if(cur==='impl'){
 										parse_type_impl();
 										break x;
@@ -741,7 +744,6 @@ x: {
 									if(cur===' '){
 										break x;
 									}
-									console.log('t1',[cur]);
 									parse_type();
 								}
 								//fn_body
@@ -806,7 +808,7 @@ x: {
 						}
 						return false;
 					}
-					console.log('!', out_arr.slice(i - 5, i),out_arr.slice(i,i + 2));
+					console.log('!', out_arr.slice(i - 5, i-1),out_arr.slice(i-1, i + 2));
 					break;
 				}
 				return items;
