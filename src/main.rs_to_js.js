@@ -768,7 +768,7 @@ x: {
 								return ['Ok',true];
 							case 'pub':
 								if (has_pub) {
-									throw Error('multiple pub keywords incorrect');
+									return ['Err','has_pub'];
 								}
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
