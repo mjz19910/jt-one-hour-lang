@@ -246,8 +246,18 @@ x: {
 			}
 			/**@returns {{kind:{type:'Char',terminated:boolean},len:number}} */
 			function ret_Char(){}
-			/**@returns {{kind: 'line_comment',len: number}} */
+			/**@returns {{kind:'line_comment',len:number}} */
 			function ret_line_comment(){}
+			/**@returns {{kind: {type:'Lifetime',starts_with_number:boolean},len:number}} */
+			function ret_Lifetime(){
+				return {
+					kind: {
+						type: 'Lifetime',
+						starts_with_number,
+					},
+					len: cc[0].length,
+				}
+			}
 			/** @returns {ReturnType<ret_Char>|ReturnType<ret_line_comment>} */
 			function pass_0_return(){}
 			let tok_arr_0 = out_arr = parse_pass_0(str);
