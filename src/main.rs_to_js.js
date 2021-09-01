@@ -571,6 +571,7 @@ x: {
 					if (ret[0]==='Ok'&&ret[1]===true) {
 						continue;
 					}
+					if(ret[0]==='Err')return ret;
 					function do_item(cur, has_pub) {
 						switch (cur) {
 							case '\n':
