@@ -2719,7 +2719,6 @@ x: {
 	}
 	{
 		console.log(__rust.crates);
-		//console.log(rust_code);
 	}
 	//# sourceURL=https://github.com/mjz19910/jt-one-hour-lang/blob/master/src/main.rs_to_js.js
 }
