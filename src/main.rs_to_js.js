@@ -266,13 +266,13 @@ x: {
 					is_val_char.lastIndex = mat_idx;
 					cc = is_val_char.exec(str);
 					if (cc === null) {
-						console.log('null');
 						break;
 					}
+					cur=cc[0];
 					if (ci++ > 8192) {
 						break;
 					}
-					if (fs(1) === '/' && cc[0] === '/') {
+					if (fs(1) === '/' && cur === '/') {
 						mat_idx = str.indexOf('\n', mat_idx);
 						tok_arr.push({
 							kind: 'line_comment',
@@ -282,7 +282,7 @@ x: {
 						val_acc = [];
 						continue;
 					};
-					x: if (cc && cc[0] === "'") {
+					x: if (cur === "'") {
 						//could be lifetime
 						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
 						mat_lt.lastIndex = mat_idx;
@@ -359,12 +359,9 @@ x: {
 							}
 						} */
 					}
-					let g;
+					let g=cc.groups;
 					let mat;
 					let kind;
-					if (cc !== null) {
-						g = cc.groups;
-					}
 					mat = 'i_s';
 					kind = 'Ident';
 					if (g && g[mat]) {
