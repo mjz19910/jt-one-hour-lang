@@ -774,7 +774,10 @@ x: {
 								arr_item.push(out_arr[i++]);
 								cur = out_arr[i];
 								let ii_ret = do_item(cur, true);
-								if (ii_ret === false) {
+								if(ii_ret[0]==='Err'){
+									return ['Err',ii_ret];
+								}
+								if (ii_ret[0]==='Ok'&&ii_ret[1] === false) {
 									debugger;
 								}
 								return ['Ok',true];
