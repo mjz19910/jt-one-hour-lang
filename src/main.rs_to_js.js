@@ -726,9 +726,8 @@ x: {
 								}
 								//fn_body
 								step();
-								console.log(cur);
 								if (cur instanceof Array && cur[0] !== "{}"[0]) {
-									throw 1;
+									throw ['e',cur];
 								}
 								in_defn = true;
 								return true;
