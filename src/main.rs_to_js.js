@@ -586,7 +586,6 @@ x: {
 						return ret;
 					}
 					function do_item(cur) {
-						if (has_pub){debugger;}
 						switch (cur) {
 							case '\n':
 								arr_item.push(cur);
