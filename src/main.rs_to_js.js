@@ -674,29 +674,47 @@ x: {
 								step();
 								// after_func
 								step();
+								function parse_imm_type(dep) {
+									let ed=dep;
+									for (let i = 0;i < 8;i++) {
+										switch (cur) {
+											case '<':
+												dep++;
+												//type
+												step();
+												//next
+												step();
+												continue;
+											case ',':
+												//type
+												step();
+												//next
+												step();
+												continue;
+											case '>':
+												dep--;
+												if(ed===dep){
+													return;
+												}
+												step();
+												console.log('i3',[cur]);
+												continue;
+											default:
+												console.log([cur]);
+												throw 1;
+										}
+									}
+								}
 								function parse_type(dep = 0) {
+									parse_imm_type(dep);
+								}
+								if (cur === '->') {
 									// type
 									step();
 									console.log('t1', [cur]);
-									switch (cur) {
-										case ',':
-											parse_type(dep);
-											return;
-									}
 									// next
 									step();
-									switch (cur) {
-										case '<':
-											parse_type(dep + 1);
-											break;
-										case ',':
-											parse_type(dep);
-											return;
-									}
 									console.log('t2', [cur]);
-									throw 1;
-								}
-								if (cur === '->') {
 									parse_type();
 								}
 								//fn_body
