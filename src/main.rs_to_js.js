@@ -577,7 +577,10 @@ x: {
 					if (ret[0]==='Ok'&&ret[1]===true) {
 						continue;
 					}
-					if(ret[0]==='Err')return ret;
+					if(ret[0]==='Err'){
+						debugger;
+						return ret;
+					}
 					function do_item(cur, has_pub) {
 						switch (cur) {
 							case '\n':
@@ -903,6 +906,7 @@ x: {
 				}
 				__rust.last_exec = arr;
 			}
+			return ['Ok'];
 
 		}
 		__rust.log_lines = function(callback_function) {
