@@ -250,7 +250,7 @@ x: {
 			function ret_line_comment() { }
 			/**@returns {{kind: {type:'Lifetime',starts_with_number:boolean},len:number}} */
 			function ret_Lifetime() { }
-			/** @returns {ReturnType<ret_Char>|ReturnType<ret_line_comment>} */
+			/** @returns {ReturnType<ret_Char>|ReturnType<ret_line_comment>|ReturnType<ret_Lifetime>} */
 			function pass_0_return() { }
 			let tok_arr_0 = out_arr = parse_pass_0(str);
 			/**
@@ -371,6 +371,7 @@ x: {
 						} */
 					}
 					let g = cc.groups;
+					/**@type {'ws'|'char'} */
 					let mat;
 					let kind;
 					mat = 'i_s';
@@ -406,7 +407,7 @@ x: {
 						continue;
 					}
 					mat = 'd_quo';
-					kind = '_' + mat;
+					kind = '_d_quo';
 					if (g && g[mat]) {
 						str_d_mat.lastIndex = mat_idx;
 						cc = str_d_mat.exec(str);
@@ -419,7 +420,7 @@ x: {
 						continue;
 					}
 					mat = 's_quo';
-					kind = '_' + mat;
+					kind = '_s_quo';
 					if (g && g[mat]) {
 						bump();
 						tok_arr.push({
@@ -429,7 +430,9 @@ x: {
 						is_val_char.lastIndex = mat_idx;
 						continue;
 					}
+					/**@arg {'ws'|'char'|'line'|'d_quo'|'s_quo'} mat */
 					function do_mat(mat, kind) {
+						/**@type {string[]} */
 						let vaa = [];
 						while (true) {
 							is_val_char.lastIndex = mat_idx;
