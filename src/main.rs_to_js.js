@@ -711,10 +711,8 @@ x: {
 								if (cur === '->') {
 									// type
 									step();
-									console.log('t1', [cur]);
 									// next
 									step();
-									console.log('t2', [cur]);
 									parse_type();
 								}
 								//fn_body
@@ -968,7 +966,11 @@ x: {
 	}
 
 	let __rust_root_scope;
-	{
+	init: {
+		__rust.crates = [];
+	}
+	x1: {
+		break x1;
 		__rust.scope = new __rust.RustScope;
 		__rust_root_scope = __rust.push_block_vec();
 		let rust_code = rr`
@@ -1377,13 +1379,11 @@ x: {
 		// filter out stuff we didn't call exec_lines on during template execution...
 		__rust.scope.block_vec = __rust.scope.block_vec.filter(e => e.value.length > 0);
 		__rust.drop(__rust_root_scope);
-		__rust.crates = [];
 		__rust.scope.files = [];
 		__rust.scope.files.push(['src/main.rs', __rust.scope.block_vec]);
 		__rust.crates.push(['onehour-language', __rust.scope.files]);
 	}
 	x1: {
-		break x1;
 		__rust.scope = new __rust.RustScope;
 		__rust_root_scope = __rust.push_block_vec();
 		//https://doc.rust-lang.org/stable/nightly-rustc/src/rustc_lexer/lib.rs.html
