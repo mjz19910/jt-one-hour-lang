@@ -271,7 +271,7 @@ x: {
 				let cur;
 				/**@type {'ws'|'char'} */
 				let mat;
-				/**@type {'Whitespace'|'_char'} */
+				/**@type {'Whitespace'|'_char'|null} */
 				let kind;
 				while (true) {
 					if (mat_idx > is_val_char.lastIndex) {
@@ -290,14 +290,22 @@ x: {
 					kind='LineComment';
 					if (fs(1) === '/' && cur === '/') {
 						mat_idx = str.indexOf('\n', mat_idx);
+						//LineComment { doc_style: Option<DocStyle> }
 						tok_arr.push({
-							kind: kind,
+							kind: {
+								type:'LineComment',
+								doc_style:{
+									type:'Optional',
+									value:'None',
+								}
+							},
 							len: mat_idx - is_val_char.lastIndex + 1,
 						});
 						is_val_char.lastIndex = mat_idx;
 						val_acc = [];
 						continue;
 					};
+					kind=null;
 					x: if (cur === "'") {
 						//could be lifetime
 						let mat_lt = /'[a-zA-Z_0-9]+?(')?/g;
