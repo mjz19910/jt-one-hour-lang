@@ -567,27 +567,26 @@ x: {
 				items.push([crate_attr_vec, null]);
 				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
-					if (cur.slice(0, 2) === '//') {
-						cur = '//';
-					}
 					let ret = do_item(cur, false);
 					if (ret) {
 						continue;
 					}
 					function parse_gt() {
-						arr_item.push(cur);
 						i++;
 						wl: for (;;) {
 							cur = out_arr[i];
+							console.log(cur);
 							if (cur === '<') {
 								arr_item.push(cur);
 								cur = out_arr[++i];
 								arr_item.push(cur);
 								i++;
 								cur = out_arr[i];
+								arr_item.push(cur);
 								parse_gt();
 							}
 							if (cur === '>') {
+								arr_item.push(cur);
 								break wl;
 							}
 							arr_item.push(cur);
@@ -666,32 +665,31 @@ x: {
 									arr_item.push(cur);
 									i++;
 								}
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								arr_item.push(out_arr[i++]);
-								x: while (!enditem.includes(cur = out_arr[i])) {
-									b: switch (cur) {
-										case 'impl':
-											arr_item.push(out_arr[i++]);
-											arr_item.push(out_arr[i++]);
-											continue x;
-									}
-									if (cur === '<') {
+								cur=out_arr[i++];
+								if(cur!==' '){
+									debugger;
+									throw Error('Stop()');
+								}
+								arr_item.push(cur);
+								cur=out_arr[i++];
+								arr_item.push(cur);
+								if(cur==='->'){
+									cur=out_arr[i++];
+									arr_item.push(cur);
+									cur=out_arr[i++];
+									arr_item.push(cur);
+									cur=out_arr[i++];
+									arr_item.push(cur);
+									i--;
+									if(cur==='<'){
 										parse_gt();
 									}
+									cur=out_arr[i++];
+									console.log([cur]);
 									arr_item.push(cur);
-									i++;
+									console.log(arr_item);
 								}
-								arr_item.push(out_arr[i++]);
-								arr_item.push(cur = out_arr[i++]);
-								if (cur === '+') {
-									arr_item.push(out_arr[i++]);
-									arr_item.push(out_arr[i++]);
-									arr_item.push(out_arr[i++]);
-								}
-								arr_item.push(out_arr[i++]);
 								in_defn = true;
-								i--;
 								return true;
 							case ';':
 								arr_item.push(cur);
@@ -708,9 +706,6 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								return true;
-							case '//':
-								arr_item.push(out_arr[i]);
 								return true;
 							case 'mod':
 								arr_item.push(out_arr[i++]);
@@ -742,6 +737,11 @@ x: {
 									items.push([tags, null]);
 								}
 								return true;
+							default:
+								if(cur.slice(0, 2) === '//'){
+									arr_item.push(cur);
+									return true;
+								}
 						}
 						return false;
 					}
@@ -2604,7 +2604,25 @@ x: {
 	{
 		__rust.scope = new __rust.RustScope;
 		window.__rust.current_scope.top.create_variable('__rust').set_value(__rust);
-		console.log(__rust.crates);
+		function accept_tok_vec(token_vec){
+			console.log(token_vec[0].value);
+		}
+		function accept_file(file){
+			console.log('file',file[0]);
+			accept_tok_vec(file[1]);
+		}
+		function accept_files(file_vec){
+			for(let x of file_vec){
+				accept_file(x);
+			}
+		}
+		function accept_crate(crate){
+			console.log('crate',crate[0]);
+			accept_files(crate[1]);
+		}
+		for(let x of __rust.crates){
+			accept_crate(x);
+		}
 	}
 	//# sourceURL=https://github.com/mjz19910/jt-one-hour-lang/blob/master/src/main.rs_to_js.js
 }
