@@ -575,6 +575,7 @@ x: {
 				let items = [];
 				let crate_attr_vec = [];
 				items.push([crate_attr_vec, null]);
+				let has_pub;
 				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
 					debugger;
@@ -585,7 +586,8 @@ x: {
 					if(ret[0]==='Err'){
 						return ret;
 					}
-					function do_item(cur, has_pub) {
+					function do_item(cur) {
+						if (has_pub){debugger;}
 						switch (cur) {
 							case '\n':
 								arr_item.push(cur);
@@ -775,6 +777,7 @@ x: {
 								if (has_pub) {
 									return ['Err','has_pub'];
 								}
+								has_pub=true;
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i]);
 								return ['Ok',true];
