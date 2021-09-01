@@ -568,7 +568,7 @@ x: {
 				for (let i = 0;i < out_arr.length;i++) {
 					let cur = out_arr[i];
 					let ret = do_item(cur, false);
-					if (ret) {
+					if (ret[0]==='Ok'&&ret[1]===true) {
 						continue;
 					}
 					function do_item(cur, has_pub) {
@@ -582,7 +582,7 @@ x: {
 									tags = [];
 									in_defn = false;
 								}
-								return true;
+								return ['Ok',true];
 							case '#!':
 								tags.push(out_arr[i++]);
 								tags.push(out_arr[i++]);
@@ -593,11 +593,11 @@ x: {
 								crate_attr_vec.push(tags);
 								tags = [];
 								i--;
-								return true;
+								return ['Ok',true];
 							case '#':
 								tags.push(out_arr[i++]);
 								tags.push(out_arr[i]);
-								return true;
+								return ['Ok',true];
 							case 'use':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -608,7 +608,7 @@ x: {
 								}
 								in_defn = true;
 								i--;
-								return true;
+								return ['Ok',true];
 							case 'struct':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -621,7 +621,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								return true;
+								return ['Ok',true];
 							case 'impl':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -634,7 +634,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								return true;
+								return ['Ok',true];
 							case 'fn':
 								function step() {
 									cur = out_arr[i++];
@@ -730,10 +730,10 @@ x: {
 									throw ['Err',['(','fn_body',cur,')']];
 								}
 								in_defn = true;
-								return true;
+								return ['Ok',true];
 							case ';':
 								arr_item.push(cur);
-								return true;
+								return ['Ok',true];
 							case 'enum':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -746,7 +746,7 @@ x: {
 								arr_item.push(out_arr[i++]);
 								in_defn = true;
 								i--;
-								return true;
+								return ['Ok',true];
 							case 'mod':
 								arr_item.push(out_arr[i++]);
 								arr_item.push(out_arr[i++]);
@@ -756,7 +756,7 @@ x: {
 								}
 								in_defn = true;
 								i--;
-								return true;
+								return ['Ok',true];
 							case 'pub':
 								if (has_pub) {
 									throw Error('multiple pub keywords incorrect');
@@ -768,7 +768,7 @@ x: {
 								if (ii_ret === false) {
 									debugger;
 								}
-								return true;
+								return ['Ok',true];
 							case Symbol.for('EOF'):
 								if (arr_item.length > 0) {
 									throw new Error('unexpected eof, arr_item not empty')
@@ -776,13 +776,13 @@ x: {
 								if (tags.length > 0) {
 									items.push([tags, null]);
 								}
-								return true;
+								return ['Ok',true];
 							default:
 								if (cur.slice(0, 2) === '//') {
 									arr_item.push(cur);
 									return true;
 								}
-								return false;
+								return ['Ok',false];
 						}
 					}
 					console.log('!', out_arr.slice(i - 5, i-1),out_arr.slice(i-1, i + 2));
