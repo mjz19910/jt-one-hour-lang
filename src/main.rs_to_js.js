@@ -646,6 +646,7 @@ x: {
 								i++;
 							}
 							in_defn = true;
+							has_pub=false;
 							i--;
 							return ['Ok', ['(', true, i, ')']];
 						case 'struct':
@@ -659,6 +660,7 @@ x: {
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
 							in_defn = true;
+							has_pub=false;
 							i--;
 							return ['Ok', ['(', true, i, ')']];
 						case 'impl':
@@ -671,6 +673,7 @@ x: {
 							}
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
+							has_pub=false;
 							in_defn = true;
 							i--;
 							return ['Ok', ['(', true, i, ')']];
@@ -769,6 +772,7 @@ x: {
 								return ['Err', ['(', 'fn_body', cur, ')']];
 							}
 							in_defn = true;
+							has_pub=false;
 							return ['Ok', ['(', true, i, ')']];
 						case ';':
 							arr_item.push(cur);
@@ -784,6 +788,7 @@ x: {
 							arr_item.push(out_arr[i++]);
 							arr_item.push(out_arr[i++]);
 							in_defn = true;
+							has_pub=false;
 							i--;
 							return ['Ok', ['(', true, i, ')']];
 						case 'mod':
@@ -794,6 +799,7 @@ x: {
 								i++;
 							}
 							in_defn = true;
+							has_pub=false;
 							i--;
 							return ['Ok', ['(', true, i, ')']];
 						case 'pub':
