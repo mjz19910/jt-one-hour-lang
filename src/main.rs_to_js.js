@@ -607,7 +607,7 @@ x: {
 				let has_pub;
 				let cur;
 				/**
-				 * @returns {['Ok',['(',boolean,number,')']]|['Err','has_pub']}
+				 * @returns {['Ok',['(',boolean,number,')']]|['Err','has_pub'|['(', 'fn_body', string, ')']]}
 				 * @arg {string} cur @arg {number} i
 				*/
 				function do_item(cur, i) {
@@ -822,7 +822,7 @@ x: {
 				}
 				for (let i = 0;i < out_arr.length;i++) {
 					cur = out_arr[i];
-					let ret = do_item(cur, i);
+					let ret0 = do_item(cur, i);
 					/**@arg {ReturnType<do_item>} ret*/
 					function unwrap(ret) {
 						if (ret[0] === 'Err') {
@@ -830,15 +830,15 @@ x: {
 						}
 						return ret[1];
 					}
-					if (ret[0] === 'Ok') {
-						let ret = unwrap(ret);
-						i = ret[2];
-						if (ret[1]) {
+					if (ret0[0] === 'Ok') {
+						let ret1 = unwrap(ret0);
+						i = ret1[2];
+						if (ret1[1]) {
 							continue;
 						}
 					}
-					if (ret[0] === 'Err') {
-						return ret;
+					if (ret0[0] === 'Err') {
+						return ret0;
 					}
 					console.log('!', out_arr.slice(i - 5, i - 1), out_arr.slice(i - 1, i + 2));
 					break;
