@@ -11,7 +11,7 @@ x: {
 			'create_impl',
 		]
 	];
-	let rust_autoexec_funcs = [
+	let rust_auto_exec_funcs = [
 		...rust_exec_code_funcs.flat(),
 	];
 	let my_rust_sym = Symbol();
@@ -34,7 +34,7 @@ x: {
 		let iter_index = 0;
 		res.push(mm.raw[iter_index++]);
 		for (let cur of rest) {
-			if (typeof cur === 'function' && rust_autoexec_funcs.includes(cur.name)) {
+			if (typeof cur === 'function' && rust_auto_exec_funcs.includes(cur.name)) {
 				cur(parse_pass);
 				block_inner[cur.block_id] = {
 					id: cur.block_id,
@@ -843,6 +843,7 @@ x: {
 							continue;
 						}
 					}
+<<<<<<< HEAD
 					if (ret0[0] === 'Err') {
 						return ret0;
 					}
@@ -862,6 +863,9 @@ x: {
 						cur_obj = new RustCrateScope;
 						cur_obj.set_tt_attribute_vec(cur[0]);
 						out_vec.push(cur_obj);
+=======
+					if(cur==='\n'&&tt_arr[tt_arr.length-1]===cur){
+>>>>>>> RustJS: Refactor spelling and variable names
 						continue;
 					}
 					if (cur[1] === null && cur[0][0] && cur[0][0][0] === '#!') {
@@ -1008,7 +1012,7 @@ x: {
 		__rust.drop = function(vv) {
 			let last = __rust_priv.stack[__rust_priv.stack.length - 1];
 			if (last === void 0) {
-				throw Error('droping undefined');
+				throw Error('dropping undefined');
 			}
 			if (last !== vv) {
 				throw Error("failed to drop in order");
