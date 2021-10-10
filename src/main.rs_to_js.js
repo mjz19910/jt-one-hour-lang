@@ -843,7 +843,6 @@ x: {
 							continue;
 						}
 					}
-<<<<<<< HEAD
 					if (ret0[0] === 'Err') {
 						return ret0;
 					}
@@ -863,9 +862,6 @@ x: {
 						cur_obj = new RustCrateScope;
 						cur_obj.set_tt_attribute_vec(cur[0]);
 						out_vec.push(cur_obj);
-=======
-					if(cur==='\n'&&tt_arr[tt_arr.length-1]===cur){
->>>>>>> RustJS: Refactor spelling and variable names
 						continue;
 					}
 					if (cur[1] === null && cur[0][0] && cur[0][0][0] === '#!') {
@@ -2732,16 +2728,12 @@ x: {
 		for (let x of __rust.crates) {
 			accept_crate(x);
 		}
-<<<<<<< HEAD
-	}
-=======
 		console.log(tok_arr.join(), ...rust_rustc_tokens_vec.slice(0, 2), rust_rustc_tokens_vec[7]);
-	});
+	};
 	let end_index = 0;
 	let mt = rust_match_rx.exec(rust_code);
 	rust_code.slice(end_index, mt.index);
 	end_index = mt.index + mt[0].length;
 	//test.runAll();
->>>>>>> RustJS: Use better variable name on match end
 	//# sourceURL=https://github.com/mjz19910/jt-one-hour-lang/blob/master/src/main.rs_to_js.js
 }
