@@ -2732,6 +2732,16 @@ x: {
 		for (let x of __rust.crates) {
 			accept_crate(x);
 		}
+<<<<<<< HEAD
 	}
+=======
+		console.log(tok_arr.join(), ...rust_rustc_tokens_vec.slice(0, 2), rust_rustc_tokens_vec[7]);
+	});
+	let end_index = 0;
+	let mt = rust_match_rx.exec(rust_code);
+	rust_code.slice(end_index, mt.index);
+	end_index = mt.index + mt[0].length;
+	//test.runAll();
+>>>>>>> RustJS: Use better variable name on match end
 	//# sourceURL=https://github.com/mjz19910/jt-one-hour-lang/blob/master/src/main.rs_to_js.js
 }
